@@ -28,6 +28,12 @@ const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
 let offsetHelper;  // contract object of the offsethelper
 
 
+// Other constants
+
+let carbonToOffset = "0.3";
+let maticToSend = "";
+
+
 /**
  * Setup the orchestra
  */
@@ -152,20 +158,31 @@ async function fetchAccountData() {
     accountContainer.appendChild(clone);
   });
 
-  // Because rendering account does its own RPC commucation
+  // Because rendering account does its own RPC communication
   // with Ethereum node, we do not want to display any results
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
+
+
+  // Display matic and carbon to offset
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  window.maticToSend = await window.offsetHelper.methods
+  .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
+  .call();
+  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
+
+  const offSetTable = document.querySelector("#offSetTable");
+  offSetTable.innerHTML = '';
+  const clone = template.content.cloneNode(true);
+  clone.querySelector(".address").textContent = carbonToOffset;
+  clone.querySelector(".balance").textContent = web3.utils.fromWei(window.maticToSend);
+  offSetTable.appendChild(clone);
 
   // Display fully loaded UI for wallet data
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
-  const carbonToOffset = web3.utils.toWei("0.3", "ether");
-  let maticToSend = await window.offsetHelper.methods
-  .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffset)
-  .call();
-  console.log("Matic: ", web3.utils.fromWei(maticToSend))
+
 }
 
 
