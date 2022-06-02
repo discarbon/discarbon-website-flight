@@ -33,13 +33,13 @@ function init() {
 
   // Check that the web page is run in a secure context,
   // as otherwise MetaMask won't be available
-  if(location.protocol !== 'https:') {
-    // https://ethereum.stackexchange.com/a/62217/620
-    const alert = document.querySelector("#alert-error-https");
-    alert.style.display = "block";
-    document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-    return;
-  }
+  // if(location.protocol !== 'https:') {
+  //   // https://ethereum.stackexchange.com/a/62217/620
+  //   const alert = document.querySelector("#alert-error-https");
+  //   alert.style.display = "block";
+  //   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
+  //   return;
+  // }
 
   // Tell Web3modal what providers we have available.
   // Built-in web browser provider (only one can exist as a time)
