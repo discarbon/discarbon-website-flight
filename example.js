@@ -20,6 +20,13 @@ let provider;
 // Address of the selected account
 let selectedAccount;
 
+// Addresses of used contracts
+
+const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";
+const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
+
+let offsetHelper;  // contract object of the offsethelper
+
 
 /**
  * Setup the orchestra
@@ -71,6 +78,33 @@ function init() {
   console.log("Web3Modal instance is", web3Modal);
 }
 
+async function createContractObject() {
+  // Load ABI
+
+  let jsonFile = "./ABI/OffsetHelper2.json";
+  var offsetHelperABI = await $.getJSON(jsonFile);
+  // let offsetHelperABI = json.abi;
+  console.log(offsetHelperABI)
+  const web3 = new Web3(provider);
+  window.offsetHelper = await new web3.eth.Contract(offsetHelperABI, offsetHelperAddress);
+
+  // old code
+  // await window.WarrantCanary.setProvider(window.ethereum);
+  // subscribe to events
+  // window.WarrantCanary.events.allEvents((err, events)=>{
+  //   let ID = events.returnValues[0];
+  //   if (document.getElementById(`warrant-canary-${ID}`)) {
+  //     displayAWarrantCanary(ID);
+  //   } else {
+  //     window.WarrantCanary.methods.warrantCanaries(ID).call().then(function(stateOfWC) {
+  //       if(stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
+  //         getAllAssociatedWarrantCanaries();
+  //       }
+  //     });
+  //   }
+  // })
+}
+
 
 /**
  * Kick in the UI action after Web3modal dialog has chosen a provider
@@ -97,7 +131,7 @@ async function fetchAccountData() {
 
   document.querySelector("#selected-account").textContent = selectedAccount;
 
-  // Get a handl
+  // Get a handle
   const template = document.querySelector("#template-balance");
   const accountContainer = document.querySelector("#accounts");
 
@@ -126,6 +160,12 @@ async function fetchAccountData() {
   // Display fully loaded UI for wallet data
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
+
+  const carbonToOffset = web3.utils.toWei("0.3", "ether");
+  let maticToSend = await window.offsetHelper.methods
+  .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffset)
+  .call();
+  console.log("Matic: ", web3.utils.fromWei(maticToSend))
 }
 
 
@@ -166,6 +206,8 @@ async function onConnect() {
     console.log("Could not get a wallet connection", e);
     return;
   }
+
+  await createContractObject();
 
   // Subscribe to accounts change
   provider.on("accountsChanged", (accounts) => {
