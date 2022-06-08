@@ -2489,20 +2489,12 @@ html {
   justify-content: center;
 }
 
-.bg-hero-pattern {
-  background-image: url('/images/1536016414.svg');
-}
-
-.bg-footer-texture {
-  background-image: url('/images/1536016414.svg');
+.bg-landscape {
+  background-image: url('/images/landscape.svg');
 }
 
 .bg-cover {
   background-size: cover;
-}
-
-.bg-bottom {
-  background-position: bottom;
 }
 
 .bg-top {
