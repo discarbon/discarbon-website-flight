@@ -32,9 +32,9 @@
    inkscape:window-height="1163"
    id="namedview281"
    showgrid="false"
-   inkscape:zoom="0.59662135"
-   inkscape:cx="984.70109"
-   inkscape:cy="257.65345"
+   inkscape:zoom="0.29831068"
+   inkscape:cx="670.96935"
+   inkscape:cy="485.61539"
    inkscape:window-x="1920"
    inkscape:window-y="0"
    inkscape:window-maximized="1"
@@ -170,7 +170,13 @@
 	
 	
 	
-	<g
+	<rect
+   style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#d7eef4;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.0965035;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+   id="rect843"
+   width="1919.5858"
+   height="896.00189"
+   x="0.82178128"
+   y="-3.2602086" /><g
    id="g1140"
    transform="translate(73.4816,-694.5172)"
    style="fill:#30422b;fill-opacity:1;stroke:#30422b;stroke-opacity:1;stroke-width:1.1;stroke-miterlimit:4;stroke-dasharray:none"><path
