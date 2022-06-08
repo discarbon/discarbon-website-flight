@@ -11,6 +11,18 @@
   </head>
   <body class="bg-no-repeat bg-cover bg-top bg-landscape">
     <!-- Construct a Bootstrap layout -->
+
+    <div class="navbar bg-base-500">
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl">disCarbon</a>
+      </div>
+      <div class="flex-none">
+        <!-- <button class="btn btn-primary" id="btn-connect">
+          Connect wallet
+        </button> -->
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -119,7 +131,17 @@
       </section>
       <!-- Section: Design Block -->
 
-    </div>
+
+
+    <!-- We use simple <template> templating for the example -->
+      <div id="templates" style="display: none">
+        <template id="template-balance">
+          <tr>
+            <th class="address"></th>
+            <td class="balance"></td>
+          </tr>
+        </template>
+      </div>
 
     <!--
 
