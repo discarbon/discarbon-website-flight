@@ -30,81 +30,7 @@
       </div>
     </div>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1>Web3modal example for vanilla JavaScript and HTML</h1>
-
-          <p>No wallet connected. Connect wallet to show accounts and their ETH balances.</p>
-
-          <div class="alert alert-danger" id="alert-error-https" style="display: none">
-            You can run this example only over HTTPS connection.
-          </div>
-
-          <!-- <div id="prepare">
-            <button class="btn btn-primary" id="btn-connect">
-              Connect wallet
-            </button>
-          </div> -->
-
-          <div id="connected" style="display: none">
-
-            <!-- <button class="btn btn-primary" id="btn-disconnect">
-              Disconnect wallet
-            </button> -->
-
-            <hr>
-
-            <div id="network">
-              <p>
-                <strong>Connected blockchain:</strong> <span id="network-name"></span>
-              </p>
-
-              <p>
-                <strong>Selected account:</strong> <span id="selected-account"></span>
-              </p>
-
-            </div>
-
-            <hr>
-
-            <h3>All account balances</h3>
-
-            <table class="table table-listing">
-              <thead>
-                <th>Address</th>
-                <th>ETH balance</th>
-              </thead>
-
-              <tbody id="accounts">
-              </tbody>
-            </table>
-
-            <p>Please try to switch between different accounts in your wallet if your wallet supports this functionality.</p>
-
-            <table class="table table-listing">
-              <thead>
-                <th>Tonnes of Carbon to Offset</th>
-                <th>Matic needed</th>
-              </thead>
-
-              <tbody id="offSetTable">
-              </tbody>
-            </table>
-
-          </div>
-
-          <br>
-
-          <div class="well">
-            <p class="text-muted">See also the <a href="https://web3modal.com/">TypeScript and React example application</a></p>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="container my-24 px-6 mx-auto bg-[url('/images/1536016414.svg)]">
+    <div class="container my-24 px-6 mx-auto]">
 
       <!-- Section: Design Block -->
       <section class="mb-32 text-gray-800 text-center">
@@ -131,15 +57,55 @@
             <input type="text" placeholder="start location" class="input input-bordered input-accent w-full max-w-xs" />
             <input type="text" placeholder="destination location" class="input input-bordered input-accent w-full max-w-xs" />
 
+
+            <div class="container">
+              <div id="connected" style="display: none">
+                <div id="network">
+                  <p>
+                    <strong>Connected blockchain:</strong> <span id="network-name"></span>
+                  </p>
+
+                  <p>
+                    <strong>Selected account:</strong> <span id="selected-account"></span>
+                  </p>
+
+                </div>
+
+                <hr>
+
+                <h3>All account balances</h3>
+
+                <table class="table table-listing">
+                  <thead>
+                    <th>Address</th>
+                    <th>ETH balance</th>
+                  </thead>
+
+                  <tbody id="accounts">
+                  </tbody>
+                </table>
+
+                <table class="table table-listing">
+                  <thead>
+                    <th>Tonnes of Carbon to Offset</th>
+                    <th>Matic needed</th>
+                  </thead>
+
+                  <tbody id="offSetTable">
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+
           </div>
 
         </div>
 
       </section>
-      <!-- Section: Design Block -->
 
 
-
+    </div>
     <!-- We use simple <template> templating for the example -->
       <div id="templates" style="display: none">
         <template id="template-balance">
