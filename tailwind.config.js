@@ -1,5 +1,6 @@
 module.exports = {
   content: ["*.{html,js}"],
+  purge: ["*.{html,js}"],
   theme: {
     extend: {
       backgroundImage: {
