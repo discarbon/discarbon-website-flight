@@ -4,7 +4,10 @@ module.exports = {
     extend: {
       backgroundImage: {
         'landscape': "url('/images/landscape.svg')",
-      }
+      },
+      minHeight: (theme) => ({
+        ...theme('spacing'),
+      }),
     }
   },
   plugins: [require("daisyui")],
