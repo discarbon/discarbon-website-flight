@@ -13,4 +13,11 @@ Open a console and start the tailwind css watcher which compiles the css automat
 
 `npx tailwindcss -i ./css/input.css -o ./css/output.css --watch`
 
+Run site using local HTTPS development via [https-localhost](https://github.com/daquinoaldo/https-localhost):
+```sh
+npm i -g --only=prod https-localhost
+sudo serve .
+```
+See [web3modal-vanilla-js-example][https://github.com/Web3Modal/web3modal-vanilla-js-example] for more info.
+
 Start hacking.
