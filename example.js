@@ -179,7 +179,8 @@ async function fetchAccountData() {
   offSetTable.appendChild(clone);
 
   // Display fully loaded UI for wallet data
-  document.querySelector("#prepare").style.display = "none";
+  document.querySelector("#connect-button-div").style.display = "none";
+  document.querySelector("#disconnect-button-div").style.display = "block";
   document.querySelector("#connected").style.display = "block";
 
 
@@ -196,10 +197,12 @@ async function fetchAccountData() {
 async function refreshAccountData() {
 
   // If any current data is displayed when
-  // the user is switching acounts in the wallet
+  // the user is switching accounts in the wallet
   // immediate hide this data
   document.querySelector("#connected").style.display = "none";
-  document.querySelector("#prepare").style.display = "block";
+  document.querySelector("#connect-button-div").style.display = "block";
+  document.querySelector("#disconnect-button-div").style.display = "none";
+
 
   // Disable button while UI is loading.
   // fetchAccountData() will take a while as it communicates
@@ -266,7 +269,8 @@ async function onDisconnect() {
   selectedAccount = null;
 
   // Set the UI back to the initial state
-  document.querySelector("#prepare").style.display = "block";
+  document.querySelector("#connect-button-div").style.display = "block";
+  document.querySelector("#disconnect-button-div").style.display = "none";
   document.querySelector("#connected").style.display = "none";
 }
 

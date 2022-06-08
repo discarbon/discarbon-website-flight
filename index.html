@@ -17,9 +17,16 @@
         <a class="btn btn-ghost normal-case text-xl">disCarbon</a>
       </div>
       <div class="flex-none">
-        <!-- <button class="btn btn-primary" id="btn-connect">
-          Connect wallet
-        </button> -->
+        <div id="connect-button-div">
+          <button class="btn btn-primary" id="btn-connect">
+            Connect wallet
+          </button>
+        </div>
+        <div id="disconnect-button-div" style="display: none">
+          <button class="btn btn-primary" id="btn-disconnect">
+            Disconnect wallet
+          </button>
+        </div>
       </div>
     </div>
 
@@ -34,17 +41,17 @@
             You can run this example only over HTTPS connection.
           </div>
 
-          <div id="prepare">
+          <!-- <div id="prepare">
             <button class="btn btn-primary" id="btn-connect">
               Connect wallet
             </button>
-          </div>
+          </div> -->
 
           <div id="connected" style="display: none">
 
-            <button class="btn btn-primary" id="btn-disconnect">
+            <!-- <button class="btn btn-primary" id="btn-disconnect">
               Disconnect wallet
-            </button>
+            </button> -->
 
             <hr>
 
