@@ -44,70 +44,72 @@
             </h2>
 
             <div class="flex flex-col w-full lg:flex-row">
-              <div class="grid flex-grow  card rounded-box place-items-center">
-                <label class="label">
-                  <span class="label-text">From:</span>
-                </label>
-                <input type="text" placeholder="start location" class="input input-bordered input-accent max-w-xs" />
-                <label class="label">
-                  <span class="label-text">To:</span>
-                </label>
-                <input type="text" placeholder="destination location" class="input input-bordered input-accent max-w-xs" />
+              <div class="grid flex-grow form-control max-w-xs card rounded-box place-items-left">
+                  <label class="label">
+                    <span class="label-text">From:</span>
+                  </label>
+                  <input type="text" placeholder="start location" class="input input-bordered input-accent max-w-xs" />
+                  <label class="label">
+                    <span class="label-text">To:</span>
+                  </label>
+                  <input type="text" placeholder="destination location" class="input input-bordered input-accent max-w-xs" />
 
-                <label for="custom-input-number" class="label">Stopovers:
-                </label>
-                <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                  <button data-action="decrement"
-                    class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
-                    <span class="m-auto text-2xl font-thin">−</span>
-                  </button>
-                  <input type="number"
-                    class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
-                    name="custom-input-number" value="0"></input>
-                  <button data-action="increment"
-                    class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
-                    <span class="m-auto text-2xl font-thin">+</span>
-                  </button>
-                </div>
+                  <label for="custom-input-number" class="label">Stopovers:
+                  </label>
+                  <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                    <button data-action="decrement"
+                      class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
+                      <span class="m-auto text-2xl font-thin">−</span>
+                    </button>
+                    <input type="number"
+                      class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                      name="custom-input-number" value="0"></input>
+                    <button data-action="increment"
+                      class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
+                      <span class="m-auto text-2xl font-thin">+</span>
+                    </button>
+                  </div>
               </div>
               <div class="divider lg:divider-horizontal"></div>
-              <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
-                <div id="connected" style="display: block">
-                  <div id="network">
-                    <p>
-                      <strong>Connected blockchain:</strong> <span id="network-name"></span>
-                    </p>
+              <div class="grid flex-grow card rounded-box place-items-center">
+                <div class="container">
+                  <div id="connected" style="display: block">
+                    <div id="network">
+                      <p>
+                        <strong>Connected blockchain:</strong> <span id="network-name"></span>
+                      </p>
 
-                    <p>
-                      <strong>Selected account:</strong> <span id="selected-account"></span>
-                    </p>
+                      <p>
+                        <strong>Selected account:</strong> <span id="selected-account"></span>
+                      </p>
+
+                    </div>
+
+                    <hr>
+
+                    <h3>All account balances</h3>
+
+                    <table class="table table-listing">
+                      <thead>
+                        <th>Address</th>
+                        <th>ETH balance</th>
+                      </thead>
+
+                      <tbody id="accounts">
+                      </tbody>
+                    </table>
+
+                    <table class="table table-listing">
+                      <thead>
+                        <th>Tonnes of Carbon to Offset</th>
+                        <th>Matic needed</th>
+                      </thead>
+
+                      <tbody id="offSetTable">
+                      </tbody>
+                    </table>
 
                   </div>
-
-                  <hr>
-
-                  <h3>All account balances</h3>
-
-                  <table class="table table-listing">
-                    <thead>
-                      <th>Address</th>
-                      <th>ETH balance</th>
-                    </thead>
-
-                    <tbody id="accounts">
-                    </tbody>
-                  </table>
-
-                  <table class="table table-listing">
-                    <thead>
-                      <th>Tonnes of Carbon to Offset</th>
-                      <th>Matic needed</th>
-                    </thead>
-
-                    <tbody id="offSetTable">
-                    </tbody>
-                  </table>
-
                 </div>
               </div>
             </div>
