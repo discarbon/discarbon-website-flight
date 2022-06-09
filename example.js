@@ -135,7 +135,7 @@ async function fetchAccountData() {
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
 
-  document.querySelector("#selected-account").textContent = selectedAccount;
+  document.querySelector("#selected-account").textContent = selectedAccount.slice(0,8)+"..."+selectedAccount.slice(-6);
 
   // Get a handle
   const template = document.querySelector("#template-balance");
@@ -153,7 +153,7 @@ async function fetchAccountData() {
     const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
     // Fill in the templated row and put in the document
     const clone = template.content.cloneNode(true);
-    clone.querySelector(".address").textContent = address;
+    clone.querySelector(".address").textContent = address.slice(0,8)+"..."+address.slice(-6);
     clone.querySelector(".balance").textContent = humanFriendlyBalance;
     accountContainer.appendChild(clone);
   });
@@ -175,7 +175,7 @@ async function fetchAccountData() {
   offSetTable.innerHTML = '';
   const clone = template.content.cloneNode(true);
   clone.querySelector(".address").textContent = carbonToOffset;
-  clone.querySelector(".balance").textContent = web3.utils.fromWei(window.maticToSend);
+  clone.querySelector(".balance").textContent = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
   offSetTable.appendChild(clone);
 
   // Display fully loaded UI for wallet data
