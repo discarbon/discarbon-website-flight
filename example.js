@@ -93,22 +93,6 @@ async function createContractObject() {
   console.log(offsetHelperABI)
   const web3 = new Web3(provider);
   window.offsetHelper = await new web3.eth.Contract(offsetHelperABI, offsetHelperAddress);
-
-  // old code
-  // await window.WarrantCanary.setProvider(window.ethereum);
-  // subscribe to events
-  // window.WarrantCanary.events.allEvents((err, events)=>{
-  //   let ID = events.returnValues[0];
-  //   if (document.getElementById(`warrant-canary-${ID}`)) {
-  //     displayAWarrantCanary(ID);
-  //   } else {
-  //     window.WarrantCanary.methods.warrantCanaries(ID).call().then(function(stateOfWC) {
-  //       if(stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
-  //         getAllAssociatedWarrantCanaries();
-  //       }
-  //     });
-  //   }
-  // })
 }
 
 
