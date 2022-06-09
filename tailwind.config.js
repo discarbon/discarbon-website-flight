@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'landscape': "url('/images/landscape.svg')",
+        'airplane': "url('/images/airplane.svg')",
       },
       minHeight: (theme) => ({
         ...theme('spacing'),

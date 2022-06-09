@@ -1492,9 +1492,9 @@ body[dir="rtl"] .checkbox:checked,
   margin: auto;
 }
 
-.my-24 {
-  margin-top: 6rem;
-  margin-bottom: 6rem;
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .mx-auto {
@@ -1528,6 +1528,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .grid {
   display: grid;
+}
+
+.h-5 {
+  height: 1.25rem;
 }
 
 .h-10 {
@@ -1634,12 +1638,24 @@ body[dir="rtl"] .checkbox:checked,
   background-image: url('/images/landscape.svg');
 }
 
+.bg-airplane {
+  background-image: url('/images/airplane.svg');
+}
+
 .bg-cover {
   background-size: cover;
 }
 
+.bg-contain {
+  background-size: contain;
+}
+
 .bg-top {
   background-position: top;
+}
+
+.bg-center {
+  background-position: center;
 }
 
 .bg-no-repeat {
