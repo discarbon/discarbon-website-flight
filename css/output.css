@@ -1702,6 +1702,10 @@ body[dir="rtl"] .checkbox:checked,
   max-width: 20rem;
 }
 
+.max-w-\[1200px\] {
+  max-width: 1200px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
