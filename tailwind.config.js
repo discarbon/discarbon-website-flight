@@ -23,5 +23,6 @@ module.exports = {
       rtl: false,
       prefix: "",
       darkTheme: "dark",
+      themes:["emerald"],
     },
 }
