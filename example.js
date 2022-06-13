@@ -82,6 +82,13 @@ function init() {
   });
 
   console.log("Web3Modal instance is", web3Modal);
+
+  var start = new Location(35.6544, 139.74477);
+  var destination = new Location(21.4225, 39.8261);
+  console.log("Start: ", start, "Destination: ", destination);
+
+  var distance = calcGeodesicDistance(start, destination);
+  console.log("Distance: ", distance);
 }
 
 async function createContractObject() {
@@ -197,6 +204,23 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
+/**
+ * Creates Locations from Latitude Longitude
+ */
+function Location(latitude, longitude) {
+  this.latitude = latitude;
+  this.longitude = longitude;
+}
+
+
+/**
+ * Calculates the distance on the earth surface given by two points Start and Destination
+ */
+function calcGeodesicDistance(start, destination) {
+
+
+  return 5.3;
+}
 
 /**
  * Connect wallet button pressed.
