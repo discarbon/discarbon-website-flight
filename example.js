@@ -205,7 +205,7 @@ async function refreshAccountData() {
 }
 
 /**
- * Creates Locations from Latitude Longitude
+ * Creates Locations from Latitude Longitude. Usage: let pointA = new Location(x.xx, x.xx)
  */
 function Location(latitude, longitude) {
   this.latitude = latitude;
@@ -214,12 +214,42 @@ function Location(latitude, longitude) {
 
 
 /**
+ * transforms an angle from dgrees to radians
+ */
+function toRad(angle) {
+  return angle*Math.PI/180;
+}
+
+/**
  * Calculates the distance on the earth surface given by two points Start and Destination
+ * https://en.wikipedia.org/wiki/Great-circle_distance#Formulas Vyncenty formula
  */
 function calcGeodesicDistance(start, destination) {
+  const earthRadius = 6371.009; // km mean earth radius (spherical approximation)
 
+  // Calculate temporary elements of the formula:
 
-  return 5.3;
+  let deltaLambda = destination.longitude - start.longitude;
+
+  let A = Math.pow(
+    Math.cos(toRad(destination.latitude)) *
+    Math.sin(toRad(deltaLambda))
+    , 2);
+
+  let B = Math.pow(
+    Math.cos(toRad(start.latitude)) * Math.sin(toRad(destination.latitude)) -
+    Math.sin(toRad(start.latitude)) * Math.cos(toRad(destination.latitude)) *
+    Math.cos(toRad(deltaLambda))
+    , 2);
+
+  let C = Math.sin(toRad(start.latitude)) * Math.sin(toRad(destination.latitude)) +
+    Math.cos(toRad(start.latitude)) * Math.cos(toRad(destination.latitude)) *
+    Math.cos(toRad(deltaLambda));
+
+  // Vyncenty formula:
+  let deltaSigma = Math.atan(Math.sqrt(A+B)/C);
+  let distance = earthRadius*deltaSigma;
+  return distance;
 }
 
 /**
