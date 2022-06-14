@@ -348,6 +348,49 @@ incrementButtons.forEach(btn => {
   btn.addEventListener("click", increment);
 });
 
+$( function() {
+  var data = [{
+    "ItemName": "Curd",
+    "BatchCode": 400231,
+    "CasesQty": 10,
+    "UnitQty": 5,
+    "PurRate": 50,
+    "Disc%": 6
+  },
+  {
+    "ItemName": "Rice",
+    "BatchCode": 400123,
+    "CasesQty": 12,
+    "UnitQty": 7,
+    "PurRate": 80,
+    "Disc%": 10
+  },
+  {
+    "ItemName": "Milk",
+    "BatchCode": 400156,
+    "CasesQty": 4,
+    "UnitQty": 2,
+    "PurRate": 20,
+    "Disc%": 2
+  },
+  {
+    "ItemName": "Butter",
+    "BatchCode": 400564,
+    "CasesQty": 8,
+    "UnitQty": 6,
+    "PurRate": 35,
+    "Disc%": 4
+  }
+]
+
+  let itemName = data.map(value => { return value.ItemName });
+
+  console.log("ItemName: ", itemName)
+
+  $( "#startLocation" ).autocomplete({
+    source: itemName
+  });
+} );
 
 /**
  * Main entry point.
