@@ -5308,31 +5308,23 @@ $(function() {
     }
   ];
 
-  // window.airports = loadAirportJSON();
-
-  console.log("fjdekl jklö")
-  // const data = $.getJSON('./resources/airports_large_only_cleaned.json');
-
   console.log("data: ", airports)
 
-  let itemName = airports.map(value => {return value.name +
+  let airportsList = airports.map(value => {return value.name +
     ", " + value.municipality +
     ", " + value.iso_country +
     ", " + value.iata_code});
 
-  console.log("ItemName: ", itemName)
+  console.log("ItemName: ", airportsList)
 
   $( "#startLocation" ).autocomplete({
-    source: itemName
+    source: airportsList
+  });
+
+  $( "#destination" ).autocomplete({
+    source: airportsList
   });
 } );
-
-async function loadAirportJSON() {
-  let response = await fetch('./resources/airports_large_only_cleaned.json');
-  let data = await response.json();
-  console.log("new data: ", data);
-  return data;
-}
 
 /**
  * Main entry point.
