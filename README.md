@@ -13,7 +13,7 @@ Open a console and start the tailwind css watcher which compiles the css automat
 
 `npx tailwindcss -i ./css/input.css -o ./css/output.css --watch`
 
-Run site using local HTTPS development via [https-localhost](https://github.com/daquinoaldo/https-localhost):
+Run site for local development with HTTPS via [https-localhost](https://github.com/daquinoaldo/https-localhost):
 ```sh
 npm i -g --only=prod https-localhost
 sudo serve .
