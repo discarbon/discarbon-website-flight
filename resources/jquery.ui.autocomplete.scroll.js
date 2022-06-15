@@ -26,7 +26,7 @@ $.widget('ui.autocomplete', $.ui.autocomplete, {
       ul.width('+=' + barW);
     }
 
-    ul.outerWidth("310");  // TODO: hardcoded width is not good.
+    ul.outerWidth("300");  // TODO: hardcoded width is not good.
 
   }
 });
