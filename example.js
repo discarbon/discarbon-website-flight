@@ -22,7 +22,8 @@ let selectedAccount;
 
 // Addresses of used contracts
 
-const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";
+// const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
+const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Newer; updated ABI
 const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
 
 let offsetHelper;  // contract object of the offsethelper
@@ -98,8 +99,7 @@ function init() {
 
 async function createContractObject() {
   // Load ABI
-
-  let jsonFile = "./ABI/OffsetHelper2.json";
+  let jsonFile = "./ABI/OffsetHelper_" + offsetHelperAddress + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
   // let offsetHelperABI = json.abi;
   console.log(offsetHelperABI)
@@ -162,8 +162,10 @@ async function fetchAccountData() {
 
   // Display matic and carbon to offset
   const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  // window.maticToSend = await window.offsetHelper.methods
+  // .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
   window.maticToSend = await window.offsetHelper.methods
-  .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
+  .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
   .call();
   console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
 
