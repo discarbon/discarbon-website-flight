@@ -4,7 +4,7 @@
  * Example JavaScript code that interacts with the page and Web3 wallets
  */
 
- // Unpkg imports
+// Unpkg imports
 const Web3Modal = window.Web3Modal.default;
 const WalletConnectProvider = window.WalletConnectProvider.default;
 const Fortmatic = window.Fortmatic;
@@ -131,7 +131,7 @@ async function fetchAccountData() {
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
 
-  document.querySelector("#selected-account").textContent = selectedAccount.slice(0,8)+"..."+selectedAccount.slice(-6);
+  document.querySelector("#selected-account").textContent = selectedAccount.slice(0, 8) + "..." + selectedAccount.slice(-6);
 
   // Get a handle
   const template = document.querySelector("#template-balance");
@@ -149,7 +149,7 @@ async function fetchAccountData() {
     const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
     // Fill in the templated row and put in the document
     const clone = template.content.cloneNode(true);
-    clone.querySelector(".address").textContent = address.slice(0,8)+"..."+address.slice(-6);
+    clone.querySelector(".address").textContent = address.slice(0, 8) + "..." + address.slice(-6);
     clone.querySelector(".balance").textContent = humanFriendlyBalance;
     accountContainer.appendChild(clone);
   });
@@ -165,8 +165,8 @@ async function fetchAccountData() {
   // window.maticToSend = await window.offsetHelper.methods
   // .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
   window.maticToSend = await window.offsetHelper.methods
-  .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
-  .call();
+    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
+    .call();
   console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
 
   const offSetTable = document.querySelector("#offSetTable");
@@ -224,7 +224,7 @@ function Location(latitude, longitude) {
  * transforms an angle from dgrees to radians
  */
 function toRad(angle) {
-  return angle*Math.PI/180;
+  return angle * Math.PI / 180;
 }
 
 /**
@@ -254,8 +254,8 @@ function calcGeodesicDistance(start, destination) {
     Math.cos(toRad(deltaLambda));
 
   // Vyncenty formula:
-  let deltaSigma = Math.atan(Math.sqrt(A+B)/C);
-  let distance = earthRadius*deltaSigma;
+  let deltaSigma = Math.atan(Math.sqrt(A + B) / C);
+  let distance = earthRadius * deltaSigma;
   return distance;
 }
 
@@ -267,7 +267,7 @@ async function onConnect() {
   console.log("Opening a dialog", web3Modal);
   try {
     provider = await web3Modal.connect();
-  } catch(e) {
+  } catch (e) {
     console.log("Could not get a wallet connection", e);
     return;
   }
@@ -300,7 +300,7 @@ async function onDisconnect() {
   console.log("Killing the wallet connection", provider);
 
   // TODO: Which providers have close method?
-  if(provider.close) {
+  if (provider.close) {
     await provider.close();
 
     // If the cached provider is not cleared,
