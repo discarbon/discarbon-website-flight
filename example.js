@@ -5317,8 +5317,6 @@ $(function () {
       ", " + value.iata_code
   });
 
-  // console.log("ItemName: ", airportsList)
-
   $(".airports").autocomplete({
     maxShowItems: 10,
     source: airportsList
