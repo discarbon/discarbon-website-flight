@@ -5322,10 +5322,6 @@ $(function () {
   $(".airports").autocomplete({
     source: airportsList
   });
-
-  $(".airports").autocomplete({
-    source: airportsList
-  });
 });
 
 /**
