@@ -353,6 +353,11 @@ incrementButtons.forEach(btn => {
   btn.addEventListener("click", increment);
 });
 
+
+
+/**
+ * Make autocomplete list for airports
+ */
 $(function () {
 
   const airports = [
@@ -5307,9 +5312,6 @@ $(function () {
       iata_code: "SHE"
     }
   ];
-
-  console.log("data: ", airports)
-
   let airportsList = airports.map(value => {
     return value.name +
       ", " + value.municipality +
@@ -5320,17 +5322,10 @@ $(function () {
   $(".airports").autocomplete({
     maxShowItems: 10,
     source: airportsList,
-    // open: function() { $("ul.ui-menu").width( $(this).innerWidth() );}
   });
-
-
-
 });
 
-// jQuery.ui.autocomplete.prototype._resizeMenu = function () {
-//   var ul = this.menu.element;
-//   ul.outerWidth(this.element.outerWidth());
-// }
+
 
 /**
  * Main entry point.
