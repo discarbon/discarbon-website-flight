@@ -353,7 +353,7 @@ incrementButtons.forEach(btn => {
   btn.addEventListener("click", increment);
 });
 
-$(function() {
+$(function () {
 
   const airports = [
     {
@@ -5310,21 +5310,23 @@ $(function() {
 
   console.log("data: ", airports)
 
-  let airportsList = airports.map(value => {return value.name +
-    ", " + value.municipality +
-    ", " + value.iso_country +
-    ", " + value.iata_code});
+  let airportsList = airports.map(value => {
+    return value.name +
+      ", " + value.municipality +
+      ", " + value.iso_country +
+      ", " + value.iata_code
+  });
 
-  console.log("ItemName: ", airportsList)
+  // console.log("ItemName: ", airportsList)
 
-  $( "#startLocation" ).autocomplete({
+  $(".airports").autocomplete({
     source: airportsList
   });
 
-  $( "#destination" ).autocomplete({
+  $(".airports").autocomplete({
     source: airportsList
   });
-} );
+});
 
 /**
  * Main entry point.
