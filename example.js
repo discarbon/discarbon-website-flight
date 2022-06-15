@@ -211,6 +211,30 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
+async function doSimpleOffset() {
+  const web3 = new Web3(provider);
+  const accounts = await web3.eth.getAccounts();
+
+  // MetaMask does not give you all accounts, only the selected account
+  console.log("Got accounts", accounts);
+  selectedAccount = accounts[0];
+  console.log(
+    "Matic: ",
+    web3.utils.fromWei(window.maticToSend),
+    ", ",
+    window.maticToSend
+  );
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  const txReceipt = await window.offsetHelper.methods
+    .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei)
+    .send({
+      from: selectedAccount,
+      value: window.maticToSend,
+    });
+  console.log("offset done: ", web3.utils.fromWei(window.maticToSend));
+}
+
+
 /**
  * Creates Locations from Latitude Longitude. Usage: let pointA = new Location(x.xx, x.xx)
  */
@@ -288,6 +312,10 @@ async function onConnect() {
   provider.on("networkChanged", (networkId) => {
     fetchAccountData();
   });
+
+  var el = document.getElementById("btn-offset");
+  if (el.addEventListener) el.addEventListener("click", doSimpleOffset, false);
+  else if (el.attachEvent) el.attachEvent("onclick", doSimpleOffset);
 
   await refreshAccountData();
 }
