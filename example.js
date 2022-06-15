@@ -5319,10 +5319,18 @@ $(function () {
 
   $(".airports").autocomplete({
     maxShowItems: 10,
-    source: airportsList
+    source: airportsList,
+    // open: function() { $("ul.ui-menu").width( $(this).innerWidth() );}
   });
 
+
+
 });
+
+// jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+//   var ul = this.menu.element;
+//   ul.outerWidth(this.element.outerWidth());
+// }
 
 /**
  * Main entry point.

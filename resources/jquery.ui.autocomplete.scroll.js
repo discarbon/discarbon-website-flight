@@ -15,7 +15,7 @@ $.widget('ui.autocomplete', $.ui.autocomplete, {
     if (isNaN(this.options.maxShowItems)) { return; }
     ul = this.menu.element
       .scrollLeft(0).scrollTop(0) // Reset scroll position
-      .css({overflowX: '', overflowY: '', width: '', maxHeight: ''}); // Restore
+      .css({overflowX: 'hidden', overflowY: 'auto', width: '', maxHeight: ''}); // Restore
     lis = ul.children('li').css('whiteSpace', 'nowrap');
 
     if (lis.length > this.options.maxShowItems) {
@@ -26,11 +26,8 @@ $.widget('ui.autocomplete', $.ui.autocomplete, {
       ul.width('+=' + barW);
     }
 
-    // Original code from jquery.ui.autocomplete.js _resizeMenu()
-    ul.outerWidth(Math.max(
-      ul.outerWidth() + 1,
-      this.element.outerWidth()
-    ));
+    ul.outerWidth("310");  // TODO: hardcoded width is not good.
+
   }
 });
 
