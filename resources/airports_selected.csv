@@ -1,4 +1,5 @@
-let airports = [["Aleknagik / New Airport Aleknagik US WKK", 59.2826004028, -158.617996216],
+const airports = [
+["Aleknagik / New Airport Aleknagik US WKK", 59.2826004028, -158.617996216],
 ["Khost International Airport Khost AF KHT", 33.284605, 69.80734],
 ["Honiara International Airport Honiara SB HIR", -9.428, 160.054993],
 ["Munda Airport Munda SB MUA", -8.32797, 157.263],
