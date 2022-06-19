@@ -34,6 +34,7 @@ let offsetHelper;  // contract object of the offsethelper
 
 let carbonToOffset = "0.3";
 let maticToSend = "";
+let flightDistance = 0;
 
 import { airports } from './resources/airports_selected.js'
 
@@ -176,11 +177,17 @@ async function fetchAccountData() {
     .call();
   console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
 
-  const offSetTable = document.querySelector("#offSetTable");
-  offSetTable.innerHTML = '';
-  const clone = template.content.cloneNode(true);
-  clone.querySelector(".address").textContent = carbonToOffset;
-  clone.querySelector(".balance").textContent = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
+  // Get a handle
+  const offsetTemplate = document.querySelector("#offsetTemplateContent");
+  const offsetContainer = document.querySelector("#offSetTable");
+
+  // Purge UI elements any previously loaded accounts
+  offsetContainer.innerHTML = '';
+
+  const clone = offsetTemplate.content.cloneNode(true);
+  clone.querySelector(".distance").textContent = window.flightDistance.toFixed(0);
+  clone.querySelector(".offset").textContent = carbonToOffset;
+  clone.querySelector(".matic").textContent = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
   offSetTable.appendChild(clone);
 
   // Display fully loaded UI for wallet data
@@ -418,10 +425,9 @@ async function calculateFlightDistance() {
 
   if (startLocation && destinationLocation){
     console.log("in if statement")
-    let distance = calcGeodesicDistance(startLocation, destinationLocation)
-    console.log("Distance: ", distance)
+    window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
+    console.log("Distance: ", window.flightDistance)
   }
-
 }
 
 
