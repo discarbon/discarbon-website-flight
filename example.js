@@ -4921,6 +4921,7 @@ $(function () {
   $(".airports").autocomplete({
     maxShowItems: 10,
     source: airportsList,
+    minLength: 2
   });
 });
 
