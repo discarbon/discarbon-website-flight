@@ -101,7 +101,7 @@ function init() {
 
   // window.airports = loadAirportJSON();
 
-  findLatLong("Altenburg-Nobitz Airport Altenburg DE AOC");
+  // findLatLong("Altenburg-Nobitz Airport Altenburg DE AOC");
 }
 
 async function createContractObject() {
@@ -397,9 +397,30 @@ incrementButtons.forEach(btn => {
 
 async function findLatLong(airportName) {
 
+  // let airportName = "Zürich Airport, Zurich CH, ZRH"
   let result = await airports.find(element => element[0] == airportName)
 
-  console.log(result)
+  console.log("Location:", result)
+  let location = new Location(result[1], result[2]);
+  return location
+}
+
+async function calculateFlightDistance() {
+
+  let startName = document.getElementById('start').value
+  let startLocation = await findLatLong(startName)
+
+  let destinationName = document.getElementById('destination').value
+  let destinationLocation = await findLatLong(destinationName)
+
+
+  console.log("Locations:", startLocation, " ", destinationLocation)
+
+  if (startLocation && destinationLocation){
+    console.log("in if statement")
+    let distance = calcGeodesicDistance(startLocation, destinationLocation)
+    console.log("Distance: ", distance)
+  }
 
 }
 
@@ -426,4 +447,7 @@ window.addEventListener('load', async () => {
   init();
   document.querySelector("#btn-connect").addEventListener("click", onConnect);
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+  document.querySelector("#start").addEventListener("change", calculateFlightDistance);
+  document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
+
 });
