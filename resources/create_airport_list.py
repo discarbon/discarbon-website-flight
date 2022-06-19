@@ -18,14 +18,17 @@ with open(INPUT_FILE, mode='r')as input_file:
 
     # displaying the contents of the CSV file
     for lines in csvFile:
-        # only airports with IATA code and of a certain size
-        if lines[13] and (lines[2] == "medium_airport" or lines[2] == "large_airport"):
+        # only airports with IATA codes, schedules services and of a certain size
+        selector = lines[13] and \
+                   lines[11] == "yes" \
+                   and (lines[2] == "medium_airport" or lines[2] == "large_airport")
+        if selector:
             number_of_airports += 1
             airport_name = lines[3] + " " + \
                            lines[10] + " " + \
                            lines[8] + " " + \
                            lines[13] # name + municipality + iso country + Iata
-            # airport_name = airport_name.replace("'", "\'")
+
             airport_name = airport_name.replace('"', '\\"')
             airport_name = airport_name.strip()
             temp_airport = [airport_name,
