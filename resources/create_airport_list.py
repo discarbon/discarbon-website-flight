@@ -25,8 +25,8 @@ with open(INPUT_FILE, mode='r')as input_file:
                            lines[10] + " " + \
                            lines[8] + " " + \
                            lines[13] # name + municipality + iso country + Iata
-            airport_name = airport_name.replace("'", "\'")
-            airport_name = airport_name.replace('"', '\"')
+            # airport_name = airport_name.replace("'", "\'")
+            airport_name = airport_name.replace('"', '\\"')
             airport_name = airport_name.strip()
             temp_airport = [airport_name,
                             lines[4],
