@@ -274,7 +274,7 @@ function calcGeodesicDistance(start, destination) {
 
   // Calculate temporary elements of the formula:
 
-  let deltaLambda = destination.longitude - start.longitude;
+  let deltaLambda = (destination.longitude - start.longitude);
 
   let A = Math.pow(
     Math.cos(toRad(destination.latitude)) *
@@ -292,7 +292,7 @@ function calcGeodesicDistance(start, destination) {
     Math.cos(toRad(deltaLambda));
 
   // Vyncenty formula:
-  let deltaSigma = Math.atan(Math.sqrt(A + B) / C);
+  let deltaSigma = Math.atan2(Math.sqrt(A + B) , C);
   let distance = earthRadius * deltaSigma;
   return distance;
 }
