@@ -1,4 +1,4 @@
-const airports = [
+export const airports = [
 ["A Coruña Airport, Culleredo ES, LCG", 43.302101, -8.37726],
 ["Aalborg Airport, Aalborg DK, AAL", 57.092759, 9.849243],
 ["Aarhus Airport, Aarhus DK, AAR", 56.303331, 10.618286],

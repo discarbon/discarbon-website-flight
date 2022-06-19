@@ -4,7 +4,7 @@ import csv
 
 INPUT_FILE = "resources/airports.csv"
 
-OUTPUT_FILE = "resources/airports_selected.csv"
+OUTPUT_FILE = "resources/airports_selected.js"
 
 
 airports_selected = []
@@ -45,7 +45,7 @@ airports_selected.sort(key=lambda x: x[0])
 print("Airports selected: " + str(number_of_airports))
 
 with open(OUTPUT_FILE, mode='w')as out_file:
-    out_file.write('const airports = [\n')
+    out_file.write('export const airports = [\n')
     for airport in airports_selected:
         out_file.write('["'+airport[0]+'"')
         out_file.write(', ' + airport[1])
