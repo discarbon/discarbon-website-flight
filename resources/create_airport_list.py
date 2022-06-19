@@ -24,9 +24,9 @@ with open(INPUT_FILE, mode='r')as input_file:
                    and (lines[2] == "medium_airport" or lines[2] == "large_airport")
         if selector:
             number_of_airports += 1
-            airport_name = lines[3] + " " + \
+            airport_name = lines[3] + ", " + \
                            lines[10] + " " + \
-                           lines[8] + " " + \
+                           lines[8] + ", " + \
                            lines[13] # name + municipality + iso country + Iata
 
             airport_name = airport_name.replace('"', '\\"')
@@ -40,6 +40,7 @@ with open(INPUT_FILE, mode='r')as input_file:
 # print(airports_selected)
 
 
+airports_selected.sort(key=lambda x: x[0])
 
 print("Airports selected: " + str(number_of_airports))
 
