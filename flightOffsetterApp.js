@@ -292,7 +292,7 @@ function calcGeodesicDistance(start, destination) {
     Math.cos(toRad(deltaLambda));
 
   // Vyncenty formula:
-  let deltaSigma = Math.atan2(Math.sqrt(A + B) , C);
+  let deltaSigma = Math.atan2(Math.sqrt(A + B), C);
   let distance = earthRadius * deltaSigma;
   return distance;
 }
@@ -423,7 +423,7 @@ async function calculateFlightDistance() {
 
   console.log("Locations:", startLocation, " ", destinationLocation)
 
-  if (startLocation && destinationLocation){
+  if (startLocation && destinationLocation) {
     console.log("in if statement")
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     console.log("Distance: ", window.flightDistance)
