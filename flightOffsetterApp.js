@@ -432,6 +432,64 @@ async function calculateFlightDistance() {
   }
 }
 
+/**
+ * get carbon emission from distance and other fields
+ */
+ async function calculateCarbonEmission() {
+  // Formula follows myclimates estimation calulator
+  // emission parameters (short distance)
+  let emShort = {
+    a: 0,
+    b: 2.714,
+    c: 1166.52,
+    S: 153.51,
+    PLF: 0.82,
+    CF: 0.07,
+    CW: {
+         economy: 0.96,
+         first: 1.23,
+         business: 2.4,
+        },
+    EF: 3.15,
+    M: 2,
+    P: 0.54,
+    AF: 0.00038,
+    A: 11.68
+  }
+  // emission parameters (long distance)
+  let emLong = {
+    a: 0.0001,
+    b: 7.104,
+    c: 5044.93,
+    S: 280.21,
+    PLF: 0.82,
+    CF: 0.26,
+    CW: {
+         economy: 0.8,
+         first: 1.54,
+         business: 2.4,
+        },
+    EF: 3.15,
+    M: 2,
+    P: 0.54,
+    AF: 0.00038,
+    A: 11.68
+  }
+
+  Emission = emission(emShort)
+
+  console.log("Emission: ", Emissions)
+ }
+
+ /**
+ * calculates CO2 emission for an emission parameter set (em)
+ */
+ function emission(em) {
+  let Emission = 0;
+
+  return 5
+ }
+
 
 
 
