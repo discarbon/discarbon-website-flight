@@ -401,7 +401,6 @@ incrementButtons.forEach(btn => {
 /**
  * Find Latitude and Longitude from airport name
  */
-
 async function findLatLong(airportName) {
 
   // let airportName = "Zürich Airport, Zurich CH, ZRH"
@@ -412,6 +411,9 @@ async function findLatLong(airportName) {
   return location
 }
 
+/**
+ * Get flight distance from the two airport input fields
+ */
 async function calculateFlightDistance() {
 
   let startName = document.getElementById('start').value
