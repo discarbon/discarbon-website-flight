@@ -471,15 +471,21 @@ async function calculateCarbonEmission() {
     A: 11.68
   }
 
-  let Emission = emission(emShort);
+  let emission = "0";
+  if (window.flightDistance < 1500) {  // short distance
+    emission = singleEmissionCalc(emShort);
+  } else if (window.flightDistance > 2500) {  // long distance
+    emission = singleEmissionCalc(emLong);
+  }
 
-  console.log("Emission: ", Emission);
+  window.carbonToOffset = emission;
+  console.log("Carbon Emission: ", emission);
 }
 
 /**
 * calculates CO2 emission for an emission parameter set (em)
 */
-function emission(em) {
+function singleEmissionCalc(em) {
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
@@ -488,9 +494,9 @@ function emission(em) {
     (em.EF * em.M + em.P) +
     em.AF * d +
     em.A;
-  console.log("emissioncalc: ", emission)
-  window.carbonToOffset = (emission / 1000).toFixed(3);
-  return window.carbonToOffset;
+  // console.log("emissioncalc: ", emission)
+  emission = (emission / 1000).toFixed(3); // from kg to tonnes
+  return emission
 }
 
 
