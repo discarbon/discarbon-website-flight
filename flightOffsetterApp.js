@@ -163,7 +163,7 @@ async function fetchAccountData() {
   // Because rendering account does its own RPC communication
   // with Ethereum node, we do not want to display any results
   // until data for all accounts is loaded
-  await Promise.all(rowResolvers);
+  // await Promise.all(rowResolvers);
 
   // calculate carbon emission
   await calculateCarbonEmission();
@@ -181,7 +181,8 @@ async function fetchAccountData() {
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
   document.querySelector("#disconnect-button-div").style.display = "block";
-  document.querySelector("#connected").style.display = "block";
+  // TODO
+  // document.querySelector("#connected").style.display = "block";
 }
 
 
@@ -197,7 +198,9 @@ async function refreshAccountData() {
   // If any current data is displayed when
   // the user is switching accounts in the wallet
   // immediate hide this data
-  document.querySelector("#connected").style.display = "none";
+  // TODO
+  // document.querySelector("#connected").style.display = "none";
+
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
 
