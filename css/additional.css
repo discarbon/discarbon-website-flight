@@ -11,3 +11,14 @@ input[type='number']::-webkit-outer-spin-button {
 .custom-number-input button:focus {
   outline: none !important;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-areas: "header header";
+  grid-template-columns: 50% 50%;
+  padding: 5px;
+}
+.grid-item {
+  padding: 10px;
+  text-align: left;
+}

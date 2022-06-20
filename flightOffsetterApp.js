@@ -29,6 +29,13 @@ const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
 
 let offsetHelper;  // contract object of the offsethelper
 
+const tokenAddresses = {
+  bct: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
+  nct: "0xD838290e877E0188a4A44700463419ED96c16107",
+  usdc: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  weth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+  wmatic: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+};
 
 // Other constants
 
@@ -118,7 +125,8 @@ async function fetchAccountData() {
   const chainId = await web3.eth.getChainId();
   // Load chain information over an HTTP API
   const chainData = evmChains.getChain(chainId);
-  document.querySelector("#network-name").textContent = chainData.name;
+  // TODO
+  // document.querySelector("#network-name").textContent = chainData.name;
 
   // Get list of accounts of the connected wallet
   const accounts = await web3.eth.getAccounts();
@@ -127,16 +135,18 @@ async function fetchAccountData() {
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
 
-  document.querySelector("#selected-account").textContent = selectedAccount.slice(0, 8) + "..." + selectedAccount.slice(-6);
+  // TODO
+  // document.querySelector("#selected-account").textContent = selectedAccount.slice(0, 8) + "..." + selectedAccount.slice(-6);
 
-  // Get a handle
-  const template = document.querySelector("#template-balance");
-  const accountContainer = document.querySelector("#accounts");
+  // TODO
+  // const template = document.querySelector("#template-balance");
+  // const accountContainer = document.querySelector("#accounts");
 
-  // Purge UI elements any previously loaded accounts
-  accountContainer.innerHTML = '';
+  // // Purge UI elements any previously loaded accounts
+  // accountContainer.innerHTML = '';
 
   // Go through all accounts and get their ETH balance
+  /*
   const rowResolvers = accounts.map(async (address) => {
     const balance = await web3.eth.getBalance(address);
     // ethBalance is a BigNumber instance
@@ -149,7 +159,7 @@ async function fetchAccountData() {
     clone.querySelector(".balance").textContent = humanFriendlyBalance;
     accountContainer.appendChild(clone);
   });
-
+  */
   // Because rendering account does its own RPC communication
   // with Ethereum node, we do not want to display any results
   // until data for all accounts is loaded
@@ -161,18 +171,12 @@ async function fetchAccountData() {
   console.log("carbontooffset: ", window.carbonToOffset);
   await calculateRequiredPaymentForOffset(window.carbonToOffset);
 
-  // Get a handle
-  const offsetTemplate = document.querySelector("#offsetTemplateContent");
-  const offsetContainer = document.querySelector("#offSetTable");
-
-  // Purge UI elements any previously loaded accounts
-  offsetContainer.innerHTML = '';
-
-  const clone = offsetTemplate.content.cloneNode(true);
-  clone.querySelector(".distance").textContent = window.flightDistance.toFixed(0);
-  clone.querySelector(".offset").textContent = window.carbonToOffset;
-  clone.querySelector(".matic").textContent = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
-  offSetTable.appendChild(clone);
+  var fieldDistance = document.getElementById("ro-input-distance");
+  fieldDistance.value = window.flightDistance.toFixed(0);
+  var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
+  fieldCarbonToOffset.value = window.carbonToOffset;
+  var fieldMaticToSend = document.getElementById("ro-input-required-payment-token-amount");
+  fieldMaticToSend.value = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
 
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
