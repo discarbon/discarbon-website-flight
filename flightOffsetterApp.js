@@ -428,7 +428,7 @@ async function calculateFlightDistance() {
 /**
  * get carbon emission from distance and other fields
  */
- async function calculateCarbonEmission() {
+async function calculateCarbonEmission() {
   // Formula follows myclimates estimation calulator
   // emission parameters (short distance)
   let emShort = {
@@ -440,10 +440,10 @@ async function calculateFlightDistance() {
     DC: 95,
     CF: 0.07,
     CW: {
-         economy: 0.96,
-         first: 1.23,
-         business: 2.4,
-        },
+      economy: 0.96,
+      first: 1.23,
+      business: 2.4,
+    },
     EF: 3.15,
     M: 2,
     P: 0.54,
@@ -460,10 +460,10 @@ async function calculateFlightDistance() {
     DC: 95,
     CF: 0.26,
     CW: {
-         economy: 0.8,
-         first: 1.54,
-         business: 2.4,
-        },
+      economy: 0.8,
+      first: 1.54,
+      business: 2.4,
+    },
     EF: 3.15,
     M: 2,
     P: 0.54,
@@ -474,24 +474,24 @@ async function calculateFlightDistance() {
   let Emission = emission(emShort);
 
   console.log("Emission: ", Emission);
- }
+}
 
- /**
- * calculates CO2 emission for an emission parameter set (em)
- */
- function emission(em) {
+/**
+* calculates CO2 emission for an emission parameter set (em)
+*/
+function emission(em) {
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
-             (1 - em.CF) *
-              em.CW.economy * // TODO change economy to whatever is chosen by the user
-             (em.EF * em.M + em.P) +
-              em.AF * d +
-              em.A;
+    (1 - em.CF) *
+    em.CW.economy * // TODO change economy to whatever is chosen by the user
+    (em.EF * em.M + em.P) +
+    em.AF * d +
+    em.A;
   console.log("emissioncalc: ", emission)
-  window.carbonToOffset = (emission/1000).toFixed(3);
+  window.carbonToOffset = (emission / 1000).toFixed(3);
   return window.carbonToOffset;
- }
+}
 
 
 
