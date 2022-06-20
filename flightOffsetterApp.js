@@ -91,15 +91,6 @@ function init() {
   });
 
   console.log("Web3Modal instance is", web3Modal);
-
-  var start = new Location(35.6544, 139.74477);
-  var destination = new Location(21.4225, 39.8261);
-  console.log("Start: ", start, "Destination: ", destination);
-
-  var distance = calcGeodesicDistance(start, destination);
-  console.log("Distance: ", distance);
-
-  calculateCarbonEmission()
 }
 
 async function createContractObject() {
@@ -185,7 +176,7 @@ async function fetchAccountData() {
   document.querySelector("#disconnect-button-div").style.display = "block";
   document.querySelector("#connected").style.display = "block";
 
-
+  await calculateCarbonEmission();
 }
 
 
@@ -477,9 +468,9 @@ async function calculateFlightDistance() {
     A: 11.68
   }
 
-  Emission = emission(emShort)
+  let Emission = emission(emShort);
 
-  console.log("Emission: ", Emissions)
+  console.log("Emission: ", Emission);
  }
 
  /**
