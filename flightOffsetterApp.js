@@ -99,10 +99,7 @@ function init() {
   var distance = calcGeodesicDistance(start, destination);
   console.log("Distance: ", distance);
 
-
-  // window.airports = loadAirportJSON();
-
-  // findLatLong("Altenburg-Nobitz Airport Altenburg DE AOC");
+  calculateCarbonEmission()
 }
 
 async function createContractObject() {
@@ -234,7 +231,7 @@ async function doSimpleOffset() {
   // MetaMask does not give you all accounts, only the selected account
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
-  // Update matic value before sending txn to account for any price change 
+  // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredPaymentForOffset(carbonToOffset);
   console.log(
@@ -431,7 +428,6 @@ async function calculateFlightDistance() {
   console.log("Locations:", startLocation, " ", destinationLocation)
 
   if (startLocation && destinationLocation) {
-    console.log("in if statement")
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     console.log("Distance: ", window.flightDistance)
   }
