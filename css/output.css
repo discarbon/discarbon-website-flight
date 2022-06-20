@@ -1653,6 +1653,14 @@ body[dir="rtl"] .checkbox:checked,
   bottom: 0px;
 }
 
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
 .m-auto {
   margin: auto;
 }
