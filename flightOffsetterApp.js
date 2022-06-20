@@ -32,7 +32,7 @@ let offsetHelper;  // contract object of the offsethelper
 
 // Other constants
 
-let carbonToOffset = "0.3";
+let carbonToOffset = "0.0000001";
 let maticToSend = "";
 let flightDistance = 0;
 
@@ -155,8 +155,11 @@ async function fetchAccountData() {
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
 
+  // calculate carbon emission
+  await calculateCarbonEmission();
   // Display matic and carbon to offset
-  await calculateRequiredPaymentForOffset(carbonToOffset);
+  console.log("carbontooffset: ", window.carbonToOffset);
+  await calculateRequiredPaymentForOffset(window.carbonToOffset);
 
   // Get a handle
   const offsetTemplate = document.querySelector("#offsetTemplateContent");
@@ -167,7 +170,7 @@ async function fetchAccountData() {
 
   const clone = offsetTemplate.content.cloneNode(true);
   clone.querySelector(".distance").textContent = window.flightDistance.toFixed(0);
-  clone.querySelector(".offset").textContent = carbonToOffset;
+  clone.querySelector(".offset").textContent = window.carbonToOffset;
   clone.querySelector(".matic").textContent = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
   offSetTable.appendChild(clone);
 
@@ -175,8 +178,6 @@ async function fetchAccountData() {
   document.querySelector("#connect-button-div").style.display = "none";
   document.querySelector("#disconnect-button-div").style.display = "block";
   document.querySelector("#connected").style.display = "block";
-
-  await calculateCarbonEmission();
 }
 
 
@@ -399,7 +400,7 @@ async function findLatLong(airportName) {
   // let airportName = "Zürich Airport, Zurich CH, ZRH"
   let result = await airports.find(element => element[0] == airportName)
 
-  console.log("Location:", result)
+  // console.log("Location:", result)
   let location = new Location(result[1], result[2]);
   return location
 }
@@ -478,8 +479,11 @@ async function calculateFlightDistance() {
  */
  function emission(em) {
   let Emission = 0;
+  let d = window.flightDistance;
+  // Emission = ((em.a*d*d + em.b*d + em.c)/(em.S*em.PLF))*(1-em.CF)*em.CW.economy*(em.EF)
 
-  return 5
+  window.carbonToOffset = (window.flightDistance/1000).toFixed(3);
+  return window.carbonToOffset;
  }
 
 
