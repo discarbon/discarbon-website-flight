@@ -82,6 +82,7 @@
               </div>
               
               <div class="divider lg:divider-horizontal"></div>
+              
               <div class="grid flex-grow card rounded-box place-items-center">
               <!--
 
@@ -116,10 +117,10 @@
                           <div class="grid-item"><b>Flight Distance</b></div>
                           <div class="grid-item"><b>Estimated Emissions</b></div>
                           <div class="grid-item">
-                            <input id="ro-input-distance" class="input input-bordered input-primary max-w-xs" type="text" placeholder="0.0 km" readonly>
+                            <input id="ro-input-distance" class="input input-bordered bg-gray-300 max-w-xs" type="text" placeholder="0.0 km" readonly>
                           </div>
                           <div class="grid-item">
-                            <input id="ro-input-tco2" type="text" placeholder="0.0 kg TCO2" class="input input-bordered input-primary max-w-xs" readonly>
+                            <input id="ro-input-tco2" type="text" placeholder="0.0 kg TCO2" class="input input-bordered bg-gray-300 input-primary max-w-xs" readonly>
                           </div>
                         </div>
                     </datalist>   
@@ -127,7 +128,7 @@
                           <div class="grid-item"><b>Payment Currency</b></div>
                           <div class="grid-item"><b>Cost</b></div>
                           <div class="grid-item">
-                            <input class="input input-bordered input-primary max-w-xs" type="text" placeholder="MATIC" name="payment-token" list="list-payment-tokens">
+                            <input id="input-payment-token" class="input input-bordered input-primary max-w-xs" type="text" placeholder="MATIC" name="payment-token" list="list-payment-tokens">
                             <datalist id="list-payment-tokens">
                               <option value="MATIC"></option>
                               <option value="USDC"></option>
@@ -137,10 +138,15 @@
                             </datalist>
                           </div>               
                           <div class="grid-item">
-                            <input id="ro-input-required-payment-token-amount" class="input input-bordered input-primary max-w-xs" type="text" placeholder="0.0" readonly>
+                            <input id="ro-input-required-payment-token-amount" class="input input-bordered bg-gray-300 input-primary max-w-xs" type="text" placeholder="0.0" readonly>
                           </div>
-                          <div class="grid-item"><button class="btn btn-primary" id="btn-approve">Approve</button></div>
-                          <div class="grid-item"><button class="btn btn-primary" id="btn-offset">Offset</button></div>
+                          <div class="grid-item">
+                            <button class="btn btn-primary" id="btn-approve" style="display:none">Approve</button>
+                          </div>
+                          <div class="grid-item">
+                            <button class="btn btn-primary max-w-xs" id="btn-offset">Offset<button>
+                          </div>
+                          <!-- <div class="grid-item"></div> -->
                       </div> 
                     
                   </div>

@@ -37,11 +37,12 @@ const tokenAddresses = {
   wmatic: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
 };
 
-// Other constants
-
+// Initial values
 let carbonToOffset = "0.0000001";
-let maticToSend = "";
 let flightDistance = 0;
+let paymentCurrency = "matic";
+let paymentQuantity = "";
+let isConnected = false;
 
 import { airports } from './resources/airports_selected.js'
 
@@ -135,6 +136,12 @@ async function fetchAccountData() {
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
 
+  window.carbonToOffset = carbonToOffset;
+  // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
+  window.isConnected = false;
+  window.paymentCurrency = paymentCurrency;
+  window.paymentQuantity = paymentQuantity;
+
   // TODO
   // document.querySelector("#selected-account").textContent = selectedAccount.slice(0, 8) + "..." + selectedAccount.slice(-6);
 
@@ -169,14 +176,14 @@ async function fetchAccountData() {
   await calculateCarbonEmission();
   // Display matic and carbon to offset
   console.log("carbontooffset: ", window.carbonToOffset);
-  await calculateRequiredPaymentForOffset(window.carbonToOffset);
+  await calculateRequiredMaticPaymentForOffset();
 
   var fieldDistance = document.getElementById("ro-input-distance");
-  fieldDistance.value = window.flightDistance.toFixed(0);
+  fieldDistance.value = window.flightDistance.toFixed(1) + " km";
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
-  fieldCarbonToOffset.value = window.carbonToOffset;
-  var fieldMaticToSend = document.getElementById("ro-input-required-payment-token-amount");
-  fieldMaticToSend.value = parseFloat(web3.utils.fromWei(window.maticToSend)).toFixed(4);
+  fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
+  var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4) + " " + window.paymentCurrency.toUpperCase();
 
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
@@ -214,41 +221,154 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
-async function calculateRequiredPaymentForOffset(carbonToOffset) {
+async function updatePaymentCosts() {
+  window.paymentCurrency = document.querySelector("#input-payment-token").value.toLowerCase();
+  console.log("Payment currency changed: ", window.paymentCurrency);
+  console.log("Connected:", window.isConnected);
+  if (window.isConnected !== true) {
+    console.log("skipping update of payment costs; wallet not connected")
+    return;
+  }
   const web3 = new Web3(provider);
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
-  window.maticToSend = await window.offsetHelper.methods
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
-    .call();
-  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
+  switch (window.paymentCurrency) {
+    case "matic":
+      var approveButton = document.getElementById("btn-approve");
+      approveButton.setAttribute("style", "display:none")
+      await calculateRequiredMaticPaymentForOffset();
+      break;
+    case "usdc":
+    case "wmatic":
+    case "weth":
+      var approveButton = document.getElementById("btn-approve");
+      approveButton.setAttribute("style", "display:true")
+      await calculateRequiredTokenPaymentForOffset();
+      break;
+    case "nct":
+      var approveButton = document.getElementById("btn-approve");
+      approveButton.setAttribute("style", "display:true")
+      window.paymentQuantity = web3.utils.toWei(window.carbonToOffset, "ether");
+      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4) + " " + window.paymentCurrency.toUpperCase();
+      break;
+    default: console.log("unsupported currency! ", window.paymentCurrency);
+  }
 }
 
-async function doSimpleOffset() {
+async function calculateRequiredMaticPaymentForOffset() {
+  const web3 = new Web3(provider);
+  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
+  window.paymentQuantity = await window.offsetHelper.methods
+    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
+    .call();
+  console.log("Matic: ", web3.utils.fromWei(window.paymentQuantity))
+}
+
+async function calculateRequiredTokenPaymentForOffset() {
+  const web3 = new Web3(provider);
+  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
+  window.paymentQuantity = await window.offsetHelper.methods
+    .calculateNeededTokenAmount(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei)
+    .call();
+  console.log("Token: ", web3.utils.fromWei(window.paymentQuantity))
+}
+
+/*
+async function approveToken() {
+  const web3 = new Web3(provider);
+
+}
+*/
+
+async function doAutoOffset() {
+  console.log("AutoOffsetting with Payment currency: ", window.paymentCurrency);
+  console.log("Connected:", window.isConnected);
+  if (window.isConnected !== true) {
+    console.log("skipping auto offset costs; wallet not connected")
+    return;
+  }
+  switch (window.paymentCurrency) {
+    case "matic":
+      await doAutoOffsetUsingETH();
+      break;
+    case "usdc":
+    case "wmatic":
+    case "weth":
+      await doAutoOffsetUsingToken();
+      break;
+    case "nct":
+      await doAutoOffsetUsingPoolToken();
+      break;
+    default: console.log("unsupported currency! ", window.paymentCurrency);
+  }
+}
+async function doAutoOffsetUsingETH() {
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
-
-  // MetaMask does not give you all accounts, only the selected account
-  console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
-  await calculateRequiredPaymentForOffset(carbonToOffset);
+  await calculateRequiredMaticPaymentForOffset();
   console.log(
     "Matic: ",
-    web3.utils.fromWei(window.maticToSend),
+    web3.utils.fromWei(window.paymentQuantity),
     ", ",
-    window.maticToSend
+    window.paymentQuantity
   );
   const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
   const txReceipt = await window.offsetHelper.methods
     .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei)
     .send({
       from: selectedAccount,
-      value: window.maticToSend,
+      value: window.paymentQuantity,
     });
-  console.log("offset done: ", web3.utils.fromWei(window.maticToSend));
+  console.log("offset done: ", web3.utils.fromWei(window.paymentQuanitity));
 }
 
+async function doAutoOffsetUsingToken() {
+  const web3 = new Web3(provider);
+  const accounts = await web3.eth.getAccounts();
+  selectedAccount = accounts[0];
+  // Update token amount before sending txn to account for any price change
+  // (an outdated value can lead to gas estimation error)
+  await calculateRequiredTokenPaymentForOffset();
+  console.log(
+    "Token Quantity: ",
+    web3.utils.fromWei(window.paymentQuantity),
+    ", ",
+    window.paymentQuantity
+  );
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  const txReceipt = await window.offsetHelper.methods
+    .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei)
+    .send({
+      from: selectedAccount,
+      value: window.paymentQuantity,
+    });
+  console.log("offset done: ", web3.utils.fromWei(window.paymentQuanitity));
+}
+
+async function doAutoOffsetUsingPoolToken() {
+  const web3 = new Web3(provider);
+  const accounts = await web3.eth.getAccounts();
+  selectedAccount = accounts[0];
+  // Update token amount before sending txn to account for any price change
+  // (an outdated value can lead to gas estimation error)
+  await calculateRequiredTokenPaymentForOffset();
+  console.log(
+    "Pool Token Quantity: ",
+    web3.utils.fromWei(window.paymentQuantity),
+    ", ",
+    window.paymentQuantity
+  );
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  const txReceipt = await window.offsetHelper.methods
+    .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei)
+    .send({
+      from: selectedAccount,
+      value: window.paymentQuantity,
+    });
+  console.log("offset done: ", web3.utils.fromWei(window.paymentQuanitity));
+}
 
 /**
  * Creates Locations from Latitude Longitude. Usage: let pointA = new Location(x.xx, x.xx)
@@ -329,10 +449,12 @@ async function onConnect() {
   });
 
   var el = document.getElementById("btn-offset");
-  if (el.addEventListener) el.addEventListener("click", doSimpleOffset, false);
-  else if (el.attachEvent) el.attachEvent("onclick", doSimpleOffset);
+  if (el.addEventListener) el.addEventListener("click", doAutoOffset, false);
+  else if (el.attachEvent) el.attachEvent("onclick", doAutoOffset);
 
   await refreshAccountData();
+
+  window.isConnected = true;
 }
 
 /**
@@ -359,7 +481,11 @@ async function onDisconnect() {
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
-  document.querySelector("#connected").style.display = "none";
+
+  // TODO
+  // document.querySelector("#connected").style.display = "none";
+
+  window.isConnected = false;
 }
 
 function decrement(e) {
@@ -486,11 +612,11 @@ async function calculateCarbonEmission() {
   } else {  // intermediate distance (interpolation)
     let shortEM = singleEmissionCalc(emShort);
     let longEM = singleEmissionCalc(emLong);
-    let longDistFactor = (window.flightDistance-1500)/1000; // 0@1500km, 1@2500km
+    let longDistFactor = (window.flightDistance - 1500) / 1000; // 0@1500km, 1@2500km
     // console.log("longdistancefactor: ", longDistFactor);
     // console.log("shortEM: ", shortEM);
     // console.log("longEM: ", longEM);
-    emission = (1-longDistFactor)*shortEM+longDistFactor*longEM; //interpolation
+    emission = (1 - longDistFactor) * shortEM + longDistFactor * longEM; //interpolation
   }
 
 
@@ -540,5 +666,6 @@ window.addEventListener('load', async () => {
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
   document.querySelector("#start").addEventListener("change", calculateFlightDistance);
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
+  document.querySelector("#input-payment-token").addEventListener("change", updatePaymentCosts);
 
 });
