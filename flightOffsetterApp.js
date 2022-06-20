@@ -437,6 +437,7 @@ async function calculateFlightDistance() {
     c: 1166.52,
     S: 153.51,
     PLF: 0.82,
+    DC: 95,
     CF: 0.07,
     CW: {
          economy: 0.96,
@@ -456,6 +457,7 @@ async function calculateFlightDistance() {
     c: 5044.93,
     S: 280.21,
     PLF: 0.82,
+    DC: 95,
     CF: 0.26,
     CW: {
          economy: 0.8,
@@ -478,11 +480,16 @@ async function calculateFlightDistance() {
  * calculates CO2 emission for an emission parameter set (em)
  */
  function emission(em) {
-  let Emission = 0;
-  let d = window.flightDistance;
-  // Emission = ((em.a*d*d + em.b*d + em.c)/(em.S*em.PLF))*(1-em.CF)*em.CW.economy*(em.EF)
-
-  window.carbonToOffset = (window.flightDistance/1000).toFixed(3);
+  let emission = 0;
+  let d = window.flightDistance + em.DC;
+  emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
+             (1 - em.CF) *
+              em.CW.economy * // TODO change economy to whatever is chosen by the user
+             (em.EF * em.M + em.P) +
+              em.AF * d +
+              em.A;
+  console.log("emissioncalc: ", emission)
+  window.carbonToOffset = (emission/1000).toFixed(3);
   return window.carbonToOffset;
  }
 
