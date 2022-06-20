@@ -476,7 +476,16 @@ async function calculateCarbonEmission() {
     emission = singleEmissionCalc(emShort);
   } else if (window.flightDistance > 2500) {  // long distance
     emission = singleEmissionCalc(emLong);
+  } else {  // intermediate distance (interpolation)
+    let shortEM = singleEmissionCalc(emShort);
+    let longEM = singleEmissionCalc(emLong);
+    let longDistFactor = (window.flightDistance-1500)/1000; // 0@1500km, 1@2500km
+    // console.log("longdistancefactor: ", longDistFactor);
+    // console.log("shortEM: ", shortEM);
+    // console.log("longEM: ", longEM);
+    emission = (1-longDistFactor)*shortEM+longDistFactor*longEM; //interpolation
   }
+
 
   window.carbonToOffset = emission;
   console.log("Carbon Emission: ", emission);
