@@ -169,13 +169,7 @@ async function fetchAccountData() {
 
 
   // Display matic and carbon to offset
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
-  // window.maticToSend = await window.offsetHelper.methods
-  // .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
-  window.maticToSend = await window.offsetHelper.methods
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
-    .call();
-  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
+  await calculateRequiredPaymentForOffset(carbonToOffset);
 
   // Get a handle
   const offsetTemplate = document.querySelector("#offsetTemplateContent");
@@ -223,6 +217,15 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
   await fetchAccountData(provider);
   document.querySelector("#btn-connect").removeAttribute("disabled")
+}
+
+async function calculateRequiredPaymentForOffset(carbonToOffset) {
+  const web3 = new Web3(provider);
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  window.maticToSend = await window.offsetHelper.methods
+    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
+    .call();
+  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
 }
 
 async function doSimpleOffset() {
