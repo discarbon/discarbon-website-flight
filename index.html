@@ -80,8 +80,11 @@
                       <input type="checkbox" class="toggle toggle-primary" checked />
                     </label>
               </div>
+              
               <div class="divider lg:divider-horizontal"></div>
               <div class="grid flex-grow card rounded-box place-items-center">
+              <!--
+
                 <div class="container">
                   <div id="connected" style="display: block">
                     <div id="network">
@@ -108,19 +111,38 @@
                       <tbody id="accounts">
                       </tbody>
                     </table>
-
-                    <table class="table table-listing">
-                      <thead>
-                        <th>Flight Distance</th>
-                        <th>Offset amount</th>
-                        <th>Matic needed</th>
-                      </thead>
-
-                      <tbody id="offSetTable">
-                      </tbody>
-                    </table>
-
-                    <button class="btn btn-primary" id="btn-offset">Offset</button>
+               -->
+                        <div class="grid-container">
+                          <div class="grid-item"><b>Flight Distance</b></div>
+                          <div class="grid-item"><b>Estimated Emissions</b></div>
+                          <div class="grid-item">
+                            <input id="ro-input-distance" class="input input-bordered input-primary max-w-xs" type="text" placeholder="0.0 km" readonly>
+                          </div>
+                          <div class="grid-item">
+                            <input id="ro-input-tco2" type="text" placeholder="0.0 kg TCO2" class="input input-bordered input-primary max-w-xs" readonly>
+                          </div>
+                        </div>
+                    </datalist>   
+                        <div class="grid-container">
+                          <div class="grid-item"><b>Payment Currency</b></div>
+                          <div class="grid-item"><b>Cost</b></div>
+                          <div class="grid-item">
+                            <input class="input input-bordered input-primary max-w-xs" type="text" placeholder="MATIC" name="payment-token" list="list-payment-tokens">
+                            <datalist id="list-payment-tokens">
+                              <option value="MATIC"></option>
+                              <option value="USDC"></option>
+                              <option value="BCT"></option>
+                              <option value="WMATIC"></option>
+                              <option value="WETH"></option>
+                            </datalist>
+                          </div>               
+                          <div class="grid-item">
+                            <input id="ro-input-required-payment-token-amount" class="input input-bordered input-primary max-w-xs" type="text" placeholder="0.0" readonly>
+                          </div>
+                          <div class="grid-item"><button class="btn btn-primary" id="btn-approve">Approve</button></div>
+                          <div class="grid-item"><button class="btn btn-primary" id="btn-offset">Offset</button></div>
+                      </div> 
+                    
                   </div>
                 </div>
               </div>
@@ -129,9 +151,6 @@
             <!-- <input type="text" placeholder="start location" class="input input-bordered input-accent max-w-xs" />
             <input type="text" placeholder="destination location" class="input input-bordered input-accent max-w-xs" />
             <input type="checkbox" class="toggle" checked /> -->
-
-
-
 
           </div>
 
