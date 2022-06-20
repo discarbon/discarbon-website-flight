@@ -167,7 +167,6 @@ async function fetchAccountData() {
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
 
-
   // Display matic and carbon to offset
   await calculateRequiredPaymentForOffset(carbonToOffset);
 
@@ -235,6 +234,9 @@ async function doSimpleOffset() {
   // MetaMask does not give you all accounts, only the selected account
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
+  // Update matic value before sending txn to account for any price change 
+  // (an outdated value can lead to gas estimation error)
+  await calculateRequiredPaymentForOffset(carbonToOffset);
   console.log(
     "Matic: ",
     web3.utils.fromWei(window.maticToSend),
