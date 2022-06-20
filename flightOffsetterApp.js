@@ -167,15 +167,8 @@ async function fetchAccountData() {
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
 
-
   // Display matic and carbon to offset
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
-  // window.maticToSend = await window.offsetHelper.methods
-  // .howMuchETHShouldISendToSwap(NCTTokenAddress, carbonToOffsetWei)
-  window.maticToSend = await window.offsetHelper.methods
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
-    .call();
-  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
+  await calculateRequiredPaymentForOffset(carbonToOffset);
 
   // Get a handle
   const offsetTemplate = document.querySelector("#offsetTemplateContent");
@@ -225,6 +218,15 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
+async function calculateRequiredPaymentForOffset(carbonToOffset) {
+  const web3 = new Web3(provider);
+  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  window.maticToSend = await window.offsetHelper.methods
+    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
+    .call();
+  console.log("Matic: ", web3.utils.fromWei(window.maticToSend))
+}
+
 async function doSimpleOffset() {
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
@@ -232,6 +234,9 @@ async function doSimpleOffset() {
   // MetaMask does not give you all accounts, only the selected account
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
+  // Update matic value before sending txn to account for any price change 
+  // (an outdated value can lead to gas estimation error)
+  await calculateRequiredPaymentForOffset(carbonToOffset);
   console.log(
     "Matic: ",
     web3.utils.fromWei(window.maticToSend),
@@ -292,7 +297,7 @@ function calcGeodesicDistance(start, destination) {
     Math.cos(toRad(deltaLambda));
 
   // Vyncenty formula:
-  let deltaSigma = Math.atan2(Math.sqrt(A + B) , C);
+  let deltaSigma = Math.atan2(Math.sqrt(A + B), C);
   let distance = earthRadius * deltaSigma;
   return distance;
 }
@@ -425,7 +430,7 @@ async function calculateFlightDistance() {
 
   console.log("Locations:", startLocation, " ", destinationLocation)
 
-  if (startLocation && destinationLocation){
+  if (startLocation && destinationLocation) {
     console.log("in if statement")
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     console.log("Distance: ", window.flightDistance)
