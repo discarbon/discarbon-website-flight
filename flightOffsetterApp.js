@@ -183,7 +183,7 @@ async function fetchAccountData() {
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
   fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
   var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4) + " " + window.paymentCurrency.toUpperCase();
+  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
 
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
@@ -242,7 +242,7 @@ async function updatePaymentCosts() {
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4) + " " + window.paymentCurrency.toUpperCase();
+      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
       await calculateRequiredTokenPaymentForOffset();
       await createErc20Contract();
       break;
@@ -251,7 +251,7 @@ async function updatePaymentCosts() {
       approveButton.setAttribute("style", "display:true")
       window.paymentQuantity = web3.utils.toWei(window.carbonToOffset, "ether");
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4) + " " + window.paymentCurrency.toUpperCase();
+      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
       await createErc20Contract();
       break;
     default:
