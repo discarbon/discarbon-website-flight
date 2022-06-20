@@ -222,7 +222,7 @@ async function refreshAccountData() {
 }
 
 async function updatePaymentCosts() {
-  window.paymentCurrency = document.querySelector("#input-payment-token").value.toLowerCase();
+  window.paymentCurrency = await document.querySelector("#list-payment-tokens").value.toLowerCase();
   console.log("Payment currency changed: ", window.paymentCurrency);
   console.log("Connected:", window.isConnected);
   if (window.isConnected !== true) {
@@ -263,6 +263,7 @@ async function updatePaymentCosts() {
 
 async function calculateRequiredMaticPaymentForOffset() {
   const web3 = new Web3(provider);
+  console.log("test carbon to offset: ", window.carbonToOffset)
   const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
   window.paymentQuantity = await window.offsetHelper.methods
     .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
@@ -680,6 +681,6 @@ window.addEventListener('load', async () => {
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
   document.querySelector("#start").addEventListener("change", calculateFlightDistance);
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
-  document.querySelector("#input-payment-token").addEventListener("change", updatePaymentCosts);
+  document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
 
 });
