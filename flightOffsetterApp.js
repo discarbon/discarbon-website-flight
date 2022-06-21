@@ -636,6 +636,9 @@ async function calculateCarbonEmission() {
     emission = (1 - longDistFactor) * shortEM + longDistFactor * longEM; //interpolation
   }
 
+  // Handle multipliers and input from other fields
+  let passengers = document.getElementById("passengers").value;
+  emission = passengers*emission;
 
   window.carbonToOffset = emission.toString();
   console.log("Carbon Emission: ", emission);
