@@ -99,6 +99,7 @@ function init() {
   });
 
   console.log("Web3Modal instance is", web3Modal);
+  window.carbonToOffset = "0.0";
 }
 
 async function createContractObject() {
@@ -136,7 +137,6 @@ async function fetchAccountData() {
   console.log("Got accounts", accounts);
   selectedAccount = accounts[0];
 
-  window.carbonToOffset = carbonToOffset;
   // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
   // window.isConnected = false;
   window.paymentCurrency = paymentCurrency;
@@ -695,7 +695,6 @@ async function handleManuallyEnteredTCO2() {
     window.carbonToOffset = TCO2.toFixed(3).toString();
     await updatePaymentCosts();
   }
-
   console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
 }
