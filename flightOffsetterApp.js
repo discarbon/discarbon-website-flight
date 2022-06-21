@@ -198,7 +198,9 @@ async function updateUIvalues() {
     fieldDistance.value = window.flightDistance.toFixed(1) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
-  fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
+  if (window.carbonToOffset) {
+    fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
+  }
 
   console.log("connected: ", window.isConnected)
   if (window.isConnected && window.carbonToOffset) {
