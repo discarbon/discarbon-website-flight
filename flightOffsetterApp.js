@@ -299,7 +299,8 @@ async function createErc20Contract() {
 }
 
 async function approveErc20() {
-  console.log("Approve ", offsetHelper, " for ", window.paymentCurrency)
+  const web3 = new Web3(provider);
+  console.log("Approving", offsetHelperAddress, "to deposit", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
   const txReceipt = window.erc20Contract.methods
     .approve(offsetHelperAddress, window.paymentQuantity)
     .send({
@@ -308,7 +309,7 @@ async function approveErc20() {
 }
 
 async function doAutoOffset() {
-  console.log("AutoOffsetting with Payment currency: ", window.paymentCurrency);
+  console.log("AutoOffsetting with Payment currency:", window.paymentCurrency);
   console.log("Connected:", window.isConnected);
   if (window.isConnected !== true) {
     console.log("skipping auto offset costs; wallet not connected")
@@ -336,13 +337,8 @@ async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log(
-    "Matic: ",
-    web3.utils.fromWei(window.paymentQuantity),
-    ", ",
-    window.paymentQuantity
-  );
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
   const txReceipt = await window.offsetHelper.methods
     .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei)
     .send({
@@ -356,17 +352,11 @@ async function doAutoOffsetUsingToken() {
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
   selectedAccount = accounts[0];
-  console.log("Offsetting using ERC20 (", window.paymentCurrency.toUpperCase(), ")");
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log(
-    "Token Quantity: ",
-    web3.utils.fromWei(window.paymentQuantity),
-    ", ",
-    window.paymentQuantity
-  );
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
   const txReceipt = await window.offsetHelper.methods
     .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei)
     .send({
@@ -379,16 +369,14 @@ async function doAutoOffsetUsingPoolToken() {
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
   selectedAccount = accounts[0];
-  console.log("Offsettings using NCT...")
-  // Update token amount before sending txn to account for any price change
-  // (an outdated value can lead to gas estimation error)
-  const carbonToOffsetWei = web3.utils.toWei(carbonToOffset, "ether");
+  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
   const txReceipt = await window.offsetHelper.methods
     .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei)
     .send({
       from: selectedAccount
     });
-  console.log("offset done: ", web3.utils.fromWei(window.paymentQuantity));
+  console.log("Offset done.");
 }
 
 /**
