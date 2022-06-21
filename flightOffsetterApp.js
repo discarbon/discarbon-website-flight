@@ -192,6 +192,16 @@ async function fetchAccountData() {
   // document.querySelector("#connected").style.display = "block";
 }
 
+function updateUIvalues() {
+  const web3 = new Web3(provider);
+
+  var fieldDistance = document.getElementById("ro-input-distance");
+  fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+  var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
+  fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
+  var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+}
 
 
 /**
