@@ -579,8 +579,8 @@ async function calculateCarbonEmission() {
     CF: 0.07,
     CW: {
       economy: 0.96,
-      first: 1.23,
-      business: 2.4,
+      business: 1.23,
+      first: 2.4,
     },
     EF: 3.15,
     M: 2,
@@ -599,8 +599,8 @@ async function calculateCarbonEmission() {
     CF: 0.26,
     CW: {
       economy: 0.8,
-      first: 1.54,
-      business: 2.4,
+      business: 1.54,
+      first: 2.4,
     },
     EF: 3.15,
     M: 2,
@@ -641,11 +641,14 @@ async function calculateCarbonEmission() {
 * calculates CO2 emission for an emission parameter set (em)
 */
 function singleEmissionCalc(em) {
+
+  let flightclass = document.getElementById("flightclass").value;
+  // console.log("flightclass: ", flightclass);
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
     (1 - em.CF) *
-    em.CW.economy * // TODO change economy to whatever is chosen by the user
+    em.CW[flightclass] *
     (em.EF * em.M + em.P) +
     em.AF * d +
     em.A;
@@ -681,5 +684,5 @@ window.addEventListener('load', async () => {
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
   document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
-
+  document.querySelector('#flighclass').addEventListener("change", calculateCarbonEmission);
 });

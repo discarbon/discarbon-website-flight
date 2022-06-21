@@ -75,10 +75,18 @@
                       <span class="m-auto text-2xl font-thin">+</span>
                     </button>
                   </div>
-                  <label class="label cursor-pointer">
-                    <span class="label-text">Round Trip</span>
-                    <input type="checkbox" id="roundtrip" checked="checked" class="checkbox checkbox-primary" />
-                  </label>
+                  <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                    <select id="flightclass" class="select select-bordered w-full max-w-xs">
+                      <option value="economy">Economy class</option>
+                      <option value="business">Business class</option>
+                      <option value="first">First class</option>
+                    </select>
+                  </div>
+                    <label class="label cursor-pointer">
+                      <span class="label-text">Round Trip:</span>
+                      <input type="checkbox" id="roundtrip" checked="checked" class="checkbox checkbox-primary" />
+                    </label>
+
                     <!-- <label class="label cursor-pointer bg-transparent">
                       <span class="label-text">Round Trip:</span>
                       <input id="roundtrip" type="checkbox" class="toggle toggle-primary" value=2 checked />
