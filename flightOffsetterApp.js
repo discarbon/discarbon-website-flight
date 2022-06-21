@@ -38,7 +38,7 @@ const tokenAddresses = {
 };
 
 // Initial values
-let carbonToOffset = "0.0000001";
+let carbonToOffset = "0.0";
 let flightDistance = 0;
 let paymentCurrency = "matic";
 let paymentQuantity = "";
@@ -175,10 +175,10 @@ async function fetchAccountData() {
   // calculate carbon emission
   await calculateFlightDistance();
   // Display matic and carbon to offset
-  console.log("carbontooffset: ", window.carbonToOffset);
-  if (window.carbonToOffset) {
-    await calculateRequiredMaticPaymentForOffset();
-  }
+  // console.log("carbontooffset: ", window.carbonToOffset);
+  // if (window.carbonToOffset) {
+  //   await calculateRequiredMaticPaymentForOffset();
+  // }
 
 
   updateUIvalues();
@@ -240,8 +240,13 @@ async function updatePaymentCosts() {
   window.paymentCurrency = await document.querySelector("#list-payment-tokens").value.toLowerCase();
   console.log("Payment currency changed: ", window.paymentCurrency);
   console.log("Connected:", window.isConnected);
+  console.log("Carbon to offset: ", window.carbonToOffset);
   if (window.isConnected !== true) {
     console.log("skipping update of payment costs; wallet not connected")
+    return;
+  }
+  if (parseFloat(window.carbonToOffset) == 0) {
+    console.log("No carbon emission to offset. Skipping calculation.")
     return;
   }
   const web3 = new Web3(provider);
