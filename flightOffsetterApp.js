@@ -638,7 +638,12 @@ async function calculateCarbonEmission() {
 
   // Handle multipliers and input from other fields
   let passengers = document.getElementById("passengers").value;
-  emission = passengers*emission;
+  emission *= passengers;
+
+  let roundTrip = document.getElementById("roundtrip").checked;
+  if (roundTrip) {
+    emission *= 2;
+  }
 
   window.carbonToOffset = emission.toString();
   console.log("Carbon Emission: ", emission);
@@ -687,5 +692,6 @@ window.addEventListener('load', async () => {
   document.querySelector("#start").addEventListener("change", calculateFlightDistance);
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
+  document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
 
 });
