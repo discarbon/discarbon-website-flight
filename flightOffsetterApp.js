@@ -591,8 +591,8 @@ async function calculateCarbonEmission() {
     CF: 0.07,
     CW: {
       economy: 0.96,
-      first: 1.23,
-      business: 2.4,
+      business: 1.23,
+      first: 2.4,
     },
     EF: 3.15,
     M: 2,
@@ -611,8 +611,8 @@ async function calculateCarbonEmission() {
     CF: 0.26,
     CW: {
       economy: 0.8,
-      first: 1.54,
-      business: 2.4,
+      business: 1.54,
+      first: 2.4,
     },
     EF: 3.15,
     M: 2,
