@@ -509,7 +509,9 @@ function decrement(e) {
   );
   const target = btn.nextElementSibling;
   let value = Number(target.value);
-  value--;
+  if (value > 1) {
+    value--;
+  }
   target.value = value;
 }
 
