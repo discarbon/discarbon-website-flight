@@ -631,7 +631,7 @@ async function calculateCarbonEmission() {
     S: 280.21,
     PLF: 0.82,
     DC: 95,
-    CF: 0.26,
+    CF: 0.23,
     CW: {
       economy: 0.8,
       business: 1.54,
