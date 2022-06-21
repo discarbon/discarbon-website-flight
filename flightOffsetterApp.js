@@ -606,7 +606,7 @@ async function calculateCarbonEmission() {
     CF: 0.07,
     CW: {
       economy: 0.96,
-      business: 1.23,
+      business: 1.26,
       first: 2.4,
     },
     EF: 3.15,
