@@ -653,11 +653,14 @@ async function calculateCarbonEmission() {
 * calculates CO2 emission for an emission parameter set (em)
 */
 function singleEmissionCalc(em) {
+
+  let flightclass = document.getElementById("flightclass").value;
+  // console.log("flightclass: ", flightclass);
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
     (1 - em.CF) *
-    em.CW.economy * // TODO change economy to whatever is chosen by the user
+    em.CW[flightclass] *
     (em.EF * em.M + em.P) +
     em.AF * d +
     em.A;
@@ -693,5 +696,5 @@ window.addEventListener('load', async () => {
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
   document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
-
+  document.querySelector('#flighclass').addEventListener("change", calculateCarbonEmission);
 });

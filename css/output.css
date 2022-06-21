@@ -1602,6 +1602,10 @@ body[dir="rtl"] .checkbox:checked,
   }
 }
 
+.select-bordered {
+  --tw-border-opacity: 0.2;
+}
+
 .select:focus {
   outline: 2px solid hsla(var(--bc) / 0.2);
   outline-offset: 2px;
