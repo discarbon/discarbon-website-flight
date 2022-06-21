@@ -173,10 +173,13 @@ async function fetchAccountData() {
   // await Promise.all(rowResolvers);
 
   // calculate carbon emission
-  await calculateCarbonEmission();
+  await calculateFlightDistance();
   // Display matic and carbon to offset
   console.log("carbontooffset: ", window.carbonToOffset);
-  await calculateRequiredMaticPaymentForOffset();
+  if (window.carbonToOffset) {
+    await calculateRequiredMaticPaymentForOffset();
+  }
+
 
   updateUIvalues();
 
@@ -190,14 +193,16 @@ async function fetchAccountData() {
 function updateUIvalues() {
   const web3 = new Web3(provider);
 
-  var fieldDistance = document.getElementById("ro-input-distance");
-  fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+  if (window.flightDistance) {
+    var fieldDistance = document.getElementById("ro-input-distance");
+    fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+  }
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
   fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
   var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
 
   console.log("connected: ", window.isConnected)
-  if (window.isConnected) {
+  if (window.isConnected && window.carbonToOffset) {
     updatePaymentCosts();
     fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
   }
@@ -560,10 +565,16 @@ async function findLatLong(airportName) {
 async function calculateFlightDistance() {
 
   let startName = document.getElementById('start').value
-  let startLocation = await findLatLong(startName)
+  let startLocation;
+  if (startName) {
+    startLocation = await findLatLong(startName)
+  }
 
   let destinationName = document.getElementById('destination').value
-  let destinationLocation = await findLatLong(destinationName)
+  let destinationLocation;
+  if (destinationName) {
+    destinationLocation = await findLatLong(destinationName)
+  }
 
 
   console.log("Locations:", startLocation, " ", destinationLocation)
