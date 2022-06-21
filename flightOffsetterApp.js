@@ -129,8 +129,14 @@ async function fetchAccountData() {
   if(chainId !== 137) {
     const alert = document.querySelector("#alert-error-incorrect-network");
     alert.style.display = "block";
-    document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
+    document.querySelector("#btn-offset").setAttribute("disabled")
+    document.querySelector("#btn-connect").setAttribute("disabled")    
     return;
+  } else {
+    const alert = document.querySelector("#alert-error-incorrect-network");
+    alert.style.display = "none";
+    document.querySelector("#btn-offset").removeAttribute("disabled")
+    document.querySelector("#btn-connect").removeAttribute("disabled")    
   }
   
   // Load chain information over an HTTP API
