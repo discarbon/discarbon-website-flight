@@ -125,6 +125,14 @@ async function fetchAccountData() {
 
   // Get connected chain id from Ethereum node
   const chainId = await web3.eth.getChainId();
+
+  if(chainId !== 137) {
+    const alert = document.querySelector("#alert-error-incorrect-network");
+    alert.style.display = "block";
+    document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
+    return;
+  }
+  
   // Load chain information over an HTTP API
   const chainData = evmChains.getChain(chainId);
   // TODO
