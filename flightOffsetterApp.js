@@ -696,5 +696,5 @@ window.addEventListener('load', async () => {
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
   document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
-  document.querySelector('#flighclass').addEventListener("change", calculateCarbonEmission);
+  document.querySelector('#flightclass').addEventListener("change", calculateCarbonEmission);
 });
