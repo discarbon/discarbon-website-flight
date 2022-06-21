@@ -24,7 +24,8 @@ let selectedAccount;
 // Addresses of used contracts
 
 // const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
-const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Newer; updated ABI
+// const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
+const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
 const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
 
 let offsetHelper;  // contract object of the offsethelper
@@ -251,18 +252,25 @@ async function updatePaymentCosts() {
   const web3 = new Web3(provider);
   switch (window.paymentCurrency) {
     case "matic":
+      await calculateRequiredMaticPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:none")
-      await calculateRequiredMaticPaymentForOffset();
+      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
       break;
     case "usdc":
     case "wmatic":
     case "weth":
+      await calculateRequiredTokenPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
-      await calculateRequiredTokenPaymentForOffset();
+
+      if (window.paymentCurrency === "usdc") {
+        fieldPaymentQuantity.value = parseFloat(window.paymentQuantity / Math.pow(10, 6)).toFixed(4);
+      } else {
+        fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+      }
       await createErc20Contract();
       break;
     case "nct":
