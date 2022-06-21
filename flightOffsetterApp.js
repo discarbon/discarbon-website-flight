@@ -691,7 +691,7 @@ async function handleManuallyEnteredTCO2() {
   console.log("manual change:")
   let TCO2 = parseFloat(document.getElementById("ro-input-tco2").value);
 
-  if (TCO2) {
+  if (TCO2 && TCO2 > 0) {
     window.carbonToOffset = TCO2.toFixed(3).toString();
     await updatePaymentCosts();
   }
