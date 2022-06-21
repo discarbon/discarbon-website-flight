@@ -733,4 +733,5 @@ window.addEventListener('load', async () => {
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
+  document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
 });
