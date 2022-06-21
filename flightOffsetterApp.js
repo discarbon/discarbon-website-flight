@@ -178,7 +178,7 @@ async function fetchAccountData() {
   console.log("carbontooffset: ", window.carbonToOffset);
   await calculateRequiredMaticPaymentForOffset();
 
-  updateUIvalues()
+  updateUIvalues();
 
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
@@ -198,6 +198,7 @@ function updateUIvalues() {
 
   console.log("connected: ", window.isConnected)
   if (window.isConnected) {
+    updatePaymentCosts();
     fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
   }
 }
@@ -509,6 +510,7 @@ function decrement(e) {
     value--;
   }
   target.value = value;
+  calculateCarbonEmission();
 }
 
 function increment(e) {
@@ -519,6 +521,7 @@ function increment(e) {
   let value = Number(target.value);
   value++;
   target.value = value;
+  calculateCarbonEmission();
 }
 
 const decrementButtons = document.querySelectorAll(
@@ -568,6 +571,7 @@ async function calculateFlightDistance() {
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     console.log("Distance: ", window.flightDistance)
+    calculateCarbonEmission();
   }
 }
 
@@ -641,8 +645,9 @@ async function calculateCarbonEmission() {
     emission *= 2;
   }
 
-  window.carbonToOffset = emission.toString();
+  window.carbonToOffset = emission.toFixed(3).toString();
   console.log("Carbon Emission: ", emission);
+  updateUIvalues();
 }
 
 /**
