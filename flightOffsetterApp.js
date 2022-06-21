@@ -190,7 +190,7 @@ async function fetchAccountData() {
   // document.querySelector("#connected").style.display = "block";
 }
 
-function updateUIvalues() {
+async function updateUIvalues() {
   const web3 = new Web3(provider);
 
   if (window.flightDistance) {
@@ -199,11 +199,11 @@ function updateUIvalues() {
   }
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
   fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
-  var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
 
   console.log("connected: ", window.isConnected)
   if (window.isConnected && window.carbonToOffset) {
-    updatePaymentCosts();
+    await updatePaymentCosts();
+    var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
     fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
   }
 }
@@ -723,7 +723,7 @@ window.addEventListener('load', async () => {
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
   document.querySelector("#start").addEventListener("change", calculateFlightDistance);
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
-  document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
+  document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
   document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
   document.querySelector('#flightclass').addEventListener("change", calculateCarbonEmission);
   document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
