@@ -138,7 +138,7 @@ async function fetchAccountData() {
 
   window.carbonToOffset = carbonToOffset;
   // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
-  window.isConnected = false;
+  // window.isConnected = false;
   window.paymentCurrency = paymentCurrency;
   window.paymentQuantity = paymentQuantity;
 
@@ -178,12 +178,7 @@ async function fetchAccountData() {
   console.log("carbontooffset: ", window.carbonToOffset);
   await calculateRequiredMaticPaymentForOffset();
 
-  var fieldDistance = document.getElementById("ro-input-distance");
-  fieldDistance.value = window.flightDistance.toFixed(1) + " km";
-  var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
-  fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
-  var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+  updateUIvalues()
 
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
@@ -200,6 +195,8 @@ function updateUIvalues() {
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
   fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
   var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+
+  console.log("connected: ", window.isConnected)
   if (window.isConnected) {
     fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
   }
@@ -441,6 +438,7 @@ async function onConnect() {
     console.log("Could not get a wallet connection", e);
     return;
   }
+  window.isConnected = true;
 
   await createContractObject();
 
@@ -468,8 +466,6 @@ async function onConnect() {
   else if (btnApprove.attachEvent) btnApprove.attachEvent("onclick", approveErc20);
 
   await refreshAccountData();
-
-  window.isConnected = true;
 }
 
 /**
