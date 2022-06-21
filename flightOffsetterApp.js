@@ -200,7 +200,9 @@ function updateUIvalues() {
   var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
   fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
   var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-  fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+  if (window.isConnected) {
+    fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+  }
 }
 
 
