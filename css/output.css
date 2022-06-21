@@ -1934,6 +1934,10 @@ body[dir="rtl"] .checkbox:checked,
   font-weight: 100;
 }
 
+.font-normal {
+  font-weight: 400;
+}
+
 .normal-case {
   text-transform: none;
 }
