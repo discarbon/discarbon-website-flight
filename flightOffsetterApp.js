@@ -16,13 +16,12 @@ let web3Modal
 
 // Chosen wallet provider given by the dialog window
 let provider;
-
+let signer;
 
 // Address of the selected account
 let selectedAccount;
 
 // Addresses of used contracts
-
 // const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
 // const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
 const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
@@ -103,13 +102,9 @@ function init() {
 }
 
 async function createContractObject() {
-  // Load ABI
   let jsonFile = "./ABI/OffsetHelper_" + offsetHelperAddress + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
-  // let offsetHelperABI = json.abi;
-  console.log(offsetHelperABI)
-  const web3 = new Web3(provider);
-  window.offsetHelper = await new web3.eth.Contract(offsetHelperABI, offsetHelperAddress);
+  window.offsetHelper = new ethers.Contract(offsetHelperAddress, offsetHelperABI, provider);
 }
 
 
@@ -119,37 +114,30 @@ async function createContractObject() {
 async function fetchAccountData() {
 
   // Get a Web3 instance for the wallet
-  const web3 = new Web3(provider);
+  //const web3 = new Web3(provider);
 
   console.log("Web3 instance is", web3);
 
   // Get connected chain id from Ethereum node
-  const chainId = await web3.eth.getChainId();
-
-  if(chainId !== 137) {
+  // const chainId = await ethers.network.getChainId();
+  const { chainId } = await provider.getNetwork()
+  if (chainId !== 137) {
     const alert = document.querySelector("#alert-error-incorrect-network");
     alert.style.display = "block";
     document.querySelector("#btn-offset").setAttribute("disabled")
-    document.querySelector("#btn-connect").setAttribute("disabled")    
+    document.querySelector("#btn-connect").setAttribute("disabled")
     return;
   } else {
     const alert = document.querySelector("#alert-error-incorrect-network");
     alert.style.display = "none";
     document.querySelector("#btn-offset").removeAttribute("disabled")
-    document.querySelector("#btn-connect").removeAttribute("disabled")    
+    document.querySelector("#btn-connect").removeAttribute("disabled")
   }
-  
+
   // Load chain information over an HTTP API
   const chainData = evmChains.getChain(chainId);
-  // TODO
   // document.querySelector("#network-name").textContent = chainData.name;
 
-  // Get list of accounts of the connected wallet
-  const accounts = await web3.eth.getAccounts();
-
-  // MetaMask does not give you all accounts, only the selected account
-  console.log("Got accounts", accounts);
-  selectedAccount = accounts[0];
 
   // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
   // window.isConnected = false;
@@ -172,7 +160,7 @@ async function fetchAccountData() {
     const balance = await web3.eth.getBalance(address);
     // ethBalance is a BigNumber instance
     // https://github.com/indutny/bn.js/
-    const ethBalance = web3.utils.fromWei(balance, "ether");
+    const ethBalance = ethers.utils.formatUnits(balance, 18);
     const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
     // Fill in the templated row and put in the document
     const clone = template.content.cloneNode(true);
@@ -205,8 +193,6 @@ async function fetchAccountData() {
 }
 
 async function updateUIvalues() {
-  const web3 = new Web3(provider);
-
   if (window.flightDistance) {
     var fieldDistance = document.getElementById("ro-input-distance");
     fieldDistance.value = window.flightDistance.toFixed(1) + " km";
@@ -220,7 +206,7 @@ async function updateUIvalues() {
   if (window.isConnected && window.carbonToOffset) {
     await updatePaymentCosts();
     var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-    fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+    fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
   }
 }
 
@@ -265,14 +251,14 @@ async function updatePaymentCosts() {
     console.log("No carbon emission to offset. Skipping calculation.")
     return;
   }
-  const web3 = new Web3(provider);
+
   switch (window.paymentCurrency) {
     case "matic":
       await calculateRequiredMaticPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:none")
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+      fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
       break;
     case "usdc":
     case "wmatic":
@@ -283,18 +269,20 @@ async function updatePaymentCosts() {
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
 
       if (window.paymentCurrency === "usdc") {
-        fieldPaymentQuantity.value = parseFloat(window.paymentQuantity / Math.pow(10, 6)).toFixed(4);
+        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
+        console.log("usdc formatUnits", fieldPaymentQuantity.value)
       } else {
-        fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 18)).toFixed(4);
+        console.log("not usdc formatUnits", fieldPaymentQuantity.value)
       }
       await createErc20Contract();
       break;
     case "nct":
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true")
-      window.paymentQuantity = web3.utils.toWei(window.carbonToOffset, "ether");
+      window.paymentQuantity = ethers.utils.parseEther(window.carbonToOffset, 18);
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(web3.utils.fromWei(window.paymentQuantity)).toFixed(4);
+      fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
       await createErc20Contract();
       break;
     default:
@@ -305,40 +293,29 @@ async function updatePaymentCosts() {
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
-  const web3 = new Web3(provider);
-  console.log("test carbon to offset: ", window.carbonToOffset)
-  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
-  window.paymentQuantity = await window.offsetHelper.methods
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei)
-    .call();
-  console.log("Matic: ", web3.utils.fromWei(window.paymentQuantity))
+  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
+  window.paymentQuantity = await window.offsetHelper
+    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei);
+  console.log("Matic: ", ethers.utils.formatUnits(window.paymentQuantity, 18))
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
-  const web3 = new Web3(provider);
-  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
-  window.paymentQuantity = await window.offsetHelper.methods
-    .calculateNeededTokenAmount(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei)
-    .call();
-  console.log("Token: ", web3.utils.fromWei(window.paymentQuantity))
+  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
+  window.paymentQuantity = await window.offsetHelper
+    .calculateNeededTokenAmount(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
+  console.log("Token: ", ethers.utils.formatUnits(window.paymentQuantity))
 }
 
 async function createErc20Contract() {
   let jsonFile = "./ABI/ERC20.json";
   var erc20ABI = await $.getJSON(jsonFile);
-  console.log(erc20ABI)
-  const web3 = new Web3(provider);
-  window.erc20Contract = await new web3.eth.Contract(erc20ABI, tokenAddresses[window.paymentCurrency]);
+  window.erc20Contract = new ethers.Contract(tokenAddresses[window.paymentCurrency], erc20ABI, provider);
 }
 
 async function approveErc20() {
-  const web3 = new Web3(provider);
-  console.log("Approving", offsetHelperAddress, "to deposit", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
-  const txReceipt = window.erc20Contract.methods
-    .approve(offsetHelperAddress, window.paymentQuantity)
-    .send({
-      from: selectedAccount
-    });
+  console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
+  const erc20WithSigner = window.erc20Contract.connect(signer);  
+  const txReceipt = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
 }
 
 async function doAutoOffset() {
@@ -364,51 +341,36 @@ async function doAutoOffset() {
   }
 }
 async function doAutoOffsetUsingETH() {
-  const web3 = new Web3(provider);
-  const accounts = await web3.eth.getAccounts();
-  selectedAccount = accounts[0];
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
-  const txReceipt = await window.offsetHelper.methods
-    .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei)
-    .send({
-      from: selectedAccount,
-      value: window.paymentQuantity,
-    });
-  console.log("offset done: ", web3.utils.fromWei(window.paymentQuantity));
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
+  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
+  const txReceipt = await offsetHelperWithSigner
+        .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei,
+                            {value: window.paymentQuantity});
+  console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
 async function doAutoOffsetUsingToken() {
-  const web3 = new Web3(provider);
-  const accounts = await web3.eth.getAccounts();
-  selectedAccount = accounts[0];
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
-  const txReceipt = await window.offsetHelper.methods
-    .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei)
-    .send({
-      from: selectedAccount
-    });
-  console.log("offset done: ", web3.utils.fromWei(window.paymentQuantity));
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
+  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
+  const txReceipt = await offsetHelperWithSigner
+        .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
+  console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  const web3 = new Web3(provider);
-  const accounts = await web3.eth.getAccounts();
-  selectedAccount = accounts[0];
-  console.log("Will offset", window.carbonToOffset, "using", web3.utils.fromWei(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = web3.utils.toWei(window.carbonToOffset, "ether");
-  const txReceipt = await window.offsetHelper.methods
-    .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei)
-    .send({
-      from: selectedAccount
-    });
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
+  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
+  const txReceipt = await offsetHelperWithSigner
+        .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei);
   console.log("Offset done.");
 }
 
@@ -466,14 +428,18 @@ function calcGeodesicDistance(start, destination) {
 async function onConnect() {
 
   console.log("Opening a dialog", web3Modal);
+
+  let instance
   try {
-    provider = await web3Modal.connect();
+    instance = await web3Modal.connect();
+    provider = new ethers.providers.Web3Provider(instance);
+    signer = provider.getSigner();
   } catch (e) {
     console.log("Could not get a wallet connection", e);
     return;
   }
   window.isConnected = true;
-
+  console.log("signer", signer)
   await createContractObject();
 
   // Subscribe to accounts change
