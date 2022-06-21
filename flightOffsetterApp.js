@@ -647,6 +647,7 @@ async function calculateCarbonEmission() {
 
   window.carbonToOffset = emission.toFixed(3).toString();
   console.log("Carbon Emission: ", emission);
+  await updatePaymentCosts();
   updateUIvalues();
 }
 
@@ -670,7 +671,18 @@ function singleEmissionCalc(em) {
   return emission
 }
 
+async function handleManuallyEnteredTCO2() {
+  console.log("manual change:")
+  let TCO2 = parseFloat(document.getElementById("ro-input-tco2").value);
 
+  if (TCO2) {
+    window.carbonToOffset = TCO2.toFixed(3).toString();
+    await updatePaymentCosts();
+  }
+
+  console.log("Carbon Emission: ", TCO2);
+  updateUIvalues();
+}
 
 
 /**
@@ -698,4 +710,5 @@ window.addEventListener('load', async () => {
   document.querySelector("#list-payment-tokens").addEventListener("change", updatePaymentCosts);
   document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
   document.querySelector('#flightclass').addEventListener("change", calculateCarbonEmission);
+  document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
 });
