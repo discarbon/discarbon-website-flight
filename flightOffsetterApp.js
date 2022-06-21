@@ -637,7 +637,7 @@ async function calculateCarbonEmission() {
   }
 
 
-  window.carbonToOffset = emission;
+  window.carbonToOffset = emission.toString();
   console.log("Carbon Emission: ", emission);
 }
 
