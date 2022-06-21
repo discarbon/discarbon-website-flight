@@ -99,7 +99,6 @@ function init() {
   });
 
   console.log("Web3Modal instance is", web3Modal);
-  window.carbonToOffset = "0.0";
 }
 
 async function createContractObject() {
@@ -520,7 +519,7 @@ function decrement(e) {
     value--;
   }
   target.value = value;
-  calculateCarbonEmission();
+  calculateFlightDistance();
 }
 
 function increment(e) {
@@ -531,7 +530,7 @@ function increment(e) {
   let value = Number(target.value);
   value++;
   target.value = value;
-  calculateCarbonEmission();
+  calculateFlightDistance();
 }
 
 const decrementButtons = document.querySelectorAll(
@@ -723,7 +722,7 @@ window.addEventListener('load', async () => {
   document.querySelector("#start").addEventListener("change", calculateFlightDistance);
   document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
-  document.querySelector("#roundtrip").addEventListener("click", calculateCarbonEmission);
-  document.querySelector('#flightclass').addEventListener("change", calculateCarbonEmission);
+  document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
+  document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
 });
