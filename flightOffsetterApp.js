@@ -113,13 +113,7 @@ async function createContractObject() {
  */
 async function fetchAccountData() {
 
-  // Get a Web3 instance for the wallet
-  //const web3 = new Web3(provider);
-
-  console.log("Web3 instance is", web3);
-
   // Get connected chain id from Ethereum node
-  // const chainId = await ethers.network.getChainId();
   const { chainId } = await provider.getNetwork()
   if (chainId !== 137) {
     const alert = document.querySelector("#alert-error-incorrect-network");
