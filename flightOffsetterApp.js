@@ -18,9 +18,6 @@ let web3Modal
 let provider;
 let signer;
 
-// Address of the selected account
-let selectedAccount;
-
 // Addresses of used contracts
 // const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
 // const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
@@ -113,24 +110,6 @@ async function createContractObject() {
  */
 async function fetchAccountData() {
 
-  // Get connected chain id from Ethereum node
-  const { chainId } = await provider.getNetwork()
-  if (chainId !== 137) {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "block";
-    document.querySelector("#btn-offset").setAttribute("disabled")
-    document.querySelector("#btn-connect").setAttribute("disabled")
-    return;
-  } else {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "none";
-    document.querySelector("#btn-offset").removeAttribute("disabled")
-    document.querySelector("#btn-connect").removeAttribute("disabled")
-  }
-
-  // Load chain information over an HTTP API
-  const chainData = evmChains.getChain(chainId);
-  // document.querySelector("#network-name").textContent = chainData.name;
 
 
   // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
@@ -138,35 +117,6 @@ async function fetchAccountData() {
   window.paymentCurrency = paymentCurrency;
   window.paymentQuantity = paymentQuantity;
 
-  // TODO
-  // document.querySelector("#selected-account").textContent = selectedAccount.slice(0, 8) + "..." + selectedAccount.slice(-6);
-
-  // TODO
-  // const template = document.querySelector("#template-balance");
-  // const accountContainer = document.querySelector("#accounts");
-
-  // // Purge UI elements any previously loaded accounts
-  // accountContainer.innerHTML = '';
-
-  // Go through all accounts and get their ETH balance
-  /*
-  const rowResolvers = accounts.map(async (address) => {
-    const balance = await web3.eth.getBalance(address);
-    // ethBalance is a BigNumber instance
-    // https://github.com/indutny/bn.js/
-    const ethBalance = ethers.utils.formatUnits(balance, 18);
-    const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
-    // Fill in the templated row and put in the document
-    const clone = template.content.cloneNode(true);
-    clone.querySelector(".address").textContent = address.slice(0, 8) + "..." + address.slice(-6);
-    clone.querySelector(".balance").textContent = humanFriendlyBalance;
-    accountContainer.appendChild(clone);
-  });
-  */
-  // Because rendering account does its own RPC communication
-  // with Ethereum node, we do not want to display any results
-  // until data for all accounts is loaded
-  // await Promise.all(rowResolvers);
 
   // calculate carbon emission
   await calculateFlightDistance();
@@ -175,7 +125,6 @@ async function fetchAccountData() {
   // if (window.carbonToOffset) {
   //   await calculateRequiredMaticPaymentForOffset();
   // }
-
 
   updateUIvalues();
 
@@ -210,16 +159,13 @@ async function updateUIvalues() {
  * - User connects wallet initially
  */
 async function refreshAccountData() {
-
   // If any current data is displayed when
   // the user is switching accounts in the wallet
   // immediate hide this data
-  // TODO
   // document.querySelector("#connected").style.display = "none";
 
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
-
 
   // Disable button while UI is loading.
   // fetchAccountData() will take a while as it communicates
@@ -412,6 +358,26 @@ function calcGeodesicDistance(start, destination) {
 }
 
 /**
+ * Check the site is connected to the correct network.
+ */
+async function isCorrectChainId() {
+  const { chainId } = await provider.getNetwork()
+  if (chainId !== 137) {
+    const alert = document.querySelector("#alert-error-incorrect-network");
+    alert.style.display = "block";
+    document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
+    document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
+    return false;
+  } else {
+    const alert = document.querySelector("#alert-error-incorrect-network");
+    alert.style.display = "none";
+    document.querySelector("#btn-offset").removeAttribute("disabled")
+    document.querySelector("#btn-connect").removeAttribute("disabled")
+    return true;
+  }
+}
+
+/**
  * Connect wallet button pressed.
  */
 async function onConnect() {
@@ -427,6 +393,12 @@ async function onConnect() {
     console.log("Could not get a wallet connection", e);
     return;
   }
+
+  const correctChainId = await isCorrectChainId();
+  if (correctChainId === false) {
+    return;
+  }
+
   window.isConnected = true;
   console.log("signer", signer)
   await createContractObject();
@@ -475,8 +447,6 @@ async function onDisconnect() {
     await web3Modal.clearCachedProvider();
     provider = null;
   }
-
-  selectedAccount = null;
 
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
