@@ -309,7 +309,7 @@ async function createErc20Contract() {
 
 async function approveErc20() {
   console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
-  const erc20WithSigner = window.erc20Contract.connect(signer);  
+  const erc20WithSigner = window.erc20Contract.connect(signer);
   const txReceipt = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
 }
 
@@ -343,8 +343,8 @@ async function doAutoOffsetUsingETH() {
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-        .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei,
-                            {value: window.paymentQuantity});
+    .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei,
+      { value: window.paymentQuantity });
   console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
@@ -356,7 +356,7 @@ async function doAutoOffsetUsingToken() {
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-        .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
+    .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
   console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
@@ -365,7 +365,7 @@ async function doAutoOffsetUsingPoolToken() {
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-        .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei);
+    .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei);
   console.log("Offset done.");
 }
 
