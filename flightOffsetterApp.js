@@ -205,8 +205,6 @@ async function updateUIvalues() {
   console.log("connected: ", window.isConnected)
   if (window.isConnected && window.carbonToOffset) {
     await updatePaymentCosts();
-    var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-    fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
   }
 }
 
@@ -267,13 +265,10 @@ async function updatePaymentCosts() {
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-
       if (window.paymentCurrency === "usdc") {
         fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
-        console.log("usdc formatUnits", fieldPaymentQuantity.value)
       } else {
         fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 18)).toFixed(4);
-        console.log("not usdc formatUnits", fieldPaymentQuantity.value)
       }
       await createErc20Contract();
       break;
