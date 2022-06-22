@@ -184,6 +184,7 @@ async function updatePaymentCosts() {
       approveButton.setAttribute("style", "display:none")
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
       fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
+      enableOffsetButton();
       break;
     case "usdc":
     case "wmatic":
@@ -191,6 +192,7 @@ async function updatePaymentCosts() {
       await calculateRequiredTokenPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
+      disableOffsetButton();
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
       if (window.paymentCurrency === "usdc") {
         fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
