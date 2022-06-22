@@ -124,7 +124,7 @@ async function updateUIvalues() {
   window.paymentCurrency = paymentCurrency;
   window.paymentQuantity = paymentQuantity;
 
-  if (window.flightDistance) {
+  if (window.flightDistance >= 0) {
     var fieldDistance = document.getElementById("ro-input-distance");
     fieldDistance.value = window.flightDistance.toFixed(1) + " km";
   }
@@ -545,7 +545,7 @@ async function calculateFlightDistance() {
  * get carbon emission from distance and other fields
  */
 async function calculateCarbonEmission() {
-  // Formula follows myclimates estimation calulator
+  // Formula follows myclimate estimation calculator
   // emission parameters (short distance)
   let emShort = {
     a: 0,
@@ -587,8 +587,10 @@ async function calculateCarbonEmission() {
     A: 11.68
   }
 
-  let emission = "0";
-  if (window.flightDistance < 1500) {  // short distance
+  let emission = 0;
+  if (window.flightDistance == 0) {
+    // do nothing
+  } else if (window.flightDistance < 1500) {  // short distance
     emission = singleEmissionCalc(emShort);
   } else if (window.flightDistance > 2500) {  // long distance
     emission = singleEmissionCalc(emLong);
