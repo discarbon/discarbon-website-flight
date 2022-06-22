@@ -109,23 +109,8 @@ async function createContractObject() {
  * Kick in the UI action after Web3modal dialog has chosen a provider
  */
 async function fetchAccountData() {
-
-
-
-  // window.flightDistance = flightDistance;  // TODO: this currently overwrites the calculated amount?
-  // window.isConnected = false;
-  window.paymentCurrency = paymentCurrency;
-  window.paymentQuantity = paymentQuantity;
-
-
   // calculate carbon emission
   await calculateFlightDistance();
-  // Display matic and carbon to offset
-  // console.log("carbontooffset: ", window.carbonToOffset);
-  // if (window.carbonToOffset) {
-  //   await calculateRequiredMaticPaymentForOffset();
-  // }
-
   updateUIvalues();
 
   // Display fully loaded UI for wallet data
@@ -136,6 +121,9 @@ async function fetchAccountData() {
 }
 
 async function updateUIvalues() {
+  window.paymentCurrency = paymentCurrency;
+  window.paymentQuantity = paymentQuantity;
+
   if (window.flightDistance) {
     var fieldDistance = document.getElementById("ro-input-distance");
     fieldDistance.value = window.flightDistance.toFixed(1) + " km";
@@ -150,7 +138,6 @@ async function updateUIvalues() {
     await updatePaymentCosts();
   }
 }
-
 
 /**
  * Fetch account data for UI when
@@ -394,15 +381,8 @@ async function onConnect() {
     return;
   }
 
-  const correctChainId = await isCorrectChainId();
-  if (correctChainId === false) {
-    return;
-  }
-
-  window.isConnected = true;
-  console.log("signer", signer)
-  await createContractObject();
-
+  let correctChainId
+  correctChainId = await isCorrectChainId();
   // Subscribe to accounts change
   provider.on("accountsChanged", (accounts) => {
     fetchAccountData();
@@ -411,12 +391,22 @@ async function onConnect() {
   // Subscribe to chainId change
   provider.on("chainChanged", (chainId) => {
     fetchAccountData();
+    correctChainId = isCorrectChainId();
   });
 
   // Subscribe to networkId change
   provider.on("networkChanged", (networkId) => {
     fetchAccountData();
+    correctChainId = isCorrectChainId();
   });
+
+  if (correctChainId === false) {
+    return;
+  }
+
+  window.isConnected = true;
+  console.log("signer", signer)
+  await createContractObject();
 
   var el = document.getElementById("btn-offset");
   if (el.addEventListener) el.addEventListener("click", doAutoOffset, false);
