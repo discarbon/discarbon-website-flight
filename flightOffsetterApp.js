@@ -201,7 +201,8 @@ async function updatePaymentCosts() {
       break;
     case "nct":
       var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:true")
+      approveButton.setAttribute("style", "display:true");
+      disableOffsetButton();
       window.paymentQuantity = ethers.utils.parseEther(window.carbonToOffset, 18);
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
       fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
@@ -212,6 +213,16 @@ async function updatePaymentCosts() {
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
       fieldPaymentQuantity.value = "unsupported token";
   }
+}
+
+function disableOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.setAttribute("disabled", "disabled");
+}
+
+function enableOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.removeAttribute("disabled");
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
@@ -238,6 +249,7 @@ async function approveErc20() {
   console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
   const erc20WithSigner = window.erc20Contract.connect(signer);
   const txReceipt = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
+  enableOffsetButton();
 }
 
 async function doAutoOffset() {
