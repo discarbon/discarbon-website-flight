@@ -7,8 +7,8 @@
 
 // Unpkg imports
 const Web3Modal = window.Web3Modal.default;
-const WalletConnectProvider = window.WalletConnectProvider.default;
-const Fortmatic = window.Fortmatic;
+// const WalletConnectProvider = window.WalletConnectProvider.default;
+// const Fortmatic = window.Fortmatic;
 const evmChains = window.evmChains;
 
 // Web3modal instance
@@ -54,8 +54,8 @@ let airportsList = airports.map(value => {
 function init() {
 
   console.log("Initializing example");
-  console.log("WalletConnectProvider is", WalletConnectProvider);
-  console.log("Fortmatic is", Fortmatic);
+  // console.log("WalletConnectProvider is", WalletConnectProvider);
+  // console.log("Fortmatic is", Fortmatic);
   console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
 
   // Check that the web page is run in a secure context,
@@ -72,21 +72,21 @@ function init() {
   // Built-in web browser provider (only one can exist as a time)
   // like MetaMask, Brave or Opera is added automatically by Web3modal
   const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        // haurogs key
-        infuraId: "95a164372c0a4d0f8847bc5c173c9fa0",
-      }
-    },
+    // walletconnect: {
+    //   package: WalletConnectProvider,
+    //   options: {
+    //     // haurogs key
+    //     infuraId: "95a164372c0a4d0f8847bc5c173c9fa0",
+    //   }
+    // },
 
-    fortmatic: {
-      package: Fortmatic,
-      options: {
-        // Mikko's TESTNET api key
-        key: "pk_test_391E26A3B43A3350"
-      }
-    }
+    // fortmatic: {
+    //   package: Fortmatic,
+    //   options: {
+    //     // Mikko's TESTNET api key
+    //     key: "pk_test_391E26A3B43A3350"
+    //   }
+    // }
   };
 
   web3Modal = new Web3Modal({
