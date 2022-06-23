@@ -24,10 +24,11 @@ with open(INPUT_FILE, mode='r')as input_file:
                    and (lines[2] == "medium_airport" or lines[2] == "large_airport")
         if selector:
             number_of_airports += 1
-            airport_name = lines[3] + ", " + \
+            airport_name = lines[13] + ", " + \
+                           lines[3] + ", " + \
                            lines[10] + " " + \
-                           lines[8] + ", " + \
-                           lines[13] # name + municipality + iso country + Iata
+                           lines[8]
+                            # Iata + name + municipality + iso country
 
             airport_name = airport_name.replace('"', '\\"')
             airport_name = airport_name.strip()

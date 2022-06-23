@@ -1,6 +1,7 @@
 # discarbon-website-flight
 flight offsetter website
 
+The website can be accessed under `https://flight.discarbon.earth/`. This directly reflects the main branch.
 
 
 ## How to develop
@@ -19,6 +20,9 @@ npm i -g --only=prod https-localhost
 sudo serve .
 ```
 See [web3modal-vanilla-js-example][https://github.com/Web3Modal/web3modal-vanilla-js-example] for more info.
+
+The website in the dev branch can be accessed under `https://flight-dev.discarbon.earth/`.
+
 
 ### List of airports
 
