@@ -20,4 +20,11 @@ sudo serve .
 ```
 See [web3modal-vanilla-js-example][https://github.com/Web3Modal/web3modal-vanilla-js-example] for more info.
 
+### List of airports
+
+The list of airports os created by the python script `create_airport_list.py` in the resources folder. If you want to change anything there, edit the script and run it via:
+
+`python3 ./resources/create_airport_list.py `
+
+
 Start hacking.
