@@ -228,6 +228,18 @@ function hideApproveButton() {
   approveButton.setAttribute("style", "display:none");
 }
 
+function busyApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.innerHTML = "";
+  approveButton.classList.add("loading");
+}
+
+function readyApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.classList.remove("loading");
+  approveButton.innerHTML = "Approve";
+}
+
 function disableOffsetButton() {
   let offsetButton = document.getElementById("btn-offset");
   offsetButton.setAttribute("disabled", "disabled");
@@ -267,11 +279,18 @@ async function createErc20Contract() {
 }
 
 async function approveErc20() {
+  busyApproveButton();
   console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
-  const erc20WithSigner = window.erc20Contract.connect(signer);
-  const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
-  await transaction.wait();
-  enableOffsetButton();
+  try {
+    const erc20WithSigner = window.erc20Contract.connect(signer);
+    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
+    await transaction.wait();
+    readyApproveButton();
+    enableOffsetButton();
+  } catch (e) {
+    readyApproveButton();
+    throw e;
+  }
 }
 
 async function doAutoOffset() {
@@ -679,7 +698,7 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
-    select: function(event, ui) {
+    select: function (event, ui) {
       // somehow this needs to be set manually here, otherwise the UI will
       // not update properly. (For the other jQuery it works without it...)
       let startField = document.getElementById("start");
@@ -704,7 +723,7 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
-    select: function(event, ui) {calculateFlightDistance()}
+    select: function (event, ui) { calculateFlightDistance() }
   }).focus(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
