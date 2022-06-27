@@ -203,12 +203,6 @@ async function updatePaymentFields() {
     case "USDC":
     case "WMATIC":
     case "WETH":
-      await calculateRequiredTokenPaymentForOffset();
-      showApproveButton();
-      disableOffsetButton();
-      updatePaymentAmountField();
-      await createErc20Contract();
-      break;
     case "NCT":
       await calculateRequiredTokenPaymentForOffset();
       showApproveButton();
