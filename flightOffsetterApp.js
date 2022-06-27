@@ -1,4 +1,4 @@
-// import { addresses, offsetHelperAddress, addresses['NCT'] } from "./addresses";
+import { addressesMainnet } from './addresses.js';
 
 "use strict";
 
@@ -25,15 +25,7 @@ let signer;
 // const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
 const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
 
-let offsetHelper;  // contract object of the offsethelper
-
-const addresses = {
-  BCT: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
-  NCT: "0xD838290e877E0188a4A44700463419ED96c16107",
-  USDC: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-  WETH: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-  WMATIC: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-};
+const addresses = addressesMainnet;
 
 const tokenDecimals = {
   BCT: 18,
@@ -116,9 +108,9 @@ function init() {
 }
 
 async function createContractObject() {
-  let jsonFile = "./ABI/OffsetHelper_" + offsetHelperAddress + ".json";
+  let jsonFile = "./ABI/OffsetHelper_" + addresses["offsetHelper"] + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
-  window.offsetHelper = new ethers.Contract(offsetHelperAddress, offsetHelperABI, provider);
+  window.offsetHelper = new ethers.Contract(addresses["offsetHelper"], offsetHelperABI, provider);
   window.offsetHelperWithSigner = window.offsetHelper.connect(signer);
 }
 
@@ -263,6 +255,7 @@ function updatePaymentAmountField() {
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
+
   let amount = await window.offsetHelper
     .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
   updatePaymentAmount(amount);
@@ -285,9 +278,9 @@ async function createErc20Contract() {
 }
 
 async function approveErc20() {
-  console.log("Approving", offsetHelperAddress, "to deposit", window.paymentAmount["asString"], window.paymentToken);
+  console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
   const erc20WithSigner = window.erc20Contract.connect(signer);
-  const transaction = await erc20WithSigner.approve(offsetHelperAddress, window.paymentAmount["asBigNumber"]);
+  const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
   //  await transaction.wait().then(
   //    enableOffsetButton()
   //  );
