@@ -131,10 +131,10 @@ async function updateUIvalues() {
   window.paymentAmount = paymentAmount;
 
   if (window.flightDistance >= 0) {
-    var fieldDistance = document.getElementById("ro-input-distance");
+    var fieldDistance = document.getElementById("distance");
     fieldDistance.value = window.flightDistance.toFixed(1) + " km";
   }
-  var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
+  var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset["asFloat"]) {
     fieldCarbonToOffset.value = window.carbonToOffset["asString"] + " TCO2";
   }
@@ -195,7 +195,7 @@ async function updatePaymentCosts() {
       await calculateRequiredMaticPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:none")
-      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount)).toFixed(4);
       enableOffsetButton();
       break;
@@ -206,7 +206,7 @@ async function updatePaymentCosts() {
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
-      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      var fieldpaymentAmount = document.getElementById("payment-amount");
       if (window.paymentToken === "USDC") {
         fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount, 6)).toFixed(4);
       } else {
@@ -219,13 +219,13 @@ async function updatePaymentCosts() {
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
       window.paymentAmount = window.carbonToOffset["asBigNumber"];
-      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = window.carbonToOffset["asString"];
       await createErc20Contract();
       break;
     default:
       console.log("Unsupported token! ", window.paymentToken);
-      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = "unsupported token";
   }
 }
@@ -649,7 +649,7 @@ function singleEmissionCalc(em) {
 
 async function handleManuallyEnteredTCO2() {
   console.log("manual change:")
-  let TCO2 = parseFloat(document.getElementById("ro-input-tco2").value);
+  let TCO2 = parseFloat(document.getElementById("carbon-to-offset").value);
   console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
     updateCarbonToOffset(TCO2);
@@ -714,6 +714,6 @@ window.addEventListener('load', async () => {
   document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
-  document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
+  document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
   document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
 });
