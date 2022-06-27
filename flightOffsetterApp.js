@@ -44,7 +44,7 @@ let carbonToOffset = {
 
 let flightDistance = 0;
 let paymentToken = "MATIC";
-let paymentQuantity = "";
+let paymentAmount = "";
 let isConnected = false;
 
 import { airports } from './resources/airports_selected.js'
@@ -128,7 +128,7 @@ async function fetchAccountData() {
 
 async function updateUIvalues() {
   window.paymentToken = paymentToken;
-  window.paymentQuantity = paymentQuantity;
+  window.paymentAmount = paymentAmount;
 
   if (window.flightDistance >= 0) {
     var fieldDistance = document.getElementById("ro-input-distance");
@@ -195,8 +195,8 @@ async function updatePaymentCosts() {
       await calculateRequiredMaticPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:none")
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
+      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount)).toFixed(4);
       enableOffsetButton();
       break;
     case "USDC":
@@ -206,11 +206,11 @@ async function updatePaymentCosts() {
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
+      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
       if (window.paymentToken === "USDC") {
-        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
+        fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount, 6)).toFixed(4);
       } else {
-        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 18)).toFixed(4);
+        fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount, 18)).toFixed(4);
       }
       await createErc20Contract();
       break;
@@ -218,15 +218,15 @@ async function updatePaymentCosts() {
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
-      window.paymentQuantity = window.carbonToOffset["asBigNumber"];
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = window.carbonToOffset["asString"];
+      window.paymentAmount = window.carbonToOffset["asBigNumber"];
+      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      fieldpaymentAmount.value = window.carbonToOffset["asString"];
       await createErc20Contract();
       break;
     default:
       console.log("Unsupported token! ", window.paymentToken);
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = "unsupported token";
+      var fieldpaymentAmount = document.getElementById("ro-input-required-payment-token-amount");
+      fieldpaymentAmount.value = "unsupported token";
   }
 }
 
@@ -241,15 +241,15 @@ function enableOffsetButton() {
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
-  window.paymentQuantity = await window.offsetHelper
+  window.paymentAmount = await window.offsetHelper
     .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Matic: ", ethers.utils.formatUnits(window.paymentQuantity, 18))
+  console.log("Matic: ", ethers.utils.formatUnits(window.paymentAmount, 18), typeof ethers.utils.formatUnits(window.paymentAmount));
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
-  window.paymentQuantity = await window.offsetHelper
+  window.paymentAmount = await window.offsetHelper
     .calculateNeededTokenAmount(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Token: ", ethers.utils.formatUnits(window.paymentQuantity))
+  console.log("Token: ", ethers.utils.formatUnits(window.paymentAmount))
 }
 
 async function createErc20Contract() {
@@ -259,9 +259,9 @@ async function createErc20Contract() {
 }
 
 async function approveErc20() {
-  console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentToken, "(", window.paymentQuantity, ")");
+  console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentAmount), window.paymentToken, "(", window.paymentAmount, ")");
   const erc20WithSigner = window.erc20Contract.connect(signer);
-  const transaction = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
+  const transaction = await erc20WithSigner.approve(offsetHelperAddress, window.paymentAmount);
   //  await transaction.wait().then(
   //    enableOffsetButton()
   //  );
@@ -293,24 +293,24 @@ async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentToken);
+  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentAmount), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset["asBigNumber"], { value: window.paymentQuantity });
-  console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
+    .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset["asBigNumber"], { value: window.paymentAmount });
+  console.log("offset done: ", ethers.utils.formatUnits(window.paymentAmount));
 }
 
 async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentToken);
+  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentAmount), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
+  console.log("Offset done: ", ethers.utils.formatUnits(window.paymentAmount));
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentToken);
+  console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentAmount), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
   console.log("Offset done.");
