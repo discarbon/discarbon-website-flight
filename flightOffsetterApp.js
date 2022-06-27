@@ -679,7 +679,13 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
-    select: function(event, ui) {calculateFlightDistance()}
+    select: function(event, ui) {
+      // somehow this needs to be set manually here, otherwise the UI will
+      // not update properly. (For the other jQuery it works without it...)
+      let startField = document.getElementById("start");
+      startField.value = ui.item.value;
+      calculateFlightDistance();
+    }
   }).focus(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
