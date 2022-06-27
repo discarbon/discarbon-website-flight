@@ -108,6 +108,7 @@ async function createContractObject() {
   let jsonFile = "./ABI/OffsetHelper_" + offsetHelperAddress + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
   window.offsetHelper = new ethers.Contract(offsetHelperAddress, offsetHelperABI, provider);
+  window.offsetHelperWithSigner = window.offsetHelper.connect(signer);
 }
 
 
@@ -294,8 +295,7 @@ async function doAutoOffsetUsingETH() {
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
   console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
+  const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset["asBigNumber"], { value: window.paymentQuantity });
   console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
@@ -305,16 +305,14 @@ async function doAutoOffsetUsingToken() {
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
   console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
+  const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingToken(addresses[window.paymentCurrency], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
   console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
 async function doAutoOffsetUsingPoolToken() {
   console.log("Will offset", window.carbonToOffset["asString"], "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
+  const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
   console.log("Offset done.");
 }
