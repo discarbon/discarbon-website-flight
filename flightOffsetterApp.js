@@ -650,7 +650,7 @@ async function calculateCarbonEmission() {
   if (roundTrip) {
     emission *= 2;
   }
-  console.log("user entered ", emission, typeof emission)
+  // console.log("user entered ", emission, typeof emission)
   updateCarbonToOffset(emission);
   console.log("Carbon Emission: ", emission);
   await updatePaymentFields();
