@@ -25,6 +25,8 @@ with open(INPUT_FILE, mode='r')as input_file:
         name = lines[3]
         municipality = lines[10]
         country = lines[8]
+        latitude = lines[4]
+        longitude = lines[5]
 
 
 
@@ -50,8 +52,8 @@ with open(INPUT_FILE, mode='r')as input_file:
             airport_string = airport_string.replace('"', '\\"')
             airport_string = airport_string.strip()
             temp_airport = [airport_string,
-                            lines[4],
-                            lines[5]]
+                            latitude,
+                            longitude]
             print(temp_airport)
             airports_selected.append(temp_airport)
 
