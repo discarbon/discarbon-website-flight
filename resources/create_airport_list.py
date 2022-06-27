@@ -46,7 +46,7 @@ with open(INPUT_FILE, mode='r')as input_file:
             number_of_airports += 1
             airport_string = IATA_code + ", " + \
                              name + ", " + \
-                             municipality + " " + \
+                             municipality + ", " + \
                              country
 
             airport_string = airport_string.replace('"', '\\"')
