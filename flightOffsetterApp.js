@@ -747,8 +747,6 @@ window.addEventListener('load', async () => {
   init();
   document.querySelector("#btn-connect").addEventListener("click", onConnect);
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
-  document.querySelector("#start").addEventListener("change", calculateFlightDistance);
-  document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
   document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
