@@ -279,6 +279,7 @@ async function approveErc20() {
   //  await transaction.wait().then(
   //    enableOffsetButton()
   //  );
+  enableOffsetButton();
 }
 
 async function doAutoOffset() {
