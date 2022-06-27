@@ -193,8 +193,7 @@ async function updatePaymentCosts() {
   switch (window.paymentToken) {
     case "MATIC":
       await calculateRequiredMaticPaymentForOffset();
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:none")
+      hideApproveButton();
       var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = parseFloat(ethers.utils.formatUnits(window.paymentAmount)).toFixed(4);
       enableOffsetButton();
@@ -203,8 +202,7 @@ async function updatePaymentCosts() {
     case "WMATIC":
     case "WETH":
       await calculateRequiredTokenPaymentForOffset();
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:true");
+      showApproveButton();
       disableOffsetButton();
       var fieldpaymentAmount = document.getElementById("payment-amount");
       if (window.paymentToken === "USDC") {
@@ -215,8 +213,7 @@ async function updatePaymentCosts() {
       await createErc20Contract();
       break;
     case "NCT":
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:true");
+      showApproveButton();
       disableOffsetButton();
       window.paymentAmount = window.carbonToOffset["asBigNumber"];
       var fieldpaymentAmount = document.getElementById("payment-amount");
@@ -228,6 +225,16 @@ async function updatePaymentCosts() {
       var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = "unsupported token";
   }
+}
+
+function showApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("style", "display:true");
+}
+
+function hideApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("style", "display:none");
 }
 
 function disableOffsetButton() {
@@ -670,14 +677,14 @@ $(function () {
     minLength: 2,
   }).focus(function () {
     $(this).autocomplete('search', $(this).val())
-  }).autocomplete("instance")._renderItem = function( ul, item ) {
-    return $( "<li>" )
-      .append( "<div>" + item.label.split(",")[1] + "<br>" +
-      "<small><b>" + item.label.split(",")[0] + "</b>, " +
-       item.label.split(",")[2] + ", " +
-       item.label.split(",")[3] +
-       "</small></div>" )
-      .appendTo( ul );
+  }).autocomplete("instance")._renderItem = function (ul, item) {
+    return $("<li>")
+      .append("<div>" + item.label.split(",")[1] + "<br>" +
+        "<small><b>" + item.label.split(",")[0] + "</b>, " +
+        item.label.split(",")[2] + ", " +
+        item.label.split(",")[3] +
+        "</small></div>")
+      .appendTo(ul);
   };
 });
 
