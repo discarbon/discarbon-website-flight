@@ -276,9 +276,7 @@ async function approveErc20() {
   console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
   const erc20WithSigner = window.erc20Contract.connect(signer);
   const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
-  //  await transaction.wait().then(
-  //    enableOffsetButton()
-  //  );
+  await transaction.wait();
   enableOffsetButton();
 }
 
