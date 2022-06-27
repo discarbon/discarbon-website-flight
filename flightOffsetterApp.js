@@ -685,6 +685,7 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
+    select: function(event, ui) {calculateFlightDistance()}
   }).focus(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
@@ -703,6 +704,7 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
+    select: function(event, ui) {calculateFlightDistance()}
   }).focus(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
