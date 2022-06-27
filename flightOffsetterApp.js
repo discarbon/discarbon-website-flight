@@ -1,4 +1,4 @@
-import { addressesMainnet } from './addresses.js';
+import { addressesMainnet, addressesMumbai } from './addresses.js';
 
 "use strict";
 
@@ -19,11 +19,6 @@ let web3Modal
 // Chosen wallet provider given by the dialog window
 let provider;
 let signer;
-
-// Addresses of used contracts
-// const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
-// const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
-const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
 
 const addresses = addressesMainnet;
 
@@ -388,6 +383,7 @@ function calcGeodesicDistance(start, destination) {
  */
 async function isCorrectChainId() {
   const { chainId } = await provider.getNetwork()
+  // if (chainId !== 80001) {
   if (chainId !== 137) {
     const alert = document.querySelector("#alert-error-incorrect-network");
     alert.style.display = "block";
@@ -419,6 +415,9 @@ async function onConnect() {
     console.log("Could not get a wallet connection", e);
     return;
   }
+
+  window.carbonToOffset = carbonToOffset;
+  window.paymentAmount = paymentAmount;
 
   let correctChainId
   correctChainId = await isCorrectChainId();
