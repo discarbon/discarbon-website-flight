@@ -666,6 +666,8 @@ $(function () {
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
+  }).focus(function () {
+    $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function( ul, item ) {
     return $( "<li>" )
       .append( "<div>" + item.label.split(",")[1] + "<br>" +
@@ -676,19 +678,22 @@ $(function () {
       .appendTo( ul );
   };
 });
+
 $(function () {
   $("#destination").autocomplete({
     maxShowItems: 6,
     source: airportsList,
     minLength: 2,
-  }).autocomplete("instance")._renderItem = function( ul, item ) {
-    return $( "<li>" )
-      .append( "<div>" + item.label.split(",")[1] + "<br>" +
-      "<small><b>" + item.label.split(",")[0] + "</b>, " +
-       item.label.split(",")[2] + ", " +
-       item.label.split(",")[3] +
-       "</small></div>" )
-      .appendTo( ul );
+  }).focus(function () {
+    $(this).autocomplete('search', $(this).val())
+  }).autocomplete("instance")._renderItem = function (ul, item) {
+    return $("<li>")
+      .append("<div>" + item.label.split(",")[1] + "<br>" +
+        "<small><b>" + item.label.split(",")[0] + "</b>, " +
+        item.label.split(",")[2] + ", " +
+        item.label.split(",")[3] +
+        "</small></div>")
+      .appendTo(ul);
   };
 });
 
