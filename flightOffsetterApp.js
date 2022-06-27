@@ -1,3 +1,5 @@
+// import { addresses, offsetHelperAddress, addresses['NCT'] } from "./addresses";
+
 "use strict";
 
 /**
@@ -22,22 +24,21 @@ let signer;
 // const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
 // const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
 const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
-const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
 
 let offsetHelper;  // contract object of the offsethelper
 
-const tokenAddresses = {
-  bct: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
-  nct: "0xD838290e877E0188a4A44700463419ED96c16107",
-  usdc: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-  weth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-  wmatic: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+const addresses = {
+  BCT: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
+  NCT: "0xD838290e877E0188a4A44700463419ED96c16107",
+  USDC: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+  WETH: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+  WMATIC: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
 };
 
 // Initial values
 let carbonToOffset = "0.0";
 let flightDistance = 0;
-let paymentCurrency = "matic";
+let paymentCurrency = "MATIC";
 let paymentQuantity = "";
 let isConnected = false;
 
@@ -164,7 +165,7 @@ async function refreshAccountData() {
 }
 
 async function updatePaymentCosts() {
-  window.paymentCurrency = await document.querySelector("#list-payment-tokens").value.toLowerCase();
+  window.paymentCurrency = await document.querySelector("#list-payment-tokens").value;
   console.log("Payment currency changed: ", window.paymentCurrency);
   console.log("Connected:", window.isConnected);
   console.log("Carbon to offset: ", window.carbonToOffset);
@@ -178,7 +179,7 @@ async function updatePaymentCosts() {
   }
 
   switch (window.paymentCurrency) {
-    case "matic":
+    case "MATIC":
       await calculateRequiredMaticPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:none")
@@ -186,22 +187,22 @@ async function updatePaymentCosts() {
       fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
       enableOffsetButton();
       break;
-    case "usdc":
-    case "wmatic":
-    case "weth":
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
       await calculateRequiredTokenPaymentForOffset();
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
       var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      if (window.paymentCurrency === "usdc") {
+      if (window.paymentCurrency === "USDC") {
         fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
       } else {
         fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 18)).toFixed(4);
       }
       await createErc20Contract();
       break;
-    case "nct":
+    case "NCT":
       var approveButton = document.getElementById("btn-approve");
       approveButton.setAttribute("style", "display:true");
       disableOffsetButton();
@@ -230,28 +231,31 @@ function enableOffsetButton() {
 async function calculateRequiredMaticPaymentForOffset() {
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
   window.paymentQuantity = await window.offsetHelper
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei);
+    .calculateNeededETHAmount(addresses['NCT'], carbonToOffsetWei);
   console.log("Matic: ", ethers.utils.formatUnits(window.paymentQuantity, 18))
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
+  console.log("NCT Address", addresses['NCT']);
   window.paymentQuantity = await window.offsetHelper
-    .calculateNeededTokenAmount(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
+    .calculateNeededTokenAmount(addresses[window.paymentCurrency], addresses['NCT'], carbonToOffsetWei);
   console.log("Token: ", ethers.utils.formatUnits(window.paymentQuantity))
 }
 
 async function createErc20Contract() {
   let jsonFile = "./ABI/ERC20.json";
   var erc20ABI = await $.getJSON(jsonFile);
-  window.erc20Contract = new ethers.Contract(tokenAddresses[window.paymentCurrency], erc20ABI, provider);
+  window.erc20Contract = new ethers.Contract(addresses[window.paymentCurrency], erc20ABI, provider);
 }
 
 async function approveErc20() {
   console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
   const erc20WithSigner = window.erc20Contract.connect(signer);
-  const txReceipt = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
-  enableOffsetButton();
+  const transaction = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
+  //  await transaction.wait().then(
+  //    enableOffsetButton()
+  //  );
 }
 
 async function doAutoOffset() {
@@ -262,15 +266,15 @@ async function doAutoOffset() {
     return;
   }
   switch (window.paymentCurrency) {
-    case "matic":
+    case "MATIC":
       await doAutoOffsetUsingETH();
       break;
-    case "usdc":
-    case "wmatic":
-    case "weth":
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
       await doAutoOffsetUsingToken();
       break;
-    case "nct":
+    case "NCT":
       await doAutoOffsetUsingPoolToken();
       break;
     default: console.log("unsupported currency! ", window.paymentCurrency);
@@ -280,11 +284,11 @@ async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei,
+    .autoOffsetUsingETH(addresses['NCT'], carbonToOffsetWei,
       { value: window.paymentQuantity });
   console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
@@ -293,20 +297,20 @@ async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
+    .autoOffsetUsingToken(addresses[window.paymentCurrency], addresses['NCT'], carbonToOffsetWei);
   console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
+  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency);
   const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
   const offsetHelperWithSigner = window.offsetHelper.connect(signer);
   const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei);
+    .autoOffsetUsingPoolToken(addresses['NCT'], carbonToOffsetWei);
   console.log("Offset done.");
 }
 
