@@ -36,13 +36,13 @@ with open(INPUT_FILE, mode='r')as input_file:
                    and (size == "medium_airport" or size == "large_airport")
 
         if selector:
-            # print(name)
-            # if country == 'XK':  # Kosovo is not an official ISO code so needs to be treated specially
-            #     country = 'Kosovo'
-            # else:
-            #     country = pycountry.countries.get(alpha_2=lines[8]).name
-            # print(lines[8])
-            # print(pycountry.countries.get(alpha_2=lines[8]).name)
+            # cleanup airport names of commas (otherwise website splits them wrongly)
+            name = name.replace(',' , ' ')
+            # convert country codes to human readable format
+            if country == 'XK':  # Kosovo is not an official ISO code so needs to be treated specially
+                country = 'Kosovo'
+            else:
+                country = pycountry.countries.get(alpha_2=lines[8]).name
             number_of_airports += 1
             airport_string = IATA_code + ", " + \
                              name + ", " + \
