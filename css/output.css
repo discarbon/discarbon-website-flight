@@ -1821,6 +1821,14 @@ body[dir="rtl"] .checkbox:checked,
   padding-right: 1.5rem;
 }
 
+.pl-2 {
+  padding-left: 0.5rem;
+}
+
+.pr-\[25px\] {
+  padding-right: 25px;
+}
+
 .text-center {
   text-align: center;
 }
