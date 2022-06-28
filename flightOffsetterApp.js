@@ -83,10 +83,10 @@ class BigNumber {
  */
 function init() {
 
-  console.log("Initializing example");
+  console.log("Initializing");
   // console.log("WalletConnectProvider is", WalletConnectProvider);
   // console.log("Fortmatic is", Fortmatic);
-  console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
+  // console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
 
   // Check that the web page is run in a secure context,
   // as otherwise MetaMask won't be available
@@ -167,7 +167,7 @@ async function updateUIvalues() {
     // fieldCarbonToOffset.innerHTML = window.carbonToOffset["asString"] + " TCO2";
   }
 
-  console.log("connected: ", window.isConnected)
+  // console.log("connected: ", window.isConnected)
   if (window.isConnected && (window.carbonToOffset["asFloat"])) {
     await updatePaymentFields();
   }
@@ -212,9 +212,9 @@ function updatePaymentAmount(amount) {
 
 async function updatePaymentFields() {
   window.paymentToken = await document.querySelector("#list-payment-tokens").value;
-  console.log("Payment token changed: ", window.paymentToken);
-  console.log("Connected:", window.isConnected);
-  console.log("Carbon to offset: ", window.carbonToOffset["asString"]);
+  // console.log("Payment token changed: ", window.paymentToken);
+  // console.log("Connected:", window.isConnected);
+  // console.log("Carbon to offset: ", window.carbonToOffset["asString"]);
   if (window.isConnected !== true) {
     console.log("skipping update of payment costs; wallet not connected")
     return;
@@ -327,7 +327,7 @@ async function getErc20Balance() {
 
 async function approveErc20() {
   busyApproveButton();
-  console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
+  // console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
   try {
     const erc20WithSigner = window.erc20Contract.connect(signer);
     const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
@@ -341,8 +341,8 @@ async function approveErc20() {
 }
 
 async function doAutoOffset() {
-  console.log("AutoOffsetting with:", window.paymentToken);
-  console.log("Connected:", window.isConnected);
+  // console.log("AutoOffsetting with:", window.paymentToken);
+  // console.log("Connected:", window.isConnected);
   if (window.isConnected !== true) {
     console.log("skipping auto offset costs; wallet not connected")
     return;
@@ -366,27 +366,27 @@ async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  // console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset["asBigNumber"], { value: window.paymentAmount["asBigNumber"] });
-  console.log("offset done: ", window.paymentAmount["asString"]);
+  // console.log("offset done: ", window.paymentAmount["asString"]);
 }
 
 async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  // console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Offset done: ", window.paymentAmount["asString"]);
+  // console.log("Offset done: ", window.paymentAmount["asString"]);
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  // console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Offset done.");
+  // console.log("Offset done.");
 }
 
 /**
@@ -616,11 +616,11 @@ async function calculateFlightDistance() {
   }
 
 
-  console.log("Locations:", startLocation, " ", destinationLocation)
+  // console.log("Locations:", startLocation, " ", destinationLocation)
 
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
-    console.log("Distance: ", window.flightDistance)
+    // console.log("Distance: ", window.flightDistance)
     calculateCarbonEmission();
   }
 }
@@ -698,7 +698,7 @@ async function calculateCarbonEmission() {
   }
   // console.log("user entered ", emission, typeof emission)
   updateCarbonToOffset(emission);
-  console.log("Carbon Emission: ", emission);
+  // console.log("Carbon Emission: ", emission);
   await updatePaymentFields();
   updateUIvalues();
 }
@@ -724,14 +724,14 @@ function singleEmissionCalc(em) {
 }
 
 async function handleManuallyEnteredTCO2() {
-  console.log("manual change:")
+  // console.log("manual change:")
   let TCO2 = parseFloat(document.getElementById("carbon-to-offset").value);
-  console.log("user entered ", TCO2, typeof TCO2)
+  // console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
     updateCarbonToOffset(TCO2);
     await updatePaymentFields();
   }
-  console.log("Carbon Emission: ", TCO2);
+  // console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
 }
 
