@@ -130,11 +130,15 @@ async function updateUIvalues() {
 
   if (window.flightDistance >= 0) {
     var fieldDistance = document.getElementById("distance");
-    fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+    // TODO stats
+    // fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+    fieldDistance.innerHTML = window.flightDistance.toFixed(1) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset["asFloat"]) {
-    fieldCarbonToOffset.value = window.carbonToOffset["asString"] + " TCO2";
+    // TODO stats
+    fieldCarbonToOffset.value = window.carbonToOffset["asString"];
+    // fieldCarbonToOffset.innerHTML = window.carbonToOffset["asString"] + " TCO2";
   }
 
   console.log("connected: ", window.isConnected)
@@ -196,19 +200,19 @@ async function updatePaymentFields() {
   switch (window.paymentToken) {
     case "MATIC":
       await calculateRequiredMaticPaymentForOffset();
+      window.balance = await getMaticBalance();
       hideApproveButton();
       enableOffsetButton();
-      updatePaymentAmountField();
       break;
     case "USDC":
     case "WMATIC":
     case "WETH":
     case "NCT":
       await calculateRequiredTokenPaymentForOffset();
+      await createErc20Contract();
+      window.balance = await getErc20Balance();
       showApproveButton();
       disableOffsetButton();
-      updatePaymentAmountField();
-      await createErc20Contract();
       break;
     default:
       console.log("Unsupported token! ", window.paymentToken);
@@ -216,6 +220,8 @@ async function updatePaymentFields() {
       var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = "unsupported token";
   }
+  updatePaymentAmountField();
+  updateBalanceField();
 }
 
 function showApproveButton() {
@@ -252,7 +258,12 @@ function enableOffsetButton() {
 
 function updatePaymentAmountField() {
   var paymentAmountField = document.getElementById("payment-amount");
-  paymentAmountField.value = window.paymentAmount["asString"];
+  paymentAmountField.innerHTML = window.paymentAmount["asString"];
+}
+
+function updateBalanceField() {
+  var balanceField = document.getElementById("balance");
+  balanceField.innerHTML = "Balance:" + parseFloat(ethers.utils.formatUnits(window.balance, tokenDecimals[window.paymentToken])).toFixed(4) + " " + window.paymentToken;
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
@@ -272,10 +283,20 @@ async function calculateRequiredTokenPaymentForOffset() {
   }
 }
 
+async function getMaticBalance() {
+  let balance = await provider.getBalance(signer.getAddress());
+  return balance;
+}
+
 async function createErc20Contract() {
   let jsonFile = "./ABI/ERC20.json";
   var erc20ABI = await $.getJSON(jsonFile);
   window.erc20Contract = new ethers.Contract(addresses[window.paymentToken], erc20ABI, provider);
+}
+
+async function getErc20Balance() {
+  let balance = await window.erc20Contract.balanceOf(signer.getAddress());
+  return balance;
 }
 
 async function approveErc20() {
@@ -467,6 +488,9 @@ async function onConnect() {
   else if (btnApprove.attachEvent) btnApprove.attachEvent("onclick", approveErc20);
 
   await refreshAccountData();
+  // TODO: "sometimes(?)" accept button and payment amount is not updated upon wallet connect.
+  // await handleManuallyEnteredTCO2();
+  // await updatePaymentFields();
 }
 
 /**
