@@ -40,13 +40,13 @@ input[type='number']::-webkit-outer-spin-button {
   color: rgb(70, 70, 70);
 }
 #list-payment-tokens {
-  font-size: 2rem;
+  font-size: 1.875rem;
   line-height: 2.5rem;
   font-weight: 800;
   padding-left: 2px;
   padding-right: 0px;
   padding-bottom: 0px;
   margin-bottom: 10px;
-  width: 135px;
+  width: 130px;
   background-position-x: -10px;
 }
