@@ -1685,6 +1685,22 @@ body[dir="rtl"] .checkbox:checked,
   border-bottom-right-radius: 0.25rem;
 }
 
+.border-l-\[0px\] {
+  border-left-width: 0px;
+}
+
+.border-r-\[0px\] {
+  border-right-width: 0px;
+}
+
+.border-t-\[0px\] {
+  border-top-width: 0px;
+}
+
+.border-b-\[1px\] {
+  border-bottom-width: 1px;
+}
+
 .bg-transparent {
   background-color: transparent;
 }

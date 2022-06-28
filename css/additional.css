@@ -45,6 +45,6 @@ input[type='number']::-webkit-outer-spin-button {
   font-weight: 800;
   padding-left: 2px;
   padding-right: 10px;
+  padding-bottom: 0px;
   width: 150px;
-  appearance: none;
 }
