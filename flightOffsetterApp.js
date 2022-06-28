@@ -152,7 +152,7 @@ async function updateUIvalues() {
     var fieldDistance = document.getElementById("distance");
     // TODO stats
     // fieldDistance.value = window.flightDistance.toFixed(1) + " km";
-    fieldDistance.innerHTML = window.flightDistance.toFixed(1) + " km";
+    fieldDistance.innerHTML = window.flightDistance.toPrecision(5) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset.asFloat()) {
@@ -483,7 +483,7 @@ async function onConnect() {
   }
 
   window.isConnected = true;
-  console.log("signer", window.signer)
+  console.log("window signer", window.signer)
   await createContractObject();
 
   var el = document.getElementById("btn-offset");
