@@ -444,14 +444,10 @@ async function isCorrectChainId() {
   const { chainId } = await provider.getNetwork()
   // if (chainId !== 80001) {
   if (chainId !== 137) {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "block";
+    document.getElementById("Network-Warning-Modal").checked = true;
     document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
-    document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
     return false;
   } else {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "none";
     document.querySelector("#btn-offset").removeAttribute("disabled")
     document.querySelector("#btn-connect").removeAttribute("disabled")
     return true;
