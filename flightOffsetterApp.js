@@ -51,6 +51,32 @@ let airportsList = airports.map(value => {
   return value[0]
 });
 
+class BigNumber {
+
+  constructor(bigNumberOrString, decimals) {
+    this.decimals = decimals
+    if (typeof bigNumberOrString === "string") {
+      this.string = bigNumberOrString;
+    } else if (bigNumberOrString._isBigNumber) {
+      this.string = parseFloat(ethers.utils.formatUnits(bigNumberOrString, decimals)).toFixed(4);
+    } else {
+      throw "Unexpected type whilst creating BigNumber: " + typeof bigNumberOrString;
+    }
+  }
+
+  asString() {
+    return parseFloat(this.string).toFixed(4);
+  }
+
+  asBigNumber() {
+    return ethers.utils.parseEther(this.string, this.decimals);
+  }
+
+  asFloat() {
+    return parseFloat(this.string);
+  }
+}
+
 
 /**
  * Setup the orchestra
