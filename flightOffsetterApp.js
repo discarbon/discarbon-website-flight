@@ -298,7 +298,7 @@ async function getMaticBalance() {
 async function createErc20Contract() {
   let jsonFile = "./ABI/ERC20.json";
   var erc20ABI = await $.getJSON(jsonFile);
-  window.erc20Contract = new ethers.Contract(addresses[window.paymentToken], erc20ABI, provider);
+  window.erc20Contract = new ethers.Contract(addresses[window.paymentToken], erc20ABI, window.provider);
 }
 
 async function getErc20Balance() {
@@ -348,6 +348,7 @@ async function doAutoOffsetUsingETH() {
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
   console.log("Will offset", window.carbonToOffset.asString(), "using", window.paymentAmount.asString(), window.paymentToken);
+  console.log("bn", window.carbonToOffset.asBigNumber(), "using", window.paymentAmount.asBigNumber())
   const txReceipt = await window.offsetHelperWithSigner
     .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
   // console.log("offset done: ", window.paymentAmount.asString());
@@ -422,7 +423,7 @@ function calcGeodesicDistance(start, destination) {
  * Check the correct network id is used.
  */
 async function isCorrectChainId(chainId) {
-  console.log("chainId: ",chainId)
+  console.log("chainId: ", chainId)
   // if (chainId !== 80001) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
@@ -467,7 +468,7 @@ async function onConnect() {
   // Subscribe to chainId change
   window.provider.provider.on("chainChanged", (chainId) => {
     console.log("chain Changed", chainId);
-    correctChainId = isCorrectChainId(parseInt(chainId,16));
+    correctChainId = isCorrectChainId(parseInt(chainId, 16));
     if (correctChainId) {
       fetchAccountData();
     } else {
