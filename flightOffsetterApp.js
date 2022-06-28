@@ -715,7 +715,6 @@ async function handleManuallyEnteredTCO2() {
   // console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
     window.carbonToOffset = new BigNumber(TCO2, tokenDecimals["NCT"]);
-    await updatePaymentFields();
   }
   // console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
