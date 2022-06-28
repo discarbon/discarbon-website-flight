@@ -131,7 +131,7 @@ function init() {
 async function createContractObject() {
   let jsonFile = "./ABI/OffsetHelper_" + addresses["offsetHelper"] + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
-  window.offsetHelper = new ethers.Contract(addresses["offsetHelper"], offsetHelperABI, provider);
+  window.offsetHelper = new ethers.Contract(addresses["offsetHelper"], offsetHelperABI, window.provider);
   window.offsetHelperWithSigner = window.offsetHelper.connect(signer);
 }
 
@@ -193,7 +193,7 @@ async function refreshAccountData() {
   // with Ethereum node via JSON-RPC and loads chain data
   // over an API call.
   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-  await fetchAccountData(provider);
+  await fetchAccountData(window.provider);
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
@@ -310,7 +310,7 @@ async function calculateRequiredTokenPaymentForOffset() {
 }
 
 async function getMaticBalance() {
-  let balance = await provider.getBalance(signer.getAddress());
+  let balance = await window.provider.getBalance(signer.getAddress());
   return balance;
 }
 
@@ -438,10 +438,10 @@ function calcGeodesicDistance(start, destination) {
 }
 
 /**
- * Check the site is connected to the correct network.
+ * Check the correct network id is used.
  */
-async function isCorrectChainId() {
-  const { chainId } = await provider.getNetwork()
+async function isCorrectChainId(chainId) {
+  console.log("chainId: ",chainId)
   // if (chainId !== 80001) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
@@ -464,8 +464,8 @@ async function onConnect() {
   let instance
   try {
     instance = await web3Modal.connect();
-    provider = new ethers.providers.Web3Provider(instance);
-    signer = provider.getSigner();
+    window.provider = new ethers.providers.Web3Provider(instance);
+    signer = window.provider.getSigner();
   } catch (e) {
     console.log("Could not get a wallet connection", e);
     return;
@@ -475,25 +475,26 @@ async function onConnect() {
   window.paymentAmount = paymentAmount;
 
   let correctChainId
-  correctChainId = await isCorrectChainId();
+  const { chainId } = await window.provider.getNetwork();
+  correctChainId = await isCorrectChainId(chainId);
   // Subscribe to accounts change
-  provider.on("accountsChanged", (accounts) => {
+  window.provider.provider.on("accountsChanged", (accounts) => {
     fetchAccountData();
+    console.log("accounts Changed");
   });
 
   // Subscribe to chainId change
-  provider.on("chainChanged", (chainId) => {
-    fetchAccountData();
-    correctChainId = isCorrectChainId();
-  });
-
-  // Subscribe to networkId change
-  provider.on("networkChanged", (networkId) => {
-    fetchAccountData();
-    correctChainId = isCorrectChainId();
+  window.provider.provider.on("chainChanged", (chainId) => {
+    console.log("chain Changed", chainId);
+    correctChainId = isCorrectChainId(chainId);
+    if (correctChainId) {
+      fetchAccountData();
+    }
   });
 
   if (correctChainId === false) {
+    console.log("wrong network, disconnect")
+    onDisconnect();
     return;
   }
 
@@ -520,18 +521,18 @@ async function onConnect() {
  */
 async function onDisconnect() {
 
-  console.log("Killing the wallet connection", provider);
+  console.log("Killing the wallet connection", window.provider);
 
   // TODO: Which providers have close method?
-  if (provider.close) {
-    await provider.close();
+  if (window.provider.close) {
+    await window.provider.close();
 
     // If the cached provider is not cleared,
     // WalletConnect will default to the existing session
     // and does not allow to re-scan the QR code with a new wallet.
     // Depending on your use case you may want or want not his behavir.
     await web3Modal.clearCachedProvider();
-    provider = null;
+    window.provider = null;
   }
 
   // Set the UI back to the initial state
