@@ -47,7 +47,7 @@ class BigNumber {
   }
 
   asString() {
-    return parseFloat(this.string).toFixed(4);
+    return parseFloat(this.string).toPrecision(4);
   }
 
   asBigNumber() {
