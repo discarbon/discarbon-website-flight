@@ -282,7 +282,7 @@ async function calculateRequiredMaticPaymentForOffset() {
 
 async function calculateRequiredTokenPaymentForOffset() {
   if (window.paymentToken === "NCT") {
-    window.paymentAmount = new BigNumber(window.paymentAmount, tokenDecimals[window.paymentToken]);
+    window.paymentAmount = new BigNumber(window.carbonToOffset.asBigNumber(), tokenDecimals[window.paymentToken]);
   } else {
     let amount = await window.offsetHelper
       .calculateNeededTokenAmount(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
