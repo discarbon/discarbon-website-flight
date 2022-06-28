@@ -709,8 +709,8 @@ $(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
     return $("<li>")
-      .append("<div>" + item.label.split(",")[1] + "<br>" +
-        "<small><b>" + item.label.split(",")[0] + "</b>, " +
+      .append('<div style="font-size:20px;">' + item.label.split(",")[1] + "<br>" +
+        '<span style="font-size:16px;"><b>' + item.label.split(",")[0] + "</b>, " +
         item.label.split(",")[2] + ", " +
         item.label.split(",")[3] +
         "</small></div>")
@@ -728,11 +728,11 @@ $(function () {
     $(this).autocomplete('search', $(this).val())
   }).autocomplete("instance")._renderItem = function (ul, item) {
     return $("<li>")
-      .append("<div>" + item.label.split(",")[1] + "<br>" +
-        "<small><b>" + item.label.split(",")[0] + "</b>, " +
+      .append('<div style="font-size:20px;">' + item.label.split(",")[1] + "<br>" +
+        '<span style="font-size:16px;"><b>' + item.label.split(",")[0] + "</b>, " +
         item.label.split(",")[2] + ", " +
         item.label.split(",")[3] +
-        "</small></div>")
+        "</span></div>")
       .appendTo(ul);
   };
 });
