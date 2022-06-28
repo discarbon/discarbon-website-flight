@@ -152,7 +152,7 @@ async function updateUIvalues() {
     var fieldDistance = document.getElementById("distance");
     // TODO stats
     // fieldDistance.value = window.flightDistance.toFixed(1) + " km";
-    fieldDistance.innerHTML = window.flightDistance.toPrecision(5) + " km";
+    fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset.asFloat()) {
