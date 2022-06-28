@@ -291,7 +291,7 @@ async function calculateRequiredTokenPaymentForOffset() {
 }
 
 async function getMaticBalance() {
-  let balance = await window.provider.getBalance(window.signer.getAddress());
+  let balance = await window.provider.getBalance(signer.getAddress());
   return new BigNumber(balance, tokenDecimals["MATIC"]);
 }
 
