@@ -486,10 +486,13 @@ async function onConnect() {
   // Subscribe to chainId change
   window.provider.provider.on("chainChanged", (chainId) => {
     console.log("chain Changed", chainId);
-    correctChainId = isCorrectChainId(chainId);
+    correctChainId = isCorrectChainId(parseInt(chainId,16));
     if (correctChainId) {
       fetchAccountData();
+    } else {
+      onDisconnect();
     }
+
   });
 
   if (correctChainId === false) {
