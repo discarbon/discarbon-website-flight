@@ -44,7 +44,9 @@ input[type='number']::-webkit-outer-spin-button {
   line-height: 2.5rem;
   font-weight: 800;
   padding-left: 2px;
-  padding-right: 10px;
+  padding-right: 0px;
   padding-bottom: 0px;
-  width: 150px;
+  margin-bottom: 10px;
+  width: 135px;
+  background-position-x: -10px;
 }
