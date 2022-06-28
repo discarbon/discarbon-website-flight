@@ -106,24 +106,24 @@
             <div class="divider lg:divider-horizontal max-w-xs"></div>
 
             <div class="grid flex-grow form-control max-w-xs card rounded-box place-items-left space-y-2">
-              <div class="stats stats-vertical lg:stats-vertical">
+              <div class="stats stats-vertical lg:stats-vertical w-full">
                 <div class="stat">
                   <div class="stat-title">Distance</div>
                   <div class="stat-value" id="distance">--.-- km</div>
                   <div class="stat-desc">(one way)</div>
                 </div>
-                <div class="stat">
-                  <div class="stat-title">Emissions</div>
-                  <div class="stat-value">
+                <div class="stat w-full">
+                  <div class="stat-title w-full">Emissions</div>
+                  <div class="stat-value align-middle w-full">
                     <input id="carbon-to-offset" type="text" placeholder="--.--"
-                    class="input input-bordered input-primary w-1/3">
+                    class="input input-bordered input-primary align-middle">
                   <label class="align-middle">
                     TCO2
                   </label>
                   </div>
                   <div class="stat-desc"></div> <!-- show nothing here -->
                 </div>
-                <div class="stat w-full">
+                <div class="stat">
                   <div class="stat-title">Cost</div>
                     <div class="stat-value"><label id="payment-amount">--.--</label>
                       <select id="list-payment-tokens"
