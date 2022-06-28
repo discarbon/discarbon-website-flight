@@ -32,15 +32,8 @@ const tokenDecimals = {
 };
 
 // Initial values
-let carbonToOffset = {
-  asString: "0.0",
-  asBigNumber: ethers.utils.parseEther("0.0", 18),
-  asFloat: parseFloat("0.0")
-};
-let paymentAmount = {
-  asString: "",
-  asBigNumber: null
-};
+let carbonToOffset = new BigNumber("0.0");
+let paymentAmount = new BigNumber("0.0");
 let flightDistance = 0;
 let paymentToken = "MATIC";
 let isConnected = false;
@@ -161,14 +154,14 @@ async function updateUIvalues() {
     fieldDistance.innerHTML = window.flightDistance.toFixed(1) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
-  if (window.carbonToOffset["asFloat"]) {
+  if (window.carbonToOffset.toFloat()) {
     // TODO stats
-    fieldCarbonToOffset.value = window.carbonToOffset["asString"];
-    // fieldCarbonToOffset.innerHTML = window.carbonToOffset["asString"] + " TCO2";
+    fieldCarbonToOffset.value = window.carbonToOffset.toString();
+    // fieldCarbonToOffset.innerHTML = window.carbonToOffset.toString() + " TCO2";
   }
 
   console.log("connected: ", window.isConnected)
-  if (window.isConnected && (window.carbonToOffset["asFloat"])) {
+  if (window.isConnected && (window.carbonToOffset.toFloat())) {
     await updatePaymentFields();
   }
 }
@@ -197,29 +190,16 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
-function updateCarbonToOffset(tco2) {
-  carbonToOffset["asString"] = tco2.toFixed(3).toString();
-  carbonToOffset["asBigNumber"] = ethers.utils.parseEther(carbonToOffset["asString"], 18);
-  carbonToOffset["asFloat"] = parseFloat(carbonToOffset["asString"]);
-  window.carbonToOffset = carbonToOffset;
-}
-
-function updatePaymentAmount(amount) {
-  paymentAmount["asString"] = parseFloat(ethers.utils.formatUnits(amount, tokenDecimals[window.paymentToken])).toFixed(4);
-  paymentAmount["asBigNumber"] = amount;
-  window.paymentAmount = paymentAmount;
-}
-
 async function updatePaymentFields() {
   window.paymentToken = await document.querySelector("#list-payment-tokens").value;
   console.log("Payment token changed: ", window.paymentToken);
   console.log("Connected:", window.isConnected);
-  console.log("Carbon to offset: ", window.carbonToOffset["asString"]);
+  console.log("Carbon to offset: ", window.carbonToOffset.toString());
   if (window.isConnected !== true) {
     console.log("skipping update of payment costs; wallet not connected")
     return;
   }
-  if (window.carbonToOffset["asFloat"] < 0.001) {
+  if (window.carbonToOffset.toFloat() < 0.001) {
     console.log("No carbon emission to offset. Skipping calculation.")
     return;
   }
@@ -284,7 +264,7 @@ function enableOffsetButton() {
 
 function updatePaymentAmountField() {
   var paymentAmountField = document.getElementById("payment-amount");
-  paymentAmountField.innerHTML = window.paymentAmount["asString"];
+  paymentAmountField.innerHTML = window.paymentAmount.toString();
 }
 
 function updateBalanceField() {
@@ -295,17 +275,18 @@ function updateBalanceField() {
 async function calculateRequiredMaticPaymentForOffset() {
 
   let amount = await window.offsetHelper
-    .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  updatePaymentAmount(amount);
+    .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset.toBigNumber());
+  window.paymentAmount = new BigNumber(amount);
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
   if (window.paymentToken === "NCT") {
-    updatePaymentAmount(window.carbonToOffset["asBigNumber"]);
+    window.paymentAmount = new BigNumber(amount);
   } else {
     let amount = await window.offsetHelper
-      .calculateNeededTokenAmount(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-    updatePaymentAmount(amount);
+      .calculateNeededTokenAmount(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.toBigNumber());
+    let carbonToOffset = new BigNumber("0.0");
+    window.paymentAmount = new BigNumber(amount);
   }
 }
 
@@ -327,10 +308,10 @@ async function getErc20Balance() {
 
 async function approveErc20() {
   busyApproveButton();
-  console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount["asString"], window.paymentToken);
+  console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount.toString(), window.paymentToken);
   try {
     const erc20WithSigner = window.erc20Contract.connect(signer);
-    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount["asBigNumber"]);
+    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount.toBigNumber());
     await transaction.wait();
     readyApproveButton();
     enableOffsetButton();
@@ -366,26 +347,26 @@ async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  console.log("Will offset", window.carbonToOffset.toString(), "using", window.paymentAmount.toString(), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset["asBigNumber"], { value: window.paymentAmount["asBigNumber"] });
-  console.log("offset done: ", window.paymentAmount["asString"]);
+    .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.toBigNumber(), { value: window.paymentAmount.toBigNumber() });
+  console.log("offset done: ", window.paymentAmount.toString());
 }
 
 async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  console.log("Will offset", window.carbonToOffset.toString(), "using", window.paymentAmount.toString(), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset["asBigNumber"]);
-  console.log("Offset done: ", window.paymentAmount["asString"]);
+    .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.toBigNumber());
+  console.log("Offset done: ", window.paymentAmount.toString());
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  console.log("Will offset", window.carbonToOffset["asString"], "using", window.paymentAmount["asString"], window.paymentToken);
+  console.log("Will offset", window.carbonToOffset.toString(), "using", window.paymentAmount.toString(), window.paymentToken);
   const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset["asBigNumber"]);
+    .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.toBigNumber());
   console.log("Offset done.");
 }
 
@@ -697,7 +678,7 @@ async function calculateCarbonEmission() {
     emission *= 2;
   }
   // console.log("user entered ", emission, typeof emission)
-  updateCarbonToOffset(emission);
+  window.carbonToOffset = new BigNumber(emission)
   console.log("Carbon Emission: ", emission);
   await updatePaymentFields();
   updateUIvalues();
@@ -728,7 +709,7 @@ async function handleManuallyEnteredTCO2() {
   let TCO2 = parseFloat(document.getElementById("carbon-to-offset").value);
   console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
-    updateCarbonToOffset(TCO2);
+    window.carbonToOffset = new BigNumber(TCO2);
     await updatePaymentFields();
   }
   console.log("Carbon Emission: ", TCO2);
