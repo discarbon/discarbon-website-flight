@@ -126,7 +126,7 @@ async function createContractObject() {
   let jsonFile = "./ABI/OffsetHelper_" + addresses["offsetHelper"] + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
   window.offsetHelper = new ethers.Contract(addresses["offsetHelper"], offsetHelperABI, window.provider);
-  window.offsetHelperWithSigner = window.offsetHelper.connect(signer);
+  window.offsetHelperWithSigner = window.offsetHelper.connect(window.signer);
 }
 
 /**
@@ -291,7 +291,7 @@ async function calculateRequiredTokenPaymentForOffset() {
 }
 
 async function getMaticBalance() {
-  let balance = await window.provider.getBalance(signer.getAddress());
+  let balance = await window.provider.getBalance(window.signer.getAddress());
   return new BigNumber(balance, tokenDecimals["MATIC"]);
 }
 
@@ -302,7 +302,7 @@ async function createErc20Contract() {
 }
 
 async function getErc20Balance() {
-  let balance = await window.erc20Contract.balanceOf(signer.getAddress());
+  let balance = await window.erc20Contract.balanceOf(window.signer.getAddress());
   return new BigNumber(balance, tokenDecimals[window.paymentToken]);
 }
 
@@ -310,7 +310,7 @@ async function approveErc20() {
   busyApproveButton();
   // console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount.asString(), window.paymentToken);
   try {
-    const erc20WithSigner = window.erc20Contract.connect(signer);
+    const erc20WithSigner = window.erc20Contract.connect(window.signer);
     const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount.asBigNumber());
     await transaction.wait();
     readyApproveButton();
@@ -446,7 +446,7 @@ async function onConnect() {
   try {
     instance = await web3Modal.connect();
     window.provider = new ethers.providers.Web3Provider(instance);
-    signer = window.provider.getSigner();
+    window.signer = window.provider.getSigner();
   } catch (e) {
     console.log("Could not get a wallet connection", e);
     return;
@@ -483,7 +483,7 @@ async function onConnect() {
   }
 
   window.isConnected = true;
-  console.log("signer", signer)
+  console.log("signer", window.signer)
   await createContractObject();
 
   var el = document.getElementById("btn-offset");
