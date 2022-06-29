@@ -286,7 +286,6 @@ function updateBalanceField() {
 }
 
 async function calculateRequiredMaticPaymentForOffset() {
-
   let amount = await window.offsetHelper
     .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset.asBigNumber());
   window.paymentAmount = new BigNumber(amount, tokenDecimals[window.paymentToken]);
@@ -334,8 +333,6 @@ async function approveErc20() {
 }
 
 async function doAutoOffset() {
-  // console.log("AutoOffsetting with:", window.paymentToken);
-  // console.log("Connected:", window.isConnected);
   if (window.isConnected !== true) {
     console.log("skipping auto offset costs; wallet not connected")
     return;
@@ -551,7 +548,10 @@ async function onDisconnect() {
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
-
+  document.getElementById("payment-amount").innerHTML = "&emsp;--.--";
+  window.paymentAmount = new BigNumber("0.0")
+  document.getElementById("balance").innerHTML = "User balance: --.--";
+  disableOffsetButton();
   // TODO
   // document.querySelector("#connected").style.display = "none";
 
