@@ -263,6 +263,18 @@ function enableOffsetButton() {
   offsetButton.removeAttribute("disabled");
 }
 
+function busyOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.innerHTML = "";
+  offsetButton.classList.add("loading");
+}
+
+function readyOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.classList.remove("loading");
+  offsetButton.innerHTML = "Offset";
+}
+
 function updatePaymentAmountField() {
   var paymentAmountField = document.getElementById("payment-amount");
   paymentAmountField.innerHTML = window.paymentAmount.asString();
@@ -343,32 +355,51 @@ async function doAutoOffset() {
     default: console.log("Unsupported token! ", window.paymentToken);
   }
 }
+
 async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset.asString(), "using", window.paymentAmount.asString(), window.paymentToken);
-  console.log("bn", window.carbonToOffset.asBigNumber(), "using", window.paymentAmount.asBigNumber())
-  const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
-  // console.log("offset done: ", window.paymentAmount.asString());
+  busyOffsetButton();
+  try {
+    const txReceipt = await window.offsetHelperWithSigner
+      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
+
 }
 
 async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  // console.log("Will offset", window.carbonToOffset.asString(), "using", window.paymentAmount.asString(), window.paymentToken);
-  const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
-  // console.log("Offset done: ", window.paymentAmount.asString());
+  busyOffsetButton();
+  try {
+    const txReceipt = await window.offsetHelperWithSigner
+      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  // console.log("Will offset", window.carbonToOffset.asString(), "using", window.paymentAmount.asString(), window.paymentToken);
-  const txReceipt = await window.offsetHelperWithSigner
-    .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
-  // console.log("Offset done.");
+  busyOffsetButton();
+  try {
+    const txReceipt = await window.offsetHelperWithSigner
+      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
 }
 
 /**
