@@ -476,8 +476,20 @@ async function isCorrectChainId(chainId) {
     return false;
   } else {
     document.querySelector("#btn-connect").removeAttribute("disabled")
+    await updateAccountInHeader();
     return true;
   }
+}
+
+/**
+ * Update account in header upon connect
+ */
+async function updateAccountInHeader() {
+  let address = await window.signer.getAddress()
+  const num = 4;
+  address = `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
+  document.querySelector('#btn-address').innerHTML = address;
+  document.querySelector("#account-button-div").style.display = "block";
 }
 
 /**
@@ -562,6 +574,8 @@ async function onDisconnect() {
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
+  document.querySelector('#btn-address').innerHTML = "";
+  document.querySelector("#account-button-div").style.display = "hidden";
   document.getElementById("payment-amount").innerHTML = "&emsp;--.--";
   window.paymentAmount = new BigNumber("0.0")
   document.getElementById("balance").innerHTML = "User balance: --.--";
