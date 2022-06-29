@@ -371,9 +371,11 @@ async function getErc20Allowance() {
 
 async function approveErc20() {
   busyApproveButton();
+  // use a slightly higher approval allowance to allow a small price change between approve and offset
+  const approvalAmount = new BigNumber(1.01 * window.paymentAmount.asFloat(), tokenDecimals[window.paymentToken]);
   try {
     const erc20WithSigner = window.erc20Contract.connect(window.signer);
-    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount.asBigNumber());
+    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], approvalAmount.asBigNumber());
     await transaction.wait();
     readyApproveButton();
     enableOffsetButton();
