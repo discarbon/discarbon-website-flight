@@ -191,6 +191,27 @@ async function refreshAccountData() {
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
+async function updateBalance() {
+  switch (window.paymentToken) {
+    case "MATIC":
+      window.balance = await getMaticBalance();
+      window.allowance = window.balance;
+      break;
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
+    case "NCT":
+      await createErc20Contract();
+      window.balance = await getErc20Balance();
+      window.allowance = await getErc20Allowance();
+      break;
+    default:
+      console.log("Unsupported token! ", window.paymentToken);
+  }
+  updateBalanceField();
+  console.log("allowance:", window.allowance.asString());
+}
+
 async function updatePaymentFields() {
   window.paymentToken = await document.querySelector("#list-payment-tokens").value;
   // console.log("Payment token changed: ", window.paymentToken);
@@ -200,6 +221,7 @@ async function updatePaymentFields() {
     console.log("skipping update of payment costs; wallet not connected")
     return;
   }
+  await updateBalance();
   if (window.carbonToOffset.asFloat() < 0.001) {
     console.log("No carbon emission to offset. Skipping calculation.")
     return;
@@ -207,19 +229,12 @@ async function updatePaymentFields() {
   switch (window.paymentToken) {
     case "MATIC":
       await calculateRequiredMaticPaymentForOffset();
-      window.balance = await getMaticBalance();
-      hideApproveButton();
-      enableOffsetButton();
       break;
     case "USDC":
     case "WMATIC":
     case "WETH":
     case "NCT":
       await calculateRequiredTokenPaymentForOffset();
-      await createErc20Contract();
-      window.balance = await getErc20Balance();
-      showApproveButton();
-      disableOffsetButton();
       break;
     default:
       console.log("Unsupported token! ", window.paymentToken);
@@ -227,8 +242,38 @@ async function updatePaymentFields() {
       var fieldpaymentAmount = document.getElementById("payment-amount");
       fieldpaymentAmount.value = "unsupported token";
   }
+  updateApproveButton();
+  updateOffsetButton();
   updatePaymentAmountField();
-  updateBalanceField();
+}
+
+function updateApproveButton() {
+  if (window.paymentToken === "MATIC") {
+    hideApproveButton();
+  } else {
+    showApproveButton();
+  }
+}
+
+function updateOffsetButton() {
+  console.log("update offset button - balance: ", window.balance.asFloat(), "paymentAmount: ", window.paymentAmount.asFloat())
+  if (window.paymentAmount.asFloat() === 0) {
+    console.log("disable offset button - paymentAmount is 0")
+    disableOffsetButton();
+    return
+  }
+  if (window.balance.asFloat() < window.paymentAmount.asFloat()) {
+    console.log("disable offset button - insufficient balance")
+    disableOffsetButton();
+    return;
+  }
+  if (window.allowance.asFloat() < window.paymentAmount.asFloat()) {
+    console.log("disable offset button - insufficient allowance approved")
+    disableOffsetButton();
+    return;
+  }
+  console.log("enable offset button")
+  enableOffsetButton();
 }
 
 function showApproveButton() {
@@ -317,9 +362,15 @@ async function getErc20Balance() {
   return new BigNumber(balance, tokenDecimals[window.paymentToken]);
 }
 
+async function getErc20Allowance() {
+  let allowance = await window.erc20Contract.allowance(window.signer.getAddress(), addresses["offsetHelper"]);
+  return new BigNumber(allowance, 18);
+  // TODO: understand if we're doing it wrong or why usdc doesn't seem to respect it's 6 decimals when calling allowance()? I.e., why not
+  // return new BigNumber(allowance, tokenDecimals[window.paymentToken]);
+}
+
 async function approveErc20() {
   busyApproveButton();
-  // console.log("Approving", addresses["offsetHelper"], "to deposit", window.paymentAmount.asString(), window.paymentToken);
   try {
     const erc20WithSigner = window.erc20Contract.connect(window.signer);
     const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], window.paymentAmount.asBigNumber());
@@ -351,6 +402,7 @@ async function doAutoOffset() {
       break;
     default: console.log("Unsupported token! ", window.paymentToken);
   }
+  await updateBalance();
 }
 
 async function doAutoOffsetUsingETH() {
