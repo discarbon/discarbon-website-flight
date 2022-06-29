@@ -558,6 +558,7 @@ async function onConnect() {
     if (correctChainId) {
       fetchAccountData();
     } else {
+      console.log("on disconncet in chain changed")
       onDisconnect();
     }
 
@@ -866,9 +867,11 @@ window.addEventListener('load', async () => {
   init();
   document.querySelector("#btn-connect").addEventListener("click", onConnect);
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+  document.querySelector("#network-modal-button").addEventListener("click", onDisconnect);
   document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
   document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
+
 });
