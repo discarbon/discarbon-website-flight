@@ -125,8 +125,6 @@ async function fetchAccountData() {
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
   document.querySelector("#disconnect-button-div").style.display = "block";
-  // TODO
-  // document.querySelector("#connected").style.display = "block";
 }
 
 async function updateUIvalues() {
@@ -135,12 +133,10 @@ async function updateUIvalues() {
 
   if (window.flightDistance >= 0) {
     var fieldDistance = document.getElementById("distance");
-    // TODO stats
     fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset.asFloat()) {
-    // TODO stats
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
   }
 
@@ -573,9 +569,6 @@ async function onDisconnect() {
   window.paymentAmount = new BigNumber("0.0")
   document.getElementById("balance").innerHTML = "User balance: --.--";
   disableOffsetButton();
-  // TODO
-  // document.querySelector("#connected").style.display = "none";
-
   window.isConnected = false;
 }
 
