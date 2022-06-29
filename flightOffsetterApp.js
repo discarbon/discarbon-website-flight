@@ -64,8 +64,6 @@ class BigNumber {
 let carbonToOffset = new BigNumber("0.0", tokenDecimals[18]);
 let paymentToken = "MATIC";
 let paymentAmount = new BigNumber("0.0", tokenDecimals[paymentToken]);
-let flightDistance = 0;
-let isConnected = false;
 
 import { airports } from './resources/airports_selected.js'
 
@@ -388,7 +386,6 @@ async function doAutoOffsetUsingETH() {
     readyOffsetButton();
     throw e;
   }
-
 }
 
 async function doAutoOffsetUsingToken() {
