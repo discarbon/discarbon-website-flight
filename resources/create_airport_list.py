@@ -36,6 +36,7 @@ with open(INPUT_FILE, mode='r')as input_file:
                    and (size == "medium_airport" or size == "large_airport")
 
         if selector:
+
             # cleanup airport names of commas (otherwise website splits them wrongly)
             name = name.replace(',' , ' ')
             # convert country codes to human readable format
@@ -48,13 +49,16 @@ with open(INPUT_FILE, mode='r')as input_file:
                              name + ", " + \
                              municipality + ", " + \
                              country
+            airport_string = airport_string.replace(", , ", ", ") # replace empty elements
 
             airport_string = airport_string.replace('"', '\\"')
             airport_string = airport_string.strip()
             temp_airport = [airport_string,
                             latitude,
                             longitude]
-            print(temp_airport)
+            # print(temp_airport)
+            if not municipality:
+                print(airport_string)
             airports_selected.append(temp_airport)
 
 # print(airports_selected)
