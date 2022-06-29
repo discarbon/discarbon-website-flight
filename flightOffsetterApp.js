@@ -2,11 +2,6 @@ import { addressesMainnet, addressesMumbai } from './addresses.js';
 
 "use strict";
 
-/**
- * Example JavaScript code that interacts with the page and Web3 wallets
- */
-
-
 // Unpkg imports
 const Web3Modal = window.Web3Modal.default;
 // const WalletConnectProvider = window.WalletConnectProvider.default;
@@ -84,23 +79,7 @@ let airportsList = airports.map(value => {
 function init() {
 
   console.log("Initializing");
-  // console.log("WalletConnectProvider is", WalletConnectProvider);
-  // console.log("Fortmatic is", Fortmatic);
-  // console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
-
-  // Check that the web page is run in a secure context,
-  // as otherwise MetaMask won't be available
-  // if(location.protocol !== 'https:') {
-  //   // https://ethereum.stackexchange.com/a/62217/620
-  //   const alert = document.querySelector("#alert-error-https");
-  //   alert.style.display = "block";
-  //   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-  //   return;
-  // }
-
   // Tell Web3modal what providers we have available.
-  // Built-in web browser provider (only one can exist as a time)
-  // like MetaMask, Brave or Opera is added automatically by Web3modal
   const providerOptions = {
     // walletconnect: {
     //   package: WalletConnectProvider,
@@ -157,17 +136,14 @@ async function updateUIvalues() {
   if (window.flightDistance >= 0) {
     var fieldDistance = document.getElementById("distance");
     // TODO stats
-    // fieldDistance.value = window.flightDistance.toFixed(1) + " km";
     fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
   if (window.carbonToOffset.asFloat()) {
     // TODO stats
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
-    // fieldCarbonToOffset.innerHTML = window.carbonToOffset.asString() + " TCO2";
   }
 
-  // console.log("connected: ", window.isConnected)
   if (window.isConnected && (window.carbonToOffset.asFloat())) {
     await updatePaymentFields();
   }
@@ -180,18 +156,10 @@ async function updateUIvalues() {
  * - User connects wallet initially
  */
 async function refreshAccountData() {
-  // If any current data is displayed when
-  // the user is switching accounts in the wallet
-  // immediate hide this data
-  // document.querySelector("#connected").style.display = "none";
 
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
 
-  // Disable button while UI is loading.
-  // fetchAccountData() will take a while as it communicates
-  // with Ethereum node via JSON-RPC and loads chain data
-  // over an API call.
   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
   await fetchAccountData(window.provider);
   document.querySelector("#btn-connect").removeAttribute("disabled")
@@ -220,9 +188,6 @@ async function updateBalance() {
 
 async function updatePaymentFields() {
   window.paymentToken = await document.querySelector("#list-payment-tokens").value;
-  // console.log("Payment token changed: ", window.paymentToken);
-  // console.log("Connected:", window.isConnected);
-  // console.log("Carbon to offset: ", window.carbonToOffset.asString());
   if (window.isConnected !== true) {
     console.log("skipping update of payment costs; wallet not connected")
     return;
@@ -597,11 +562,6 @@ async function onDisconnect() {
   // TODO: Which providers have close method?
   if (window.provider.close) {
     await window.provider.close();
-
-    // If the cached provider is not cleared,
-    // WalletConnect will default to the existing session
-    // and does not allow to re-scan the QR code with a new wallet.
-    // Depending on your use case you may want or want not his behavir.
     await web3Modal.clearCachedProvider();
     window.provider = null;
   }
@@ -659,16 +619,11 @@ incrementButtons.forEach(btn => {
   btn.addEventListener("click", increment);
 });
 
-
 /**
  * Find Latitude and Longitude from airport name
  */
 async function findLatLong(airportName) {
-
-  // let airportName = "Zürich Airport, Zurich CH, ZRH"
   let result = await airports.find(element => element[0] == airportName)
-
-  // console.log("Location:", result)
   let location = new Location(result[1], result[2]);
   return location
 }
@@ -690,12 +645,8 @@ async function calculateFlightDistance() {
     destinationLocation = await findLatLong(destinationName)
   }
 
-
-  // console.log("Locations:", startLocation, " ", destinationLocation)
-
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
-    // console.log("Distance: ", window.flightDistance)
     calculateCarbonEmission();
   }
 }
@@ -757,9 +708,6 @@ async function calculateCarbonEmission() {
     let shortEM = singleEmissionCalc(emShort);
     let longEM = singleEmissionCalc(emLong);
     let longDistFactor = (window.flightDistance - 1500) / 1000; // 0@1500km, 1@2500km
-    // console.log("longdistancefactor: ", longDistFactor);
-    // console.log("shortEM: ", shortEM);
-    // console.log("longEM: ", longEM);
     emission = (1 - longDistFactor) * shortEM + longDistFactor * longEM; //interpolation
   }
 
@@ -771,9 +719,7 @@ async function calculateCarbonEmission() {
   if (roundTrip) {
     emission *= 2;
   }
-  // console.log("user entered ", emission, typeof emission)
   window.carbonToOffset = new BigNumber(emission, tokenDecimals["NCT"]);
-  // console.log("Carbon Emission: ", emission);
   await updatePaymentFields();
   updateUIvalues();
 }
@@ -784,7 +730,6 @@ async function calculateCarbonEmission() {
 function singleEmissionCalc(em) {
 
   let flightclass = document.getElementById("flightclass").value;
-  // console.log("flightclass: ", flightclass);
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
@@ -793,7 +738,6 @@ function singleEmissionCalc(em) {
     (em.EF * em.M + em.P) +
     em.AF * d +
     em.A;
-  // console.log("emissioncalc: ", emission)
   emission = (emission / 1000).toFixed(3); // from kg to tonnes
   return emission
 }
@@ -808,7 +752,6 @@ async function handleManuallyEnteredTCO2() {
   // console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
 }
-
 
 /**
  * Make autocomplete list for airports
@@ -857,9 +800,6 @@ $(function () {
   };
 });
 
-
-
-
 /**
  * Main entry point.
  */
@@ -873,5 +813,4 @@ window.addEventListener('load', async () => {
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
   document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
-
 });
