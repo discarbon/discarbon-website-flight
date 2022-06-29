@@ -118,7 +118,7 @@ function init() {
     providerOptions, // required
     disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
   });
-
+  disableOffsetButton();
   console.log("Web3Modal instance is", web3Modal);
 }
 
@@ -458,10 +458,8 @@ async function isCorrectChainId(chainId) {
   // if (chainId !== 80001) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
-    document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
     return false;
   } else {
-    document.querySelector("#btn-offset").removeAttribute("disabled")
     document.querySelector("#btn-connect").removeAttribute("disabled")
     return true;
   }
