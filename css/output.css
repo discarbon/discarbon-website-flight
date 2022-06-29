@@ -821,16 +821,6 @@ html {
           text-decoration-line: underline;
 }
 
-.link-hover {
-  -webkit-text-decoration-line: none;
-          text-decoration-line: none;
-}
-
-.link-hover:hover {
-  -webkit-text-decoration-line: underline;
-          text-decoration-line: underline;
-}
-
 .menu > :where(li.disabled > *:not(ul):focus) {
   cursor: auto;
 }
@@ -1625,6 +1615,10 @@ body[dir="rtl"] .checkbox:checked,
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
 }
 
 .mb-32 {
