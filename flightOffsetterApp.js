@@ -46,7 +46,7 @@ class BigNumber {
     if (precision.length < this.string.length) {
       return precision;
     } else {
-      return parseFloat(this.string).toFixed(4);
+      return this.string;
     }
   }
 
