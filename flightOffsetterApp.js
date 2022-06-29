@@ -378,7 +378,7 @@ async function doAutoOffsetUsingETH() {
   await calculateRequiredMaticPaymentForOffset();
   busyOffsetButton();
   try {
-    const txReceipt = await window.offsetHelperWithSigner
+    const transaction = await window.offsetHelperWithSigner
       .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
     await transaction.wait();
     readyOffsetButton();
@@ -394,7 +394,7 @@ async function doAutoOffsetUsingToken() {
   await calculateRequiredTokenPaymentForOffset();
   busyOffsetButton();
   try {
-    const txReceipt = await window.offsetHelperWithSigner
+    const transaction = await window.offsetHelperWithSigner
       .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
     await transaction.wait();
     readyOffsetButton();
@@ -407,7 +407,7 @@ async function doAutoOffsetUsingToken() {
 async function doAutoOffsetUsingPoolToken() {
   busyOffsetButton();
   try {
-    const txReceipt = await window.offsetHelperWithSigner
+    const transaction = await window.offsetHelperWithSigner
       .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
     await transaction.wait();
     readyOffsetButton();
