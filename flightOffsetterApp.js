@@ -43,11 +43,10 @@ class BigNumber {
 
   asString() {
     let precision = parseFloat(this.string).toPrecision(4)
-
     if (precision.length < this.string.length) {
       return precision;
     } else {
-      return parseFloat(this.string).toPrecision(4);
+      return this.string;
     }
   }
 
