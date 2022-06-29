@@ -549,43 +549,6 @@ html {
   }
 }
 
-.alert {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
-  padding: 1rem;
-  border-radius: var(--rounded-box, 1rem);
-}
-
-.alert > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
-@media (min-width: 768px) {
-  .alert {
-    flex-direction: row;
-  }
-
-  .alert > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0px * var(--tw-space-y-reverse));
-  }
-}
-
-.alert > :where(*) {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .avatar.placeholder > div {
   display: flex;
   align-items: center;
@@ -854,6 +817,16 @@ html {
 
 .link {
   cursor: pointer;
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+}
+
+.link-hover {
+  -webkit-text-decoration-line: none;
+          text-decoration-line: none;
+}
+
+.link-hover:hover {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
 }
@@ -1676,6 +1649,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .grid {
   display: grid;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-5 {

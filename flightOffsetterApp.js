@@ -487,8 +487,10 @@ async function isCorrectChainId(chainId) {
 async function updateAccountInHeader() {
   let address = await window.signer.getAddress()
   const num = 4;
-  address = `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
-  document.querySelector('#btn-address').innerHTML = address;
+  const shortAddress = `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
+  const addressWithLink =
+    document.querySelector('#account-link').setAttribute("href", "https://polygonscan.com/address/" + address);
+  document.querySelector('#account-link').innerHTML = shortAddress;
   document.querySelector("#account-button-div").style.display = "block";
 }
 
