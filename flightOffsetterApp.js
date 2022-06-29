@@ -525,9 +525,8 @@ async function onConnect() {
   else if (btnApprove.attachEvent) btnApprove.attachEvent("onclick", approveErc20);
 
   await refreshAccountData();
-  // TODO: "sometimes(?)" accept button and payment amount is not updated upon wallet connect.
-  // await handleManuallyEnteredTCO2();
-  // await updatePaymentFields();
+  await handleManuallyEnteredTCO2();
+  await updatePaymentFields();
 }
 
 /**
