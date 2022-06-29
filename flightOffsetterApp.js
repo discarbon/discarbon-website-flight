@@ -576,7 +576,7 @@ async function onDisconnect() {
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
-  document.querySelector('#btn-address').innerHTML = "";
+  document.querySelector('#account-link').innerHTML = "";
   document.querySelector("#account-button-div").style.display = "hidden";
   document.getElementById("payment-amount").innerHTML = "&emsp;--.--";
   window.paymentAmount = new BigNumber("0.0")
