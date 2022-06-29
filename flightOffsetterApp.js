@@ -1,9 +1,6 @@
+import { addressesMainnet, addressesMumbai } from './addresses.js';
+
 "use strict";
-
-/**
- * Example JavaScript code that interacts with the page and Web3 wallets
- */
-
 
 // Unpkg imports
 const Web3Modal = window.Web3Modal.default;
@@ -18,28 +15,55 @@ let web3Modal
 let provider;
 let signer;
 
-// Addresses of used contracts
-// const offsetHelperAddress = "0x79E63048B355F4FBa192c5b28687B852a5521b31";  // Used in Amsterdam
-// const offsetHelperAddress = "0x7229F708d2d1C29b1508E35695a3070F55BbA479";   // Deployed 20220516
-const offsetHelperAddress = "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa";   // Deployed 20220621
-const NCTTokenAddress = "0xD838290e877E0188a4A44700463419ED96c16107";
+const addresses = addressesMainnet;
 
-let offsetHelper;  // contract object of the offsethelper
-
-const tokenAddresses = {
-  bct: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
-  nct: "0xD838290e877E0188a4A44700463419ED96c16107",
-  usdc: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-  weth: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-  wmatic: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+const tokenDecimals = {
+  BCT: 18,
+  NCT: 18,
+  MATIC: 18,
+  USDC: 6,
+  WWETH: 18,
+  WMATIC: 18
 };
 
+class BigNumber {
+
+  constructor(bigNumberOrString, decimals) {
+    this.decimals = decimals
+    if (typeof bigNumberOrString === "string") {
+      this.string = bigNumberOrString;
+    } else if (bigNumberOrString._isBigNumber) {
+      this.string = parseFloat(ethers.utils.formatUnits(bigNumberOrString, decimals)).toFixed(4);
+    } else if (typeof bigNumberOrString === "number") {
+      this.string = parseFloat(bigNumberOrString).toFixed(4);
+    } else {
+      throw "Unexpected type whilst creating BigNumber: " + typeof bigNumberOrString;
+    }
+  }
+
+  asString() {
+    let precision = parseFloat(this.string).toPrecision(4)
+
+    if (precision.length < this.string.length) {
+      return precision;
+    } else {
+      return parseFloat(this.string).toPrecision(4);
+    }
+  }
+
+  asBigNumber() {
+    return ethers.utils.parseEther(this.string, this.decimals);
+  }
+
+  asFloat() {
+    return parseFloat(this.string);
+  }
+}
+
 // Initial values
-let carbonToOffset = "0.0";
-let flightDistance = 0;
-let paymentCurrency = "matic";
-let paymentQuantity = "";
-let isConnected = false;
+let carbonToOffset = new BigNumber("0.0", tokenDecimals[18]);
+let paymentToken = "MATIC";
+let paymentAmount = new BigNumber("0.0", tokenDecimals[paymentToken]);
 
 import { airports } from './resources/airports_selected.js'
 
@@ -47,30 +71,13 @@ let airportsList = airports.map(value => {
   return value[0]
 });
 
-
 /**
  * Setup the orchestra
  */
 function init() {
 
-  console.log("Initializing example");
-  // console.log("WalletConnectProvider is", WalletConnectProvider);
-  // console.log("Fortmatic is", Fortmatic);
-  console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
-
-  // Check that the web page is run in a secure context,
-  // as otherwise MetaMask won't be available
-  // if(location.protocol !== 'https:') {
-  //   // https://ethereum.stackexchange.com/a/62217/620
-  //   const alert = document.querySelector("#alert-error-https");
-  //   alert.style.display = "block";
-  //   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-  //   return;
-  // }
-
+  console.log("Initializing");
   // Tell Web3modal what providers we have available.
-  // Built-in web browser provider (only one can exist as a time)
-  // like MetaMask, Brave or Opera is added automatically by Web3modal
   const providerOptions = {
     // walletconnect: {
     //   package: WalletConnectProvider,
@@ -94,16 +101,16 @@ function init() {
     providerOptions, // required
     disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
   });
-
+  disableOffsetButton();
   console.log("Web3Modal instance is", web3Modal);
 }
 
 async function createContractObject() {
-  let jsonFile = "./ABI/OffsetHelper_" + offsetHelperAddress + ".json";
+  let jsonFile = "./ABI/OffsetHelper_" + addresses["offsetHelper"] + ".json";
   var offsetHelperABI = await $.getJSON(jsonFile);
-  window.offsetHelper = new ethers.Contract(offsetHelperAddress, offsetHelperABI, provider);
+  window.offsetHelper = new ethers.Contract(addresses["offsetHelper"], offsetHelperABI, window.provider);
+  window.offsetHelperWithSigner = window.offsetHelper.connect(window.signer);
 }
-
 
 /**
  * Kick in the UI action after Web3modal dialog has chosen a provider
@@ -116,26 +123,23 @@ async function fetchAccountData() {
   // Display fully loaded UI for wallet data
   document.querySelector("#connect-button-div").style.display = "none";
   document.querySelector("#disconnect-button-div").style.display = "block";
-  // TODO
-  // document.querySelector("#connected").style.display = "block";
 }
 
 async function updateUIvalues() {
-  window.paymentCurrency = paymentCurrency;
-  window.paymentQuantity = paymentQuantity;
+  window.paymentToken = paymentToken;
+  window.paymentAmount = paymentAmount;
 
   if (window.flightDistance >= 0) {
-    var fieldDistance = document.getElementById("ro-input-distance");
-    fieldDistance.value = window.flightDistance.toFixed(1) + " km";
+    var fieldDistance = document.getElementById("distance");
+    fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
   }
-  var fieldCarbonToOffset = document.getElementById("ro-input-tco2");
-  if (window.carbonToOffset) {
-    fieldCarbonToOffset.value = window.carbonToOffset + " TCO2";
+  var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
+  if (window.carbonToOffset.asFloat()) {
+    fieldCarbonToOffset.value = window.carbonToOffset.asString();
   }
 
-  console.log("connected: ", window.isConnected)
-  if (window.isConnected && window.carbonToOffset) {
-    await updatePaymentCosts();
+  if (window.isConnected && (window.carbonToOffset.asFloat())) {
+    await updatePaymentFields();
   }
 }
 
@@ -146,75 +150,117 @@ async function updateUIvalues() {
  * - User connects wallet initially
  */
 async function refreshAccountData() {
-  // If any current data is displayed when
-  // the user is switching accounts in the wallet
-  // immediate hide this data
-  // document.querySelector("#connected").style.display = "none";
 
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
 
-  // Disable button while UI is loading.
-  // fetchAccountData() will take a while as it communicates
-  // with Ethereum node via JSON-RPC and loads chain data
-  // over an API call.
   document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-  await fetchAccountData(provider);
+  await fetchAccountData(window.provider);
   document.querySelector("#btn-connect").removeAttribute("disabled")
 }
 
-async function updatePaymentCosts() {
-  window.paymentCurrency = await document.querySelector("#list-payment-tokens").value.toLowerCase();
-  console.log("Payment currency changed: ", window.paymentCurrency);
-  console.log("Connected:", window.isConnected);
-  console.log("Carbon to offset: ", window.carbonToOffset);
+async function updateBalance() {
+  switch (window.paymentToken) {
+    case "MATIC":
+      window.balance = await getMaticBalance();
+      window.allowance = window.balance;
+      break;
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
+    case "NCT":
+      await createErc20Contract();
+      window.balance = await getErc20Balance();
+      window.allowance = await getErc20Allowance();
+      break;
+    default:
+      console.log("Unsupported token! ", window.paymentToken);
+  }
+  updateBalanceField();
+  console.log("allowance:", window.allowance.asString());
+}
+
+async function updatePaymentFields() {
+  window.paymentToken = await document.querySelector("#list-payment-tokens").value;
   if (window.isConnected !== true) {
     console.log("skipping update of payment costs; wallet not connected")
     return;
   }
-  if (parseFloat(window.carbonToOffset) == 0) {
+  await updateBalance();
+  if (window.carbonToOffset.asFloat() < 0.001) {
     console.log("No carbon emission to offset. Skipping calculation.")
     return;
   }
-
-  switch (window.paymentCurrency) {
-    case "matic":
+  switch (window.paymentToken) {
+    case "MATIC":
       await calculateRequiredMaticPaymentForOffset();
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:none")
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
-      enableOffsetButton();
       break;
-    case "usdc":
-    case "wmatic":
-    case "weth":
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
+    case "NCT":
       await calculateRequiredTokenPaymentForOffset();
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:true");
-      disableOffsetButton();
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      if (window.paymentCurrency === "usdc") {
-        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 6)).toFixed(4);
-      } else {
-        fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity, 18)).toFixed(4);
-      }
-      await createErc20Contract();
-      break;
-    case "nct":
-      var approveButton = document.getElementById("btn-approve");
-      approveButton.setAttribute("style", "display:true");
-      disableOffsetButton();
-      window.paymentQuantity = ethers.utils.parseEther(window.carbonToOffset, 18);
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = parseFloat(ethers.utils.formatUnits(window.paymentQuantity)).toFixed(4);
-      await createErc20Contract();
       break;
     default:
-      console.log("unsupported currency! ", window.paymentCurrency);
-      var fieldPaymentQuantity = document.getElementById("ro-input-required-payment-token-amount");
-      fieldPaymentQuantity.value = "unsupported token";
+      console.log("Unsupported token! ", window.paymentToken);
+      // TODO: better error message propagation in UI
+      var fieldpaymentAmount = document.getElementById("payment-amount");
+      fieldpaymentAmount.value = "unsupported token";
   }
+  updateApproveButton();
+  updateOffsetButton();
+  updatePaymentAmountField();
+}
+
+function updateApproveButton() {
+  if (window.paymentToken === "MATIC") {
+    hideApproveButton();
+  } else {
+    showApproveButton();
+  }
+}
+
+function updateOffsetButton() {
+  console.log("update offset button - balance: ", window.balance.asFloat(), "paymentAmount: ", window.paymentAmount.asFloat())
+  if (window.paymentAmount.asFloat() === 0) {
+    console.log("disable offset button - paymentAmount is 0")
+    disableOffsetButton();
+    return
+  }
+  if (window.balance.asFloat() < window.paymentAmount.asFloat()) {
+    console.log("disable offset button - insufficient balance")
+    disableOffsetButton();
+    return;
+  }
+  if (window.allowance.asFloat() < window.paymentAmount.asFloat()) {
+    console.log("disable offset button - insufficient allowance approved")
+    disableOffsetButton();
+    return;
+  }
+  console.log("enable offset button")
+  enableOffsetButton();
+}
+
+function showApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("style", "display:true");
+}
+
+function hideApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("style", "display:none");
+}
+
+function busyApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.innerHTML = "";
+  approveButton.classList.add("loading");
+}
+
+function readyApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.classList.remove("loading");
+  approveButton.innerHTML = "Approve";
 }
 
 function disableOffsetButton() {
@@ -227,87 +273,148 @@ function enableOffsetButton() {
   offsetButton.removeAttribute("disabled");
 }
 
+function busyOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.innerHTML = "";
+  offsetButton.classList.add("loading");
+}
+
+function readyOffsetButton() {
+  let offsetButton = document.getElementById("btn-offset");
+  offsetButton.classList.remove("loading");
+  offsetButton.innerHTML = "Offset";
+}
+
+function updatePaymentAmountField() {
+  var paymentAmountField = document.getElementById("payment-amount");
+  paymentAmountField.innerHTML = window.paymentAmount.asString();
+}
+
+function updateBalanceField() {
+  var balanceField = document.getElementById("balance");
+  balanceField.innerHTML = "Balance: " + window.balance.asString() + " " + window.paymentToken;
+}
+
 async function calculateRequiredMaticPaymentForOffset() {
-  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
-  window.paymentQuantity = await window.offsetHelper
-    .calculateNeededETHAmount(NCTTokenAddress, carbonToOffsetWei);
-  console.log("Matic: ", ethers.utils.formatUnits(window.paymentQuantity, 18))
+  let amount = await window.offsetHelper
+    .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset.asBigNumber());
+  window.paymentAmount = new BigNumber(amount, tokenDecimals[window.paymentToken]);
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
-  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18)
-  window.paymentQuantity = await window.offsetHelper
-    .calculateNeededTokenAmount(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
-  console.log("Token: ", ethers.utils.formatUnits(window.paymentQuantity))
+  if (window.paymentToken === "NCT") {
+    window.paymentAmount = new BigNumber(window.carbonToOffset.asBigNumber(), tokenDecimals[window.paymentToken]);
+  } else {
+    let amount = await window.offsetHelper
+      .calculateNeededTokenAmount(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
+    window.paymentAmount = new BigNumber(amount, tokenDecimals[window.paymentToken]);
+  }
+}
+
+async function getMaticBalance() {
+  let balance = await window.provider.getBalance(window.signer.getAddress());
+  return new BigNumber(balance, tokenDecimals["MATIC"]);
 }
 
 async function createErc20Contract() {
   let jsonFile = "./ABI/ERC20.json";
   var erc20ABI = await $.getJSON(jsonFile);
-  window.erc20Contract = new ethers.Contract(tokenAddresses[window.paymentCurrency], erc20ABI, provider);
+  window.erc20Contract = new ethers.Contract(addresses[window.paymentToken], erc20ABI, window.provider);
+}
+
+async function getErc20Balance() {
+  let balance = await window.erc20Contract.balanceOf(window.signer.getAddress());
+  return new BigNumber(balance, tokenDecimals[window.paymentToken]);
+}
+
+async function getErc20Allowance() {
+  let allowance = await window.erc20Contract.allowance(window.signer.getAddress(), addresses["offsetHelper"]);
+  return new BigNumber(allowance, 18);
+  // TODO: understand if we're doing it wrong or why usdc doesn't seem to respect it's 6 decimals when calling allowance()? I.e., why not
+  // return new BigNumber(allowance, tokenDecimals[window.paymentToken]);
 }
 
 async function approveErc20() {
-  console.log("Approving", offsetHelperAddress, "to deposit", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency, "(", window.paymentQuantity, ")");
-  const erc20WithSigner = window.erc20Contract.connect(signer);
-  const txReceipt = await erc20WithSigner.approve(offsetHelperAddress, window.paymentQuantity);
-  enableOffsetButton();
+  busyApproveButton();
+  // use a slightly higher approval allowance to allow a small price change between approve and offset
+  const approvalAmount = new BigNumber(1.01 * window.paymentAmount.asFloat(), tokenDecimals[window.paymentToken]);
+  try {
+    const erc20WithSigner = window.erc20Contract.connect(window.signer);
+    const transaction = await erc20WithSigner.approve(addresses["offsetHelper"], approvalAmount.asBigNumber());
+    await transaction.wait();
+    readyApproveButton();
+    enableOffsetButton();
+  } catch (e) {
+    readyApproveButton();
+    throw e;
+  }
 }
 
 async function doAutoOffset() {
-  console.log("AutoOffsetting with Payment currency:", window.paymentCurrency);
-  console.log("Connected:", window.isConnected);
   if (window.isConnected !== true) {
     console.log("skipping auto offset costs; wallet not connected")
     return;
   }
-  switch (window.paymentCurrency) {
-    case "matic":
+  switch (window.paymentToken) {
+    case "MATIC":
       await doAutoOffsetUsingETH();
       break;
-    case "usdc":
-    case "wmatic":
-    case "weth":
+    case "USDC":
+    case "WMATIC":
+    case "WETH":
       await doAutoOffsetUsingToken();
       break;
-    case "nct":
+    case "NCT":
       await doAutoOffsetUsingPoolToken();
       break;
-    default: console.log("unsupported currency! ", window.paymentCurrency);
+    default: console.log("Unsupported token! ", window.paymentToken);
   }
+  await updateBalance();
 }
+
 async function doAutoOffsetUsingETH() {
   // Update matic value before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredMaticPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingETH(NCTTokenAddress, carbonToOffsetWei,
-      { value: window.paymentQuantity });
-  console.log("offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
+  busyOffsetButton();
+  try {
+    const transaction = await window.offsetHelperWithSigner
+      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
 }
 
 async function doAutoOffsetUsingToken() {
   // Update token amount before sending txn to account for any price change
   // (an outdated value can lead to gas estimation error)
   await calculateRequiredTokenPaymentForOffset();
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingToken(tokenAddresses[window.paymentCurrency], NCTTokenAddress, carbonToOffsetWei);
-  console.log("Offset done: ", ethers.utils.formatUnits(window.paymentQuantity));
+  busyOffsetButton();
+  try {
+    const transaction = await window.offsetHelperWithSigner
+      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
 }
 
 async function doAutoOffsetUsingPoolToken() {
-  console.log("Will offset", window.carbonToOffset, "using", ethers.utils.formatUnits(window.paymentQuantity), window.paymentCurrency.toUpperCase());
-  const carbonToOffsetWei = ethers.utils.parseEther(window.carbonToOffset, 18);
-  const offsetHelperWithSigner = window.offsetHelper.connect(signer);
-  const txReceipt = await offsetHelperWithSigner
-    .autoOffsetUsingPoolToken(NCTTokenAddress, carbonToOffsetWei);
-  console.log("Offset done.");
+  busyOffsetButton();
+  try {
+    const transaction = await window.offsetHelperWithSigner
+      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
+    await transaction.wait();
+    readyOffsetButton();
+  } catch (e) {
+    readyOffsetButton();
+    throw e;
+  }
 }
 
 /**
@@ -359,23 +466,32 @@ function calcGeodesicDistance(start, destination) {
 }
 
 /**
- * Check the site is connected to the correct network.
+ * Check the correct network id is used.
  */
-async function isCorrectChainId() {
-  const { chainId } = await provider.getNetwork()
+async function isCorrectChainId(chainId) {
+  console.log("chainId: ", chainId)
+  // if (chainId !== 80001) {
   if (chainId !== 137) {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "block";
-    document.querySelector("#btn-offset").setAttribute("disabled", "disabled")
-    document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
+    document.getElementById("Network-Warning-Modal").checked = true;
     return false;
   } else {
-    const alert = document.querySelector("#alert-error-incorrect-network");
-    alert.style.display = "none";
-    document.querySelector("#btn-offset").removeAttribute("disabled")
     document.querySelector("#btn-connect").removeAttribute("disabled")
+    await updateAccountInHeader();
     return true;
   }
+}
+
+/**
+ * Update account in header upon connect
+ */
+async function updateAccountInHeader() {
+  let address = await window.signer.getAddress()
+  const num = 4;
+  const shortAddress = `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
+  const addressWithLink =
+    document.querySelector('#account-link').setAttribute("href", "https://polygonscan.com/address/" + address);
+  document.querySelector('#account-link').innerHTML = shortAddress;
+  document.querySelector("#account-button-div").style.display = "block";
 }
 
 /**
@@ -388,38 +504,47 @@ async function onConnect() {
   let instance
   try {
     instance = await web3Modal.connect();
-    provider = new ethers.providers.Web3Provider(instance);
-    signer = provider.getSigner();
+    window.provider = new ethers.providers.Web3Provider(instance);
+    window.signer = window.provider.getSigner();
   } catch (e) {
     console.log("Could not get a wallet connection", e);
     return;
   }
 
+  window.carbonToOffset = carbonToOffset;
+  window.paymentAmount = paymentAmount;
+
   let correctChainId
-  correctChainId = await isCorrectChainId();
+  const { chainId } = await window.provider.getNetwork();
+  correctChainId = await isCorrectChainId(chainId);
   // Subscribe to accounts change
-  provider.on("accountsChanged", (accounts) => {
+  window.provider.provider.on("accountsChanged", (accounts) => {
     fetchAccountData();
+    updateAccountInHeader();
+    console.log("accounts Changed");
   });
 
   // Subscribe to chainId change
-  provider.on("chainChanged", (chainId) => {
-    fetchAccountData();
-    correctChainId = isCorrectChainId();
-  });
+  window.provider.provider.on("chainChanged", (chainId) => {
+    console.log("chain Changed", chainId);
+    correctChainId = isCorrectChainId(parseInt(chainId, 16));
+    if (correctChainId) {
+      fetchAccountData();
+    } else {
+      console.log("on disconnect in chain changed")
+      onDisconnect();
+    }
 
-  // Subscribe to networkId change
-  provider.on("networkChanged", (networkId) => {
-    fetchAccountData();
-    correctChainId = isCorrectChainId();
   });
 
   if (correctChainId === false) {
+    console.log("wrong network, disconnect")
+    onDisconnect();
     return;
   }
 
   window.isConnected = true;
-  console.log("signer", signer)
+  console.log("window signer", window.signer)
   await createContractObject();
 
   var el = document.getElementById("btn-offset");
@@ -431,6 +556,8 @@ async function onConnect() {
   else if (btnApprove.attachEvent) btnApprove.attachEvent("onclick", approveErc20);
 
   await refreshAccountData();
+  await handleManuallyEnteredTCO2();
+  await updatePaymentFields();
 }
 
 /**
@@ -438,27 +565,24 @@ async function onConnect() {
  */
 async function onDisconnect() {
 
-  console.log("Killing the wallet connection", provider);
+  console.log("Killing the wallet connection", window.provider);
 
   // TODO: Which providers have close method?
-  if (provider.close) {
-    await provider.close();
-
-    // If the cached provider is not cleared,
-    // WalletConnect will default to the existing session
-    // and does not allow to re-scan the QR code with a new wallet.
-    // Depending on your use case you may want or want not his behavir.
+  if (window.provider.close) {
+    await window.provider.close();
     await web3Modal.clearCachedProvider();
-    provider = null;
+    window.provider = null;
   }
 
   // Set the UI back to the initial state
   document.querySelector("#connect-button-div").style.display = "block";
   document.querySelector("#disconnect-button-div").style.display = "none";
-
-  // TODO
-  // document.querySelector("#connected").style.display = "none";
-
+  document.querySelector('#account-link').innerHTML = "";
+  document.querySelector("#account-button-div").style.display = "hidden";
+  document.getElementById("payment-amount").innerHTML = "&emsp;--.--";
+  window.paymentAmount = new BigNumber("0.0")
+  document.getElementById("balance").innerHTML = "User balance: --.--";
+  disableOffsetButton();
   window.isConnected = false;
 }
 
@@ -502,16 +626,11 @@ incrementButtons.forEach(btn => {
   btn.addEventListener("click", increment);
 });
 
-
 /**
  * Find Latitude and Longitude from airport name
  */
 async function findLatLong(airportName) {
-
-  // let airportName = "Zürich Airport, Zurich CH, ZRH"
   let result = await airports.find(element => element[0] == airportName)
-
-  // console.log("Location:", result)
   let location = new Location(result[1], result[2]);
   return location
 }
@@ -533,12 +652,8 @@ async function calculateFlightDistance() {
     destinationLocation = await findLatLong(destinationName)
   }
 
-
-  console.log("Locations:", startLocation, " ", destinationLocation)
-
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
-    console.log("Distance: ", window.flightDistance)
     calculateCarbonEmission();
   }
 }
@@ -600,9 +715,6 @@ async function calculateCarbonEmission() {
     let shortEM = singleEmissionCalc(emShort);
     let longEM = singleEmissionCalc(emLong);
     let longDistFactor = (window.flightDistance - 1500) / 1000; // 0@1500km, 1@2500km
-    // console.log("longdistancefactor: ", longDistFactor);
-    // console.log("shortEM: ", shortEM);
-    // console.log("longEM: ", longEM);
     emission = (1 - longDistFactor) * shortEM + longDistFactor * longEM; //interpolation
   }
 
@@ -614,10 +726,8 @@ async function calculateCarbonEmission() {
   if (roundTrip) {
     emission *= 2;
   }
-
-  window.carbonToOffset = emission.toFixed(3).toString();
-  console.log("Carbon Emission: ", emission);
-  await updatePaymentCosts();
+  window.carbonToOffset = new BigNumber(emission, tokenDecimals["NCT"]);
+  await updatePaymentFields();
   updateUIvalues();
 }
 
@@ -627,7 +737,6 @@ async function calculateCarbonEmission() {
 function singleEmissionCalc(em) {
 
   let flightclass = document.getElementById("flightclass").value;
-  // console.log("flightclass: ", flightclass);
   let emission = 0;
   let d = window.flightDistance + em.DC;
   emission = ((em.a * d * d + em.b * d + em.c) / (em.S * em.PLF)) *
@@ -636,36 +745,67 @@ function singleEmissionCalc(em) {
     (em.EF * em.M + em.P) +
     em.AF * d +
     em.A;
-  // console.log("emissioncalc: ", emission)
   emission = (emission / 1000).toFixed(3); // from kg to tonnes
   return emission
 }
 
 async function handleManuallyEnteredTCO2() {
-  console.log("manual change:")
-  let TCO2 = parseFloat(document.getElementById("ro-input-tco2").value);
-
+  // console.log("manual change:")
+  let TCO2 = parseFloat(document.getElementById("carbon-to-offset").value);
+  // console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
-    window.carbonToOffset = TCO2.toFixed(3).toString();
-    await updatePaymentCosts();
+    window.carbonToOffset = new BigNumber(TCO2, tokenDecimals["NCT"]);
   }
-  console.log("Carbon Emission: ", TCO2);
+  // console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
 }
-
 
 /**
  * Make autocomplete list for airports
  */
 $(function () {
-  $(".airports").autocomplete({
-    maxShowItems: 10,
+  $("#start").autocomplete({
+    maxShowItems: 6,
     source: airportsList,
-    minLength: 2
-  });
+    minLength: 2,
+    select: function (event, ui) {
+      // somehow this needs to be set manually here, otherwise the UI will
+      // not update properly. (For the other jQuery it works without it...)
+      let startField = document.getElementById("start");
+      startField.value = ui.item.value;
+      calculateFlightDistance();
+    }
+  }).focus(function () {
+    $(this).autocomplete('search', $(this).val())
+  }).autocomplete("instance")._renderItem = function (ul, item) {
+    return $("<li>")
+      .append('<div style="font-size:20px;">' + item.label.split(",")[1] + "<br>" +
+        '<span style="font-size:16px;"><b>' + item.label.split(",")[0] + "</b>, " +
+        item.label.split(",")[2] + ", " +
+        item.label.split(",")[3] +
+        "</small></div>")
+      .appendTo(ul);
+  };
 });
 
-
+$(function () {
+  $("#destination").autocomplete({
+    maxShowItems: 6,
+    source: airportsList,
+    minLength: 2,
+    select: function (event, ui) { calculateFlightDistance() }
+  }).focus(function () {
+    $(this).autocomplete('search', $(this).val())
+  }).autocomplete("instance")._renderItem = function (ul, item) {
+    return $("<li>")
+      .append('<div style="font-size:20px;">' + item.label.split(",")[1] + "<br>" +
+        '<span style="font-size:16px;"><b>' + item.label.split(",")[0] + "</b>, " +
+        item.label.split(",")[2] + ", " +
+        item.label.split(",")[3] +
+        "</span></div>")
+      .appendTo(ul);
+  };
+});
 
 /**
  * Main entry point.
@@ -674,11 +814,10 @@ window.addEventListener('load', async () => {
   init();
   document.querySelector("#btn-connect").addEventListener("click", onConnect);
   document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
-  document.querySelector("#start").addEventListener("change", calculateFlightDistance);
-  document.querySelector("#destination").addEventListener("change", calculateFlightDistance);
+  document.querySelector("#network-modal-button").addEventListener("click", onDisconnect);
   document.querySelector("#list-payment-tokens").addEventListener("change", updateUIvalues);
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
-  document.querySelector('#ro-input-tco2').addEventListener("change", handleManuallyEnteredTCO2);
+  document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
   document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
 });
