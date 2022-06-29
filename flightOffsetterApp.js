@@ -520,6 +520,7 @@ async function onConnect() {
   // Subscribe to accounts change
   window.provider.provider.on("accountsChanged", (accounts) => {
     fetchAccountData();
+    updateAccountInHeader();
     console.log("accounts Changed");
   });
 
@@ -530,7 +531,7 @@ async function onConnect() {
     if (correctChainId) {
       fetchAccountData();
     } else {
-      console.log("on disconncet in chain changed")
+      console.log("on disconnect in chain changed")
       onDisconnect();
     }
 
