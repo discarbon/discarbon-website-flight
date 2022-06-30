@@ -821,16 +821,6 @@ html {
           text-decoration-line: underline;
 }
 
-.link-hover {
-  -webkit-text-decoration-line: none;
-          text-decoration-line: none;
-}
-
-.link-hover:hover {
-  -webkit-text-decoration-line: underline;
-          text-decoration-line: underline;
-}
-
 .menu > :where(li.disabled > *:not(ul):focus) {
   cursor: auto;
 }
@@ -1627,6 +1617,10 @@ body[dir="rtl"] .checkbox:checked,
   margin-right: auto;
 }
 
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
 .mb-32 {
   margin-bottom: 8rem;
 }
@@ -1637,10 +1631,6 @@ body[dir="rtl"] .checkbox:checked,
 
 .mt-1 {
   margin-top: 0.25rem;
-}
-
-.mr-1 {
-  margin-right: 0.25rem;
 }
 
 .block {
@@ -1898,6 +1888,12 @@ body[dir="rtl"] .checkbox:checked,
 .outline-none {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+@media (min-width: 640px) {
+  .sm\:block {
+    display: block;
+  }
 }
 
 @media (min-width: 768px) {
