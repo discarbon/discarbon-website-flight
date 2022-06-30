@@ -1775,11 +1775,7 @@ body[dir="rtl"] .checkbox:checked,
 }
 
 .bg-landscape {
-  background-image: url('/images/landscape.svg');
-}
-
-.bg-airplane {
-  background-image: url('/images/airplane.svg');
+  background-image: url('/images/stainless-images-JzCf5Y3XmFU-unsplash.jpg');
 }
 
 .bg-cover {

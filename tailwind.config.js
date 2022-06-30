@@ -4,8 +4,9 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'landscape': "url('/images/landscape.svg')",
-        'airplane': "url('/images/airplane.svg')",
+        'landscape': "url('/images/stainless-images-JzCf5Y3XmFU-unsplash.jpg')",
+        //'landscape': "url('/images/landscape.svg')",
+        //'airplane': "url('/images/airplane.svg')",
       },
       minHeight: (theme) => ({
         ...theme('spacing'),
@@ -14,16 +15,16 @@ module.exports = {
   },
   plugins: [require("daisyui")],
 
-    // daisyUI config (optional)
-    daisyui: {
-      styled: true,
-      themes: true,
-      base: true,
-      utils: true,
-      logs: true,
-      rtl: false,
-      prefix: "",
-      darkTheme: "forest",
-      themes:["emerald"],
-    },
+  // daisyUI config (optional)
+  daisyui: {
+    styled: true,
+    themes: true,
+    base: true,
+    utils: true,
+    logs: true,
+    rtl: false,
+    prefix: "",
+    darkTheme: "forest",
+    themes: ["emerald"],
+  },
 }
