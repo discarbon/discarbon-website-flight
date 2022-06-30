@@ -133,7 +133,7 @@ async function updateUIvalues() {
     fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
-  if (window.carbonToOffset.asFloat()) {
+  if (window.carbonToOffset.asFloat() >= 0) {
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
   }
 
@@ -188,23 +188,24 @@ async function updatePaymentFields() {
   await updateBalance();
   if (window.carbonToOffset.asFloat() < 0.001) {
     console.log("No carbon emission to offset. Skipping calculation.")
-    return;
-  }
-  switch (window.paymentToken) {
-    case "MATIC":
-      await calculateRequiredMaticPaymentForOffset();
-      break;
-    case "USDC":
-    case "WMATIC":
-    case "WETH":
-    case "NCT":
-      await calculateRequiredTokenPaymentForOffset();
-      break;
-    default:
-      console.log("Unsupported token! ", window.paymentToken);
-      // TODO: better error message propagation in UI
-      var fieldpaymentAmount = document.getElementById("payment-amount");
-      fieldpaymentAmount.value = "unsupported token";
+    window.paymentAmount = new BigNumber("0.0");
+  } else {
+    switch (window.paymentToken) {
+      case "MATIC":
+        await calculateRequiredMaticPaymentForOffset();
+        break;
+      case "USDC":
+      case "WMATIC":
+      case "WETH":
+      case "NCT":
+        await calculateRequiredTokenPaymentForOffset();
+        break;
+      default:
+        console.log("Unsupported token! ", window.paymentToken);
+        // TODO: better error message propagation in UI
+        var fieldpaymentAmount = document.getElementById("payment-amount");
+        fieldpaymentAmount.value = "unsupported token";
+    }
   }
   updateApproveButton();
   updateOffsetButton();
@@ -530,7 +531,6 @@ async function onConnect() {
     if (correctChainId) {
       fetchAccountData();
     } else {
-      console.log("on disconnect in chain changed")
       onDisconnect();
     }
 
