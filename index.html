@@ -71,46 +71,48 @@
 
         <div class="max-w-[1200px]">
           <div class="flex flex-col w-full lg:flex-row">
-            <div class="grid flex-grow form-control max-w-xs card rounded-box place-items-left space-y-2">
+            <div class="form-control max-w-xs card rounded-box space-y-2">
               <h2 class="card-title">Configure Flight</h2>
-              <div>
-                <input name="start" type="text" id="start" placeholder="From"
-                  class="input input-bordered input-primary max-w-xs w-full" />
-              </div>
-              <div>
-                <input id="destination" type="text" id="destination" placeholder="To"
-                  class="input input-bordered input-primary max-w-xs w-full" />
-              </div>
-              <div>
-                <label for="passengers" class="label">
-                  <span class="label-text">Passengers</span>
-                </label>
-                <div class="flex flex-row w-full h-10 rounded-lg relative bg-transparent mt-1">
-                  <button data-action="decrement" class="btn-primary h-full w-20 rounded-l cursor-pointer outline-none">
-                    <span class="m-auto text-2xl">−</span>
-                  </button>
-                  <input type="number"
-                    class="input input-bordered input-primary rounded-none text-center w-full text-md flex items-center text-gray-700 h-10"
-                    id="passengers" value="1"></input>
-                  <button data-action="increment" class="btn-primary w-20 rounded-r cursor-pointer">
-                    <span class="m-auto text-2xl">+</span>
-                  </button>
+              <div class="grid flex-grow  rounded-box place-items-left space-y-2">
+                <div>
+                  <input name="start" type="text" id="start" placeholder="From"
+                    class="input input-bordered input-primary max-w-xs w-full" />
                 </div>
-              </div>
-              <div>
-                <div class="flex flex-row w-full rounded-lg bg-transparent mt-1">
-                  <select id="flightclass" class="select select-bordered select-primary w-full max-w-xs font-normal">
-                    <option value="economy">Economy class</option>
-                    <option value="business">Business class</option>
-                    <option value="first">First class</option>
-                  </select>
+                <div>
+                  <input id="destination" type="text" id="destination" placeholder="To"
+                    class="input input-bordered input-primary max-w-xs w-full" />
                 </div>
-              </div>
-              <div class="relative ">
-                <label class="label cursor-pointer space-y-2">
-                  <span class="label-text">Round Trip:</span>
-                  <input type="checkbox" id="roundtrip" checked="checked" class="checkbox checkbox-primary" />
-                </label>
+                <div>
+                  <label for="passengers" class="label">
+                    <span class="label-text">Passengers</span>
+                  </label>
+                  <div class="flex flex-row w-full h-10 rounded-lg relative bg-transparent mt-1">
+                    <button data-action="decrement" class="btn-primary h-full w-20 rounded-l cursor-pointer outline-none">
+                      <span class="m-auto text-2xl">−</span>
+                    </button>
+                    <input type="number"
+                      class="input input-bordered input-primary rounded-none text-center w-full text-md flex items-center text-gray-700 h-10"
+                      id="passengers" value="1"></input>
+                    <button data-action="increment" class="btn-primary w-20 rounded-r cursor-pointer">
+                      <span class="m-auto text-2xl">+</span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex flex-row w-full rounded-lg bg-transparent mt-1">
+                    <select id="flightclass" class="select select-bordered select-primary w-full max-w-xs font-normal">
+                      <option value="economy">Economy class</option>
+                      <option value="business">Business class</option>
+                      <option value="first">First class</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="relative ">
+                  <label class="label cursor-pointer space-y-2">
+                    <span class="label-text">Round Trip:</span>
+                    <input type="checkbox" id="roundtrip" checked="checked" class="checkbox checkbox-primary" />
+                  </label>
+                </div>
               </div>
             </div>
 
