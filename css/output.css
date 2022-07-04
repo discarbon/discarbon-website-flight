@@ -1782,26 +1782,6 @@ body[dir="rtl"] .checkbox:checked,
   background-color: transparent;
 }
 
-.bg-green-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(21 128 61 / var(--tw-bg-opacity));
-}
-
-.bg-lime-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(77 124 15 / var(--tw-bg-opacity));
-}
-
-.bg-lime-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(132 204 22 / var(--tw-bg-opacity));
-}
-
-.bg-lime-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(63 98 18 / var(--tw-bg-opacity));
-}
-
 .bg-landscape {
   background-image: url('/images/landscape.svg');
 }
@@ -1973,6 +1953,10 @@ body[dir="rtl"] .checkbox:checked,
 
   .lg\:fixed {
     position: fixed;
+  }
+
+  .lg\:mb-32 {
+    margin-bottom: 8rem;
   }
 
   .lg\:flex-row {
