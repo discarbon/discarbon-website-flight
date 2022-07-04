@@ -1762,10 +1762,6 @@ body[dir="rtl"] .checkbox:checked,
   border-bottom-right-radius: 0.25rem;
 }
 
-.border-0 {
-  border-width: 0px;
-}
-
 .border-l-\[0px\] {
   border-left-width: 0px;
 }
