@@ -1,3 +1,6 @@
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: ["*.{html,js}"],
   purge: ["*.{html,js}"],
@@ -13,10 +16,7 @@ module.exports = {
       fontFamily: {
         sans: [
           'Helvetica',
-          'Verdana',
-          'Arial',
-          'Roboto',
-          'sans-serif',
+          ...defaultTheme.fontFamily.sans,
         ],
       },
     }
