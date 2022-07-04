@@ -1790,6 +1790,23 @@ body[dir="rtl"] .checkbox:checked,
   background-image: url('/images/landscape.svg');
 }
 
+.bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.from-sky-200 {
+  --tw-gradient-from: #bae6fd;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(186 230 253 / 0));
+}
+
+.via-sky-300 {
+  --tw-gradient-stops: var(--tw-gradient-from), #7dd3fc, var(--tw-gradient-to, rgb(125 211 252 / 0));
+}
+
+.to-emerald-200 {
+  --tw-gradient-to: #a7f3d0;
+}
+
 .bg-cover {
   background-size: cover;
 }
@@ -1887,81 +1904,6 @@ body[dir="rtl"] .checkbox:checked,
 .outline-none {
   outline: 2px solid transparent;
   outline-offset: 2px;
-}
-
-@media (min-width: 768px) {
-  .btn-outline.md\:btn-primary .badge {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--p) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--p) / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: hsl(var(--pc) / var(--tw-text-opacity));
-  }
-
-  .btn-outline.md\:btn-primary .badge-outline {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--p) / var(--tw-border-opacity));
-    background-color: transparent;
-    --tw-text-opacity: 1;
-    color: hsl(var(--p) / var(--tw-text-opacity));
-  }
-
-  .btn-outline.md\:btn-primary:hover .badge {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--pc) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--pc) / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: hsl(var(--p) / var(--tw-text-opacity));
-  }
-
-  .btn-outline.md\:btn-primary:hover .badge.outline {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--pc) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: hsl(var(--pc) / var(--tw-text-opacity));
-  }
-
-  .md\:btn-primary {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--p) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--p) / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: hsl(var(--pc) / var(--tw-text-opacity));
-  }
-
-  .md\:btn-primary:hover, .btn-primary.btn-active {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--pf, var(--p)) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-  }
-
-  .md\:btn-primary:focus-visible {
-    outline: 2px solid hsl(var(--p));
-  }
-
-  .btn-outline.md\:btn-primary {
-    --tw-text-opacity: 1;
-    color: hsl(var(--p) / var(--tw-text-opacity));
-  }
-
-  .btn-outline.md\:btn-primary:hover {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--pf, var(--p)) / var(--tw-border-opacity));
-    --tw-bg-opacity: 1;
-    background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-    --tw-text-opacity: 1;
-    color: hsl(var(--pc) / var(--tw-text-opacity));
-  }
-
-  .drawer-toggle:focus-visible ~ .drawer-content .drawer-button.md\:btn-primary {
-    outline: 2px solid hsl(var(--p));
-  }
 }
 
 @media (min-width: 1024px) {
