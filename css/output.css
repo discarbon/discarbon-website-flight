@@ -1778,9 +1778,8 @@ body[dir="rtl"] .checkbox:checked,
   background-color: transparent;
 }
 
-.bg-neutral {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+.bg-\[\#222e1eff\] {
+  background-color: #222e1eff;
 }
 
 .bg-landscape {
@@ -1803,8 +1802,8 @@ body[dir="rtl"] .checkbox:checked,
   fill: currentColor;
 }
 
-.p-4 {
-  padding: 1rem;
+.p-2 {
+  padding: 0.5rem;
 }
 
 .py-4 {
