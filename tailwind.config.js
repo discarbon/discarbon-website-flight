@@ -10,6 +10,15 @@ module.exports = {
       minHeight: (theme) => ({
         ...theme('spacing'),
       }),
+      fontFamily: {
+        sans: [
+          'Helvetica',
+          'Verdana',
+          'Arial',
+          'Roboto',
+          'sans-serif',
+        ],
+      },
     }
   },
   plugins: [require("daisyui")],

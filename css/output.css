@@ -42,7 +42,7 @@ html {
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: Helvetica, Verdana, Arial, Roboto, sans-serif;
   /* 4 */
 }
 
@@ -1762,10 +1762,6 @@ body[dir="rtl"] .checkbox:checked,
   border-bottom-right-radius: 0.25rem;
 }
 
-.border-0 {
-  border-width: 0px;
-}
-
 .border-l-\[0px\] {
   border-left-width: 0px;
 }
@@ -1839,6 +1835,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .align-middle {
   vertical-align: middle;
+}
+
+.font-sans {
+  font-family: Helvetica, Verdana, Arial, Roboto, sans-serif;
 }
 
 .text-lg {
