@@ -1782,8 +1782,24 @@ body[dir="rtl"] .checkbox:checked,
   background-color: transparent;
 }
 
-.bg-\[\#222e1eff\] {
-  background-color: #222e1eff;
+.bg-green-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 128 61 / var(--tw-bg-opacity));
+}
+
+.bg-lime-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(77 124 15 / var(--tw-bg-opacity));
+}
+
+.bg-lime-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(132 204 22 / var(--tw-bg-opacity));
+}
+
+.bg-lime-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(63 98 18 / var(--tw-bg-opacity));
 }
 
 .bg-landscape {
@@ -1792,6 +1808,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.bg-RollingHills {
+  background-image: url('/images/RollingHills.svg');
 }
 
 .from-sky-200 {
@@ -1813,6 +1833,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .bg-top {
   background-position: top;
+}
+
+.bg-bottom {
+  background-position: bottom;
 }
 
 .bg-no-repeat {

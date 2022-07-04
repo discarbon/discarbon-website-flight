@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'landscape': "url('/images/landscape.svg')",
+        'RollingHills': "url('/images/RollingHills.svg')",
         'airplane': "url('/images/airplane.svg')",
       },
       minHeight: (theme) => ({
