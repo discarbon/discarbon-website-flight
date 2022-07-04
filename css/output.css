@@ -1662,10 +1662,6 @@ body[dir="rtl"] .checkbox:checked,
   display: none;
 }
 
-.h-5 {
-  height: 1.25rem;
-}
-
 .h-10 {
   height: 2.5rem;
 }
@@ -1791,16 +1787,8 @@ body[dir="rtl"] .checkbox:checked,
   background-image: url('/images/landscape.svg');
 }
 
-.bg-airplane {
-  background-image: url('/images/airplane.svg');
-}
-
 .bg-cover {
   background-size: cover;
-}
-
-.bg-contain {
-  background-size: contain;
 }
 
 .bg-top {
@@ -1896,12 +1884,6 @@ body[dir="rtl"] .checkbox:checked,
 .outline-none {
   outline: 2px solid transparent;
   outline-offset: 2px;
-}
-
-@media (min-width: 640px) {
-  .sm\:block {
-    display: block;
-  }
 }
 
 @media (min-width: 768px) {
