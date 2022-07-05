@@ -128,13 +128,19 @@ async function updateUIvalues() {
   window.paymentToken = paymentToken;
   window.paymentAmount = paymentAmount;
 
-  if (window.flightDistance >= 0) {
+  if (window.flightDistance > 0) {
     var fieldDistance = document.getElementById("distance");
     fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
+  } else {
+    var fieldDistance = document.getElementById("distance");
+    fieldDistance.innerHTML = "--.-- km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
-  if (window.carbonToOffset.asFloat() >= 0) {
+  console.log("carbontooffset: ", window.carbonToOffset.asFloat())
+  if (window.carbonToOffset.asFloat() > 0) {
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
+  } else {
+    fieldCarbonToOffset.value = "--.--";
   }
 
   if (window.isConnected && (window.carbonToOffset.asFloat())) {
@@ -634,8 +640,14 @@ incrementButtons.forEach(btn => {
  */
 async function findLatLong(airportName) {
   let result = await airports.find(element => element[0] == airportName)
-  let location = new Location(result[1], result[2]);
-  return location
+
+  let location;
+  if (result) {
+    return new Location(result[1], result[2]);
+  } else {
+    return undefined
+  }
+
 }
 
 /**
@@ -658,6 +670,12 @@ async function calculateFlightDistance() {
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     calculateCarbonEmission();
+  } else {
+    console.log("in else: ")
+    window.flightDistance = 0;
+    calculateCarbonEmission();
+    await updatePaymentFields();
+    updateUIvalues();
   }
 }
 
@@ -823,4 +841,6 @@ window.addEventListener('load', async () => {
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
   document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
+  document.querySelector('#start').addEventListener("change", calculateFlightDistance);
+  document.querySelector('#destination').addEventListener("change", calculateFlightDistance);
 });
