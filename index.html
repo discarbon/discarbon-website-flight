@@ -28,6 +28,7 @@
 </head>
 
 <!-- Modal definitions -->
+<!-- Wrong Network -->
 <input type="checkbox" id="Network-Warning-Modal" class="modal-toggle" />
 <div class="modal">
   <div class="modal-box">
@@ -36,6 +37,18 @@
       <a class="link" href="https://chainlist.org/?search=polygon">chainlist.org</a>.</span>
     <div class="modal-action">
       <label for="Network-Warning-Modal" id="network-modal-button" class="btn btn-primary">Disconnect</label>
+    </div>
+  </div>
+</div>
+
+<!-- Install Metamask -->
+<input type="checkbox" id="Metamask-Warning-Modal" class="modal-toggle" />
+<div class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">No Browser Wallet Found</h3>
+    <p class="py-4">Please install <a class="link" href="https://metamask.io/">MetaMask</a> or any compatible browser wallet.</p>
+    <div class="modal-action">
+      <label for="Metamask-Warning-Modal" class="btn">OK</label>
     </div>
   </div>
 </div>
@@ -71,7 +84,7 @@
 
         <div class="max-w-[1200px]">
           <div class="flex flex-col w-full lg:flex-row">
-            <div class="form-control w-80 card rounded-box space-y-2">
+            <div class="form-control w-80 card rounded-box space-y-2 mb-10 lg:mb-0 lg:mr-10">
               <h2 class="card-title">Configure Flight</h2>
               <div class="grid flex-grow  rounded-box place-items-left space-y-2">
                 <div>
@@ -83,14 +96,14 @@
                     class="input input-bordered input-primary max-w-xs w-full lg:h-[60px] lg:text-xl" />
                 </div>
                 <div>
-                  <div class="flex flex-row w-full h-10 rounded-lg relative bg-transparent mt-1 lg:h-[60px] lg:text-xl">
-                    <button data-action="decrement" class="btn-primary h-full w-20 rounded-l cursor-pointer outline-none">
+                  <div class="flex flex-row w-full h-12 rounded-xl relative bg-transparent mt-1 lg:h-[54px] lg:text-xl">
+                    <button data-action="decrement" class="btn-primary h-full w-20 lg:w-24 rounded-l-lg cursor-pointer outline-none">
                       <span class="m-auto text-2xl">−</span>
                     </button>
                     <input type="text"
-                      class="input input-bordered input-primary rounded-none text-center w-full text-md flex items-center text-gray-700 h-10 lg:h-[60px] lg:text-xl"
+                      class="input input-bordered input-primary rounded-none text-center w-full text-md flex items-center text-gray-700 h-12 lg:h-[54px] lg:text-xl"
                       id="passengers" value="1 passenger"></input>
-                    <button data-action="increment" class="btn-primary w-20 rounded-r cursor-pointer">
+                    <button data-action="increment" class="btn-primary w-20 lg:w-24 rounded-r-lg cursor-pointer">
                       <span class="m-auto text-2xl">+</span>
                     </button>
                   </div>
@@ -112,8 +125,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="divider lg:divider-horizontal w-80"></div>
 
             <div class="grid flex-grow form-control w-80 card rounded-box place-items-left space-y-2">
               <h2 class="card-title">Offset Flight</h2>
