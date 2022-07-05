@@ -595,17 +595,27 @@ async function onDisconnect() {
   window.isConnected = false;
 }
 
+function updatePassengerField() {
+  let passengers = document.getElementById("passengers");
+  console.log("passengers in update field: ", passengers.value);
+  passengers.value = passengers.value + " passenger";
+  if (parseFloat(passengers.value) > 1) {
+    passengers.value += "s";
+  }
+  calculateFlightDistance();
+}
+
 function decrement(e) {
   const btn = e.target.parentNode.parentElement.querySelector(
     'button[data-action="decrement"]'
   );
   const target = btn.nextElementSibling;
-  let value = Number(target.value);
+  let value = parseFloat(target.value);
   if (value > 1) {
     value--;
   }
   target.value = value;
-  calculateFlightDistance();
+  updatePassengerField();
 }
 
 function increment(e) {
@@ -613,10 +623,10 @@ function increment(e) {
     'button[data-action="decrement"]'
   );
   const target = btn.nextElementSibling;
-  let value = Number(target.value);
+  let value = parseFloat(target.value);
   value++;
   target.value = value;
-  calculateFlightDistance();
+  updatePassengerField();
 }
 
 const decrementButtons = document.querySelectorAll(
@@ -740,7 +750,8 @@ async function calculateCarbonEmission() {
   }
 
   // Handle multipliers and input from other fields
-  let passengers = document.getElementById("passengers").value;
+  let passengers = parseFloat(document.getElementById("passengers").value);
+  console.log("passengers in emission calc: ", passengers);
   emission *= passengers;
 
   let roundTrip = document.getElementById("roundtrip").checked;
@@ -840,7 +851,7 @@ window.addEventListener('load', async () => {
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
-  document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
+  document.querySelector('#passengers').addEventListener("change", updatePassengerField);
   document.querySelector('#start').addEventListener("change", calculateFlightDistance);
   document.querySelector('#destination').addEventListener("change", calculateFlightDistance);
 });
