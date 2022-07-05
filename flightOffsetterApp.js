@@ -128,13 +128,19 @@ async function updateUIvalues() {
   window.paymentToken = paymentToken;
   window.paymentAmount = paymentAmount;
 
-  if (window.flightDistance >= 0) {
+  if (window.flightDistance > 0) {
     var fieldDistance = document.getElementById("distance");
     fieldDistance.innerHTML = window.flightDistance.toFixed(0) + " km";
+  } else {
+    var fieldDistance = document.getElementById("distance");
+    fieldDistance.innerHTML = "--.-- km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
-  if (window.carbonToOffset.asFloat() >= 0) {
+  console.log("carbontooffset: ", window.carbonToOffset.asFloat())
+  if (window.carbonToOffset.asFloat() > 0) {
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
+  } else {
+    fieldCarbonToOffset.value = "--.--";
   }
 
   if (window.isConnected && (window.carbonToOffset.asFloat())) {
@@ -487,7 +493,11 @@ async function isCorrectChainId(chainId) {
 async function updateAccountInHeader() {
   let address = await window.signer.getAddress()
   const num = 4;
-  const shortAddress = `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
+  let shortAddress = address.slice(0, num + 2) + "...";
+  if (window.innerWidth > 640){
+    shortAddress += address.slice(-num);
+  }
+
   const addressWithLink =
     document.querySelector('#account-link').setAttribute("href", "https://polygonscan.com/address/" + address);
   document.querySelector('#account-link').innerHTML = shortAddress;
@@ -501,13 +511,21 @@ async function onConnect() {
 
   console.log("Opening a dialog", web3Modal);
 
+  // Needs to be removed if more wallets than metamask are allowed
+  if (typeof window.ethereum == 'undefined') {
+    document.getElementById("Metamask-Warning-Modal").checked = true;
+    console.log("No MetaMask compatible wallet found.")
+    return;
+  }
+
   let instance
   try {
     instance = await web3Modal.connect();
     window.provider = new ethers.providers.Web3Provider(instance);
     window.signer = window.provider.getSigner();
   } catch (e) {
-    console.log("Could not get a wallet connection", e);
+    document.getElementById("Metamask-Warning-Modal").checked = true;
+    console.log("Could not get a wallet connection", e)
     return;
   }
 
@@ -585,17 +603,32 @@ async function onDisconnect() {
   window.isConnected = false;
 }
 
+function updatePassengerField() {
+  let passengers = document.getElementById("passengers").value;
+  if (parseFloat(passengers)) {
+    passengers = parseFloat(passengers);
+  } else {
+    passengers = 1;
+  }
+  passengers = passengers + " passenger";
+  if (parseFloat(passengers) > 1) {
+    passengers += "s";
+  }
+  document.getElementById("passengers").value = passengers
+  calculateFlightDistance();
+}
+
 function decrement(e) {
   const btn = e.target.parentNode.parentElement.querySelector(
     'button[data-action="decrement"]'
   );
   const target = btn.nextElementSibling;
-  let value = Number(target.value);
+  let value = parseFloat(target.value);
   if (value > 1) {
     value--;
   }
   target.value = value;
-  calculateFlightDistance();
+  updatePassengerField();
 }
 
 function increment(e) {
@@ -603,10 +636,10 @@ function increment(e) {
     'button[data-action="decrement"]'
   );
   const target = btn.nextElementSibling;
-  let value = Number(target.value);
+  let value = parseFloat(target.value);
   value++;
   target.value = value;
-  calculateFlightDistance();
+  updatePassengerField();
 }
 
 const decrementButtons = document.querySelectorAll(
@@ -630,8 +663,14 @@ incrementButtons.forEach(btn => {
  */
 async function findLatLong(airportName) {
   let result = await airports.find(element => element[0] == airportName)
-  let location = new Location(result[1], result[2]);
-  return location
+
+  let location;
+  if (result) {
+    return new Location(result[1], result[2]);
+  } else {
+    return undefined
+  }
+
 }
 
 /**
@@ -654,6 +693,12 @@ async function calculateFlightDistance() {
   if (startLocation && destinationLocation) {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     calculateCarbonEmission();
+  } else {
+    console.log("in else: ")
+    window.flightDistance = 0;
+    calculateCarbonEmission();
+    await updatePaymentFields();
+    updateUIvalues();
   }
 }
 
@@ -718,7 +763,8 @@ async function calculateCarbonEmission() {
   }
 
   // Handle multipliers and input from other fields
-  let passengers = document.getElementById("passengers").value;
+  let passengers = parseFloat(document.getElementById("passengers").value);
+  console.log("passengers in emission calc: ", passengers);
   emission *= passengers;
 
   let roundTrip = document.getElementById("roundtrip").checked;
@@ -818,5 +864,7 @@ window.addEventListener('load', async () => {
   document.querySelector("#roundtrip").addEventListener("click", calculateFlightDistance);
   document.querySelector('#flightclass').addEventListener("change", calculateFlightDistance);
   document.querySelector('#carbon-to-offset').addEventListener("change", handleManuallyEnteredTCO2);
-  document.querySelector('#passengers').addEventListener("change", calculateFlightDistance);
+  document.querySelector('#passengers').addEventListener("change", updatePassengerField);
+  document.querySelector('#start').addEventListener("change", calculateFlightDistance);
+  document.querySelector('#destination').addEventListener("change", calculateFlightDistance);
 });

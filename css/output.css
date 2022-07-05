@@ -42,7 +42,7 @@ html {
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: Helvetica, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
 }
 
@@ -724,25 +724,6 @@ html {
   border-radius: var(--rounded-btn, 0.5rem);
 }
 
-.divider {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-self: stretch;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  height: 1rem;
-  white-space: nowrap;
-}
-
-.divider:before,
-  .divider:after {
-  content: "";
-  flex-grow: 1;
-  height: 0.125rem;
-  width: 100%;
-}
-
 .footer {
   display: grid;
   width: 100%;
@@ -1213,6 +1194,15 @@ html {
   line-height: 1.25rem;
 }
 
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
 .checkbox:focus-visible {
   outline: 2px solid hsl(var(--bc));
   outline-offset: 2px;
@@ -1305,20 +1295,6 @@ body[dir="rtl"] .checkbox {
 body[dir="rtl"] .checkbox:checked,
     body[dir="rtl"] .checkbox[checked="true"] {
   background-image: linear-gradient(45deg, transparent 65%, hsl(var(--chkbg)) 65.99%), linear-gradient(-45deg, transparent 75%, hsl(var(--chkbg)) 75.99%), linear-gradient(45deg, hsl(var(--chkbg)) 40%, transparent 40.99%), linear-gradient(-45deg, hsl(var(--chkbg)) 30%, hsl(var(--chkfg)) 30.99%, hsl(var(--chkfg)) 40%, transparent 40.99%), linear-gradient(45deg, hsl(var(--chkfg)) 50%, hsl(var(--chkbg)) 50.99%);
-}
-
-.divider:before {
-  background-color: hsl(var(--bc) / var(--tw-bg-opacity));
-  --tw-bg-opacity: 0.1;
-}
-
-.divider:after {
-  background-color: hsl(var(--bc) / var(--tw-bg-opacity));
-  --tw-bg-opacity: 0.1;
-}
-
-.divider:not(:empty) {
-  gap: 1rem;
 }
 
 .drawer-toggle:focus-visible ~ .drawer-content .drawer-button.btn-primary {
@@ -1552,6 +1528,14 @@ body[dir="rtl"] .checkbox:checked,
   grid-auto-flow: row;
 }
 
+.card-compact .card-title {
+  margin-bottom: 0.25rem;
+}
+
+.card-normal .card-title {
+  margin-bottom: 0.75rem;
+}
+
 .modal-bottom :where(.modal-box) {
   width: 100%;
   max-width: none;
@@ -1625,8 +1609,8 @@ body[dir="rtl"] .checkbox:checked,
   margin-bottom: 8rem;
 }
 
-.mb-12 {
-  margin-bottom: 3rem;
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 
 .mt-1 {
@@ -1649,12 +1633,8 @@ body[dir="rtl"] .checkbox:checked,
   display: none;
 }
 
-.h-5 {
-  height: 1.25rem;
-}
-
-.h-10 {
-  height: 2.5rem;
+.h-12 {
+  height: 3rem;
 }
 
 .h-full {
@@ -1667,6 +1647,10 @@ body[dir="rtl"] .checkbox:checked,
 
 .w-full {
   width: 100%;
+}
+
+.w-80 {
+  width: 20rem;
 }
 
 .w-20 {
@@ -1731,22 +1715,30 @@ body[dir="rtl"] .checkbox:checked,
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
+.justify-self-end {
+  justify-self: end;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
 }
 
 .rounded-none {
   border-radius: 0px;
 }
 
-.rounded-l {
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
-.rounded-r {
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+.rounded-l-lg {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.rounded-r-lg {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .border-l-\[0px\] {
@@ -1769,29 +1761,16 @@ body[dir="rtl"] .checkbox:checked,
   background-color: transparent;
 }
 
-.bg-neutral {
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--n) / var(--tw-bg-opacity));
-}
-
-.bg-landscape {
-  background-image: url('/images/landscape.svg');
-}
-
-.bg-airplane {
-  background-image: url('/images/airplane.svg');
+.bg-RollingHills {
+  background-image: url('/images/RollingHills.svg');
 }
 
 .bg-cover {
   background-size: cover;
 }
 
-.bg-contain {
-  background-size: contain;
-}
-
-.bg-top {
-  background-position: top;
+.bg-bottom {
+  background-position: bottom;
 }
 
 .bg-no-repeat {
@@ -1802,8 +1781,8 @@ body[dir="rtl"] .checkbox:checked,
   fill: currentColor;
 }
 
-.p-4 {
-  padding: 1rem;
+.p-2 {
+  padding: 0.5rem;
 }
 
 .py-4 {
@@ -1824,6 +1803,10 @@ body[dir="rtl"] .checkbox:checked,
   vertical-align: middle;
 }
 
+.font-sans {
+  font-family: Helvetica, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -1832,11 +1815,6 @@ body[dir="rtl"] .checkbox:checked,
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
 }
 
 .text-2xl {
@@ -1859,10 +1837,6 @@ body[dir="rtl"] .checkbox:checked,
 
 .normal-case {
   text-transform: none;
-}
-
-.tracking-tight {
-  letter-spacing: -0.025em;
 }
 
 .text-green-700 {
@@ -1890,53 +1864,14 @@ body[dir="rtl"] .checkbox:checked,
   outline-offset: 2px;
 }
 
-@media (min-width: 640px) {
-  .sm\:block {
-    display: block;
-  }
-}
-
-@media (min-width: 768px) {
-  .md\:place-self-center {
-    place-self: center;
-  }
-
-  .md\:justify-self-end {
-    justify-self: end;
-  }
-
-  .md\:text-6xl {
-    font-size: 3.75rem;
-    line-height: 1;
-  }
-}
-
 @media (min-width: 1024px) {
-  .lg\:divider-horizontal {
-    flex-direction: column;
-  }
-
-  .lg\:divider-horizontal:before {
-    height: 100%;
-    width: 0.125rem;
-  }
-
-  .lg\:divider-horizontal:after {
-    height: 100%;
-    width: 0.125rem;
+  .lg\:checkbox-lg {
+    height: 2rem;
+    width: 2rem;
   }
 
   .lg\:stats-vertical {
     grid-auto-flow: row;
-  }
-
-  .lg\:divider-horizontal {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    height: auto;
-    width: 1rem;
   }
 
   .lg\:stats-vertical > :not([hidden]) ~ :not([hidden]) {
@@ -1956,14 +1891,36 @@ body[dir="rtl"] .checkbox:checked,
     position: fixed;
   }
 
+  .lg\:mb-32 {
+    margin-bottom: 8rem;
+  }
+
+  .lg\:mb-0 {
+    margin-bottom: 0px;
+  }
+
+  .lg\:mr-10 {
+    margin-right: 2.5rem;
+  }
+
+  .lg\:h-\[60px\] {
+    height: 60px;
+  }
+
+  .lg\:h-\[54px\] {
+    height: 54px;
+  }
+
+  .lg\:w-24 {
+    width: 6rem;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
   }
-}
 
-@media (min-width: 1280px) {
-  .xl\:text-7xl {
-    font-size: 4.5rem;
-    line-height: 1;
+  .lg\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }

@@ -1,3 +1,6 @@
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: ["*.{html,js}"],
   purge: ["*.{html,js}"],
@@ -5,11 +8,18 @@ module.exports = {
     extend: {
       backgroundImage: {
         'landscape': "url('/images/landscape.svg')",
+        'RollingHills': "url('/images/RollingHills.svg')",
         'airplane': "url('/images/airplane.svg')",
       },
       minHeight: (theme) => ({
         ...theme('spacing'),
       }),
+      fontFamily: {
+        sans: [
+          'Helvetica',
+          ...defaultTheme.fontFamily.sans,
+        ],
+      },
     }
   },
   plugins: [require("daisyui")],
