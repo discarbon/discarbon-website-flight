@@ -1702,6 +1702,10 @@ body[dir="rtl"] .checkbox:checked,
   width: 33.333333%;
 }
 
+.w-24 {
+  width: 6rem;
+}
+
 .max-w-\[1200px\] {
   max-width: 1200px;
 }
@@ -1764,6 +1768,14 @@ body[dir="rtl"] .checkbox:checked,
   border-radius: 0px;
 }
 
+.rounded-sm {
+  border-radius: 0.125rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
 .rounded-l {
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
@@ -1772,6 +1784,21 @@ body[dir="rtl"] .checkbox:checked,
 .rounded-r {
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
+}
+
+.rounded-l-xl {
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+}
+
+.rounded-l-lg {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.rounded-r-lg {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .border-l-\[0px\] {
@@ -1961,6 +1988,10 @@ body[dir="rtl"] .checkbox:checked,
 
   .lg\:h-\[60px\] {
     height: 60px;
+  }
+
+  .lg\:h-\[54px\] {
+    height: 54px;
   }
 
   .lg\:flex-row {
