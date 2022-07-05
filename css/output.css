@@ -1890,11 +1890,6 @@ body[dir="rtl"] .checkbox:checked,
 }
 
 @media (min-width: 1024px) {
-  .lg\:checkbox-lg {
-    height: 2rem;
-    width: 2rem;
-  }
-
   .lg\:divider-horizontal {
     flex-direction: column;
   }
@@ -1943,16 +1938,7 @@ body[dir="rtl"] .checkbox:checked,
     margin-bottom: 8rem;
   }
 
-  .lg\:h-\[60px\] {
-    height: 60px;
-  }
-
   .lg\:flex-row {
     flex-direction: row;
-  }
-
-  .lg\:text-xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
   }
 }
