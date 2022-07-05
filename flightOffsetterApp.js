@@ -596,12 +596,17 @@ async function onDisconnect() {
 }
 
 function updatePassengerField() {
-  let passengers = document.getElementById("passengers");
-  console.log("passengers in update field: ", passengers.value);
-  passengers.value = passengers.value + " passenger";
-  if (parseFloat(passengers.value) > 1) {
-    passengers.value += "s";
+  let passengers = document.getElementById("passengers").value;
+  if (parseFloat(passengers)) {
+    passengers = parseFloat(passengers);
+  } else {
+    passengers = 1;
   }
+  passengers = passengers + " passenger";
+  if (parseFloat(passengers) > 1) {
+    passengers += "s";
+  }
+  document.getElementById("passengers").value = passengers
   calculateFlightDistance();
 }
 
