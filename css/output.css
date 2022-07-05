@@ -1678,6 +1678,10 @@ body[dir="rtl"] .checkbox:checked,
   width: 100%;
 }
 
+.w-80 {
+  width: 20rem;
+}
+
 .w-20 {
   width: 5rem;
 }
@@ -1782,37 +1786,12 @@ body[dir="rtl"] .checkbox:checked,
   background-color: transparent;
 }
 
-.bg-landscape {
-  background-image: url('/images/landscape.svg');
-}
-
-.bg-gradient-to-b {
-  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
-}
-
 .bg-RollingHills {
   background-image: url('/images/RollingHills.svg');
 }
 
-.from-sky-200 {
-  --tw-gradient-from: #bae6fd;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(186 230 253 / 0));
-}
-
-.via-sky-300 {
-  --tw-gradient-stops: var(--tw-gradient-from), #7dd3fc, var(--tw-gradient-to, rgb(125 211 252 / 0));
-}
-
-.to-emerald-200 {
-  --tw-gradient-to: #a7f3d0;
-}
-
 .bg-cover {
   background-size: cover;
-}
-
-.bg-top {
-  background-position: top;
 }
 
 .bg-bottom {
