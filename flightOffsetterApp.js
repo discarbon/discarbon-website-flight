@@ -511,13 +511,21 @@ async function onConnect() {
 
   console.log("Opening a dialog", web3Modal);
 
+  // Needs to be removed if more wallets than metamask are allowed
+  if (typeof window.ethereum == 'undefined') {
+    document.getElementById("Metamask-Warning-Modal").checked = true;
+    console.log("No MetaMask compatible wallet found.")
+    return;
+  }
+
   let instance
   try {
     instance = await web3Modal.connect();
     window.provider = new ethers.providers.Web3Provider(instance);
     window.signer = window.provider.getSigner();
   } catch (e) {
-    console.log("Could not get a wallet connection", e);
+    document.getElementById("Metamask-Warning-Modal").checked = true;
+    console.log("Could not get a wallet connection", e)
     return;
   }
 
