@@ -110,7 +110,7 @@
   #faq ul li i:after {
     transform: translate(2px, 0) rotate(-45deg);
   }
-  #faq ul li input[type=checkbox] {
+  #faq ul li input[type=radio] {
     position: absolute;
     cursor: pointer;
     width: 100%;
@@ -119,31 +119,22 @@
     opacity: 0;
     touch-action: manipulation;
   }
-  #faq ul li input[type=checkbox]:checked ~ h2 {
+  #faq ul li input[type=radio]:not(:checked) ~ h2 {
     color: #000;
   }
-  #faq ul li input[type=checkbox]:checked ~ p {
+  #faq ul li input[type=radio]:not(:checked) ~ p {
     /*margin-top: 0;*/
     max-height: 0;
     transition: .3s;
     opacity: 0;
     /*transform: translate(0, 50%);*/
   }
-  #faq ul li input[type=checkbox]:checked ~ i:before {
+  #faq ul li input[type=radio]:not(:checked) ~ i:before {
     transform: translate(2px, 0) rotate(45deg);
   }
-  #faq ul li input[type=checkbox]:checked ~ i:after {
+  #faq ul li input[type=radio]:not(:checked) ~ i:after {
     transform: translate(-2px, 0) rotate(-45deg);
   }
-
-
-
-
-
-
-
-
-
 
 
   * {
