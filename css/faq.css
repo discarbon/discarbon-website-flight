@@ -31,7 +31,7 @@
   }
 
   #faq h2 {
-    color: #cc071e;
+    color: #000000;
     font-family: 'hm_light', sans-serif;
     font-size: 20px;
     line-height: 34px;
@@ -97,19 +97,6 @@
     margin-top: 28px;
     right: 15px;
   }
-  #faq ul li i:before, ul li i:after {
-    content: "";
-    position: absolute;
-    background-color: #cc071e;
-    width: 3px;
-    height: 9px;
-  }
-  #faq ul li i:before {
-    transform: translate(-2px, 0) rotate(45deg);
-  }
-  #faq ul li i:after {
-    transform: translate(2px, 0) rotate(-45deg);
-  }
   #faq ul li input[type=radio] {
     position: absolute;
     cursor: pointer;
@@ -125,8 +112,8 @@
   #faq ul li input[type=radio]:not(:checked) ~ p {
     /*margin-top: 0;*/
     max-height: 0;
-    transition: .3s;
-    opacity: 0;
+    transition: 0.3s;
+    opacity: 100%;
     /*transform: translate(0, 50%);*/
   }
   #faq ul li input[type=radio]:not(:checked) ~ i:before {
