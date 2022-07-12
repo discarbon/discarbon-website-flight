@@ -55,3 +55,7 @@ input[type=number] {
   width: 130px;
   background-position-x: -10px;
 }
+
+.empty-space { /* empty vertical space at the end of the faq */
+   margin-bottom: 100cm;
+}
