@@ -22,9 +22,29 @@
         <div class="max-w-[800px]">
           <div class="grid flex flex-col w-full lg:flex-row space-y-4">
 
-            <div tabindex="0" class="collapse border border-base-300 bg-base-100 rounded-box">
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
-                First question
+                What does the offset transaction do?
+              </div>
+              <div class="collapse-content">
+                <p>The carbon offset button initiates an on-chain transaction which exchanges the
+                  supplied tokens into NCT tokens on sushiswap. It then takes these NCT tokens to
+                  exchange them into the tokens of the carbon reduction project. The
+                  project tokens are then irrevocably retired using the infrastructure of
+                  <a class="link link-accent" href="https://toucan.earth/">the toucan
+                  bridge</a>. All these steps are done in one transaction and can be verified on
+                  chain. Here is an example of such a transaction starting with USDC as an input token:
+                  <a class="link link-accent"
+                  href="https://polygonscan.com/tx/0xdde1b7409696499b0744620cee9c5b591822fd794785cc821b8cd1fa0a806c2f">
+                  offset transaction</a>.</p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                Which project is supported when offsetting the carbon credits?
               </div>
               <div class="collapse-content">
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae debitis iusto voluptatum
@@ -33,9 +53,10 @@
               </div>
             </div>
 
-            <div tabindex="0" class="collapse border border-base-300 bg-base-100 rounded-box">
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
-                Second question
+                Can I choose a carbon credit project to support?
               </div>
               <div class="collapse-content">
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae debitis iusto voluptatum
@@ -44,9 +65,9 @@
               </div>
             </div>
 
-            <div tabindex="0" class="collapse border border-base-300 bg-base-100 rounded-box">
+            <div tabindex="0" class="collapse collapse-open border border-base-300 bg-base-100 rounded-box">
               <div class="collapse-title text-xl font-medium">
-                third question
+                Can I fill in a custom number of carbon to offset?
               </div>
               <div class="collapse-content">
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae debitis iusto voluptatum
