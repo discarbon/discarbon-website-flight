@@ -222,6 +222,11 @@ function updateApproveButton() {
     hideApproveButton();
   } else {
     showApproveButton();
+    if (window.balance.asFloat() < window.paymentAmount.asFloat()) {
+      disableApproveButton();
+    } else {
+      enableApproveButton();
+    }
   }
 }
 
@@ -254,6 +259,16 @@ function showApproveButton() {
 function hideApproveButton() {
   let approveButton = document.getElementById("btn-approve");
   approveButton.setAttribute("style", "display:none");
+}
+
+function disableApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("disabled", "disabled");
+}
+
+function enableApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.removeAttribute("disabled");
 }
 
 function busyApproveButton() {
@@ -493,7 +508,7 @@ async function updateAccountInHeader() {
   let address = await window.signer.getAddress()
   const num = 4;
   let shortAddress = address.slice(0, num + 2) + "...";
-  if (window.innerWidth > 640){
+  if (window.innerWidth > 640) {
     shortAddress += address.slice(-num);
   }
 
