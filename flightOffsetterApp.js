@@ -136,7 +136,6 @@ async function updateUIvalues() {
     fieldDistance.innerHTML = "--.-- km";
   }
   var fieldCarbonToOffset = document.getElementById("carbon-to-offset");
-  console.log("carbontooffset: ", window.carbonToOffset.asFloat())
   if (window.carbonToOffset.asFloat() > 0) {
     fieldCarbonToOffset.value = window.carbonToOffset.asString();
   } else {
@@ -223,27 +222,32 @@ function updateApproveButton() {
     hideApproveButton();
   } else {
     showApproveButton();
+    if (window.balance.asFloat() < window.paymentAmount.asFloat()) {
+      disableApproveButton();
+    } else {
+      enableApproveButton();
+    }
   }
 }
 
 function updateOffsetButton() {
-  console.log("update offset button - balance: ", window.balance.asFloat(), "paymentAmount: ", window.paymentAmount.asFloat())
+  // console.log("update offset button - balance: ", window.balance.asFloat(), "paymentAmount: ", window.paymentAmount.asFloat())
   if (window.paymentAmount.asFloat() === 0) {
-    console.log("disable offset button - paymentAmount is 0")
+    // console.log("disable offset button - paymentAmount is 0")
     disableOffsetButton();
     return
   }
   if (window.balance.asFloat() < window.paymentAmount.asFloat()) {
-    console.log("disable offset button - insufficient balance")
+    // console.log("disable offset button - insufficient balance")
     disableOffsetButton();
     return;
   }
   if (window.allowance.asFloat() < window.paymentAmount.asFloat()) {
-    console.log("disable offset button - insufficient allowance approved")
+    // console.log("disable offset button - insufficient allowance approved")
     disableOffsetButton();
     return;
   }
-  console.log("enable offset button")
+  // console.log("enable offset button")
   enableOffsetButton();
 }
 
@@ -255,6 +259,16 @@ function showApproveButton() {
 function hideApproveButton() {
   let approveButton = document.getElementById("btn-approve");
   approveButton.setAttribute("style", "display:none");
+}
+
+function disableApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.setAttribute("disabled", "disabled");
+}
+
+function enableApproveButton() {
+  let approveButton = document.getElementById("btn-approve");
+  approveButton.removeAttribute("disabled");
 }
 
 function busyApproveButton() {
@@ -475,7 +489,7 @@ function calcGeodesicDistance(start, destination) {
  * Check the correct network id is used.
  */
 async function isCorrectChainId(chainId) {
-  console.log("chainId: ", chainId)
+  // console.log("chainId: ", chainId)
   // if (chainId !== 80001) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
@@ -494,7 +508,7 @@ async function updateAccountInHeader() {
   let address = await window.signer.getAddress()
   const num = 4;
   let shortAddress = address.slice(0, num + 2) + "...";
-  if (window.innerWidth > 640){
+  if (window.innerWidth > 640) {
     shortAddress += address.slice(-num);
   }
 
@@ -694,7 +708,6 @@ async function calculateFlightDistance() {
     window.flightDistance = calcGeodesicDistance(startLocation, destinationLocation)
     calculateCarbonEmission();
   } else {
-    console.log("in else: ")
     window.flightDistance = 0;
     calculateCarbonEmission();
     await updatePaymentFields();
@@ -764,7 +777,6 @@ async function calculateCarbonEmission() {
 
   // Handle multipliers and input from other fields
   let passengers = parseFloat(document.getElementById("passengers").value);
-  console.log("passengers in emission calc: ", passengers);
   emission *= passengers;
 
   let roundTrip = document.getElementById("roundtrip").checked;
@@ -795,13 +807,10 @@ function singleEmissionCalc(em) {
 }
 
 async function handleManuallyEnteredTCO2() {
-  // console.log("manual change:")
   let TCO2 = parseFloat(document.getElementById("carbon-to-offset").value);
-  // console.log("user entered ", TCO2, typeof TCO2)
   if (TCO2 && TCO2 > 0) {
     window.carbonToOffset = new BigNumber(TCO2, tokenDecimals["NCT"]);
   }
-  // console.log("Carbon Emission: ", TCO2);
   updateUIvalues();
 }
 
