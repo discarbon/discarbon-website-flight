@@ -1489,16 +1489,6 @@ body[dir="rtl"] .checkbox:checked,
   --tw-placeholder-opacity: 0.2;
 }
 
-.link-accent {
-  --tw-text-opacity: 1;
-  color: hsl(var(--a) / var(--tw-text-opacity));
-}
-
-.link-accent:hover {
-  --tw-text-opacity: 1;
-  color: hsl(var(--af, var(--a)) / var(--tw-text-opacity));
-}
-
 .link:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
