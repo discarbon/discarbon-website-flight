@@ -399,7 +399,7 @@ async function doAutoOffsetUsingETH() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
+      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber(), gasLimit: 600000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -415,7 +415,7 @@ async function doAutoOffsetUsingToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
+      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 600000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -428,7 +428,7 @@ async function doAutoOffsetUsingPoolToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
+      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 420000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
