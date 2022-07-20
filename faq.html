@@ -30,7 +30,7 @@
           </h1>
           <div class="grid flex flex-col w-full lg:flex-row space-y-2">
 
-<!--
+            <!--
             <div class="collapse border border-base-300 bg-base-100 rounded-box">
               <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
@@ -63,7 +63,8 @@
               </div>
               <div class="collapse-content">
                 <p>The carbon offset button initiates an on-chain transaction which exchanges the
-                  tokens specified by the user into NCT tokens on Sushiswap. It then exchanges (redeems) these NCT tokens
+                  tokens specified by the user into NCT tokens on Sushiswap. It then exchanges (redeems) these NCT
+                  tokens
                   into tokens of a specific carbon reduction project and then
                   irrevocably retires these project tokens using
                   <a class="link text-green-700" href="https://toucan.earth/">Toucan Protocol's
@@ -79,13 +80,54 @@
             <div class="collapse border border-base-300 bg-base-100 rounded-box">
               <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
+                Are there any fees involved?
+              </div>
+              <div class="collapse-content">
+                <p>disCarbon does not currently add any fees. The entire offset amount stated is used to buy and retire
+                  carbon credits. In a later version we will enable users to make a voluntary contribution. If enabled,
+                  this will add a small percentage to the transaction which goes to disCarbon. This helps disCarbon keep
+                  this project up and running and build even better carbon offset tools.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
                 What does tCO<sub>2</sub> stand for?
               </div>
               <div class="collapse-content">
                 <p>It stands for "tonnes of carbon dioxide"/"tonnes of CO<sub>2</sub>" that needs to
                   be compensated so that a flight has zero impact on the climate. More precisely it actually stands for
-                  <b>CO<sub>2</sub> equivalent</b> emission, as an airplane emits more climate active pollutants than just CO<sub>2</sub>. The
+                  <b>CO<sub>2</sub> equivalent</b> emission, as an airplane emits more climate active pollutants than
+                  just CO<sub>2</sub>. The
                   influence of all these other pollutants is accounted for in the tCO<sub>2</sub> estimation.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                Which tokens can I use to Offset?
+              </div>
+              <div class="collapse-content">
+                <p>At the moment one can choose between MATIC, USDC, WETH, WMATIC and the NCT token by clicking on the
+                  "MATIC" ticker in the flight offsetter.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                What is NCT?
+              </div>
+              <div class="collapse-content">
+                <p>The NCT token represents one tonne of carbon in any of the nature-based carbon projects in the NCT
+                  pool. This makes carbon certificates fungible among different projects and allows for a liquid carbon
+                  market. Only when the carbon certificates are retired does the smart contract choose a specific
+                  project to retire from.
                 </p>
               </div>
             </div>
@@ -119,7 +161,6 @@
               </div>
             </div>
 
-
             <div class="collapse border border-base-300 bg-base-100 rounded-box">
               <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
@@ -134,25 +175,66 @@
             <div class="collapse border border-base-300 bg-base-100 rounded-box">
               <input type="checkbox" />
               <div class="collapse-title text-xl font-medium">
+                How does disCarbon estimate the carbon emissions of a flight?
+              </div>
+              <div class="collapse-content">
+                <p>We use the emission estimation model developed by <a class="link text-green-700"
+                    href="https://co2.myclimate.org/en/flight_calculators/new">myclimate</a>. This is an established
+                  model which has been found to be one of the best ones in terms of accuracy (<a
+                    class="link text-green-700"
+                    href="https://unipub.uni-graz.at/obvugrhs/download/pdf/246073?originalFilename=true">see page 86 in
+                    the linked report</a>, only available in German). A more detailed comparison between different
+                  estimation models and their accuracy can be <a class="link text-green-700"
+                    href="https://hackmd.io/@haurog/BJ0dT-g35">found in our recent post</a>.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                Why does my travel class affect my carbon emissions?
+              </div>
+              <div class="collapse-content">
+                <p>The flight class directly influences the space a single passenger has available for themselves. This
+                  means fewer people can fit on a plane the more higher class seating is available. Therefore, the
+                  flight emission is divided through fewer passengers, in turn increasing the carbon emission per
+                  passenger. In addition higher class tickets have a larger baggage allowance and more elaborate meals.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
                 Why is the calculated carbon emission different for each flight offset calculator?
               </div>
               <div class="collapse-content">
-                <p>To calculate the carbon emission, <a class="link text-green-700" href="https://hackmd.io/@haurog/BJ0dT-g35">a lot of
+                <p>To calculate the carbon emission, <a class="link text-green-700"
+                    href="https://hackmd.io/@haurog/BJ0dT-g35">a lot of
                     assumptions need to be made.</a>
                   Some influencing factors are the weather, the airplane type, the seat occupancy, cargo load,
-                  emission from the airport infrastructure, carbon emission from jet fuel production.
-                  Most of these factors cannot be known for a specific flight and therefore need to be
+                  emission from the airport infrastructure, carbon emission from jet fuel production. A critical part of
+                  any emission
+                  model is to also consider non-CO<sub>2</sub> emissions. Our model considers them. Many other
+                  estimators with lower calculated
+                  emissions do not.
+                  Most of the above mentioned factors cannot be known for a specific flight and therefore need to be
                   calculated from general number of average emissions of the flight industry. As our
                   approach is to make it as simple as possible for the user to offset their emission,
                   we do not provide such a user configurable flight emission estimator, but focus on
                   the typical emission for a certain flight distance.
-                  </p><p>If a more detailed analysis is desired,
-                  <a class="link text-green-700" href="https://www.atmosfair.de/de/">atmosfair</a> is a very detailed and accurate
+                </p>
+                <p>If a more detailed analysis is desired,
+                  <a class="link text-green-700" href="https://www.atmosfair.de/de/">atmosfair</a> is a very detailed
+                  and accurate
                   estimation tool.
-                  The calculated carbon emission can then be manually filled in the disCarbon flight offsetter and be offset on chain.
-                  <a class="link text-green-700" href="https://www.google.com/flights/">Google flights</a> is a popular choice but
+                  The calculated carbon emission can then be manually filled in the disCarbon flight offsetter and be
+                  offset on chain.
+                  <a class="link text-green-700" href="https://www.google.com/flights/">Google flights</a> is a popular
+                  choice but
                   unfortunately we cannot recommend it for emission offsetting as <a class="link text-green-700"
-                    href="https://hackmd.io/@haurog/BJ0dT-g35">they most probably underestimate the climate impact of
+                    href="https://hackmd.io/@haurog/BJ0dT-g35">they underestimate the climate impact of
                     a flight.</a>
                 </p>
               </div>
@@ -170,6 +252,30 @@
                   allows carbon offset projects to manage their own carbon credits, enabling them to obtain market
                   prices when required. Our hope is that this leads to the faster creation of high quality carbon offset
                   projects.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                How can I support your work/disCarbon?
+              </div>
+              <div class="collapse-content">
+                <p>At the moment the best way to support us is by using and sharing our tools!
+                  Later you will be able to voluntarily make a small contribution when you perform the offset
+                  transaction to disCarbon.
+                </p>
+              </div>
+            </div>
+
+            <div class="collapse border border-base-300 bg-base-100 rounded-box">
+              <input type="checkbox" />
+              <div class="collapse-title text-xl font-medium">
+                How can I contact disCarbon?
+              </div>
+              <div class="collapse-content">
+                <p>Feel free to write to "danceratopz" on Twitter, Telegram or Gmail.
                 </p>
               </div>
             </div>
