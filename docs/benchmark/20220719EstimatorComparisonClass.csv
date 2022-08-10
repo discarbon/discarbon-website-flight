@@ -1,0 +1,19 @@
+Emission Offsetter,Range,Route,Emission,Type,Range Label,Passenger Travel Class
+disCarbon,Long,ZRH-SIN,3.322,Single,"Long: ZRH-SIN, 10,300 km",Economy
+myclimate,Long,ZRH-SIN,3.4,Single,"Long: ZRH-SIN, 10,300 km",Economy
+atmosfair,Long,ZRH-SIN,5.84,Average,"Long: ZRH-SIN, 10,300 km",Economy
+Google Flights,Long,ZRH-SIN,1.056,Single,"Long: ZRH-SIN, 10,300 km",Economy
+Google Flights,Long,ZRH-SIN,1.786,Single,"Long: ZRH-SIN, 10,300 km",Economy
+ICAO,Long,ZRH-SIN,0.907,Single,"Long: ZRH-SIN, 10,300 km",Economy
+disCarbon,Long,ZRH-SIN,6.4,Single,"Long: ZRH-SIN, 10,300 km",Business
+myclimate,Long,ZRH-SIN,6.5,Single,"Long: ZRH-SIN, 10,300 km",Business
+atmosfair,Long,ZRH-SIN,11,Average,"Long: ZRH-SIN, 10,300 km",Business
+Google Flights,Long,ZRH-SIN,4.2,Single,"Long: ZRH-SIN, 10,300 km",Business
+Google Flights,Long,ZRH-SIN,6.4,Single,"Long: ZRH-SIN, 10,300 km",Business
+ICAO,Long,ZRH-SIN,1.8,Single,"Long: ZRH-SIN, 10,300 km",Business
+disCarbon,Long,ZRH-SIN,9.9,Single,"Long: ZRH-SIN, 10,300 km",First
+myclimate,Long,ZRH-SIN,10.2,Single,"Long: ZRH-SIN, 10,300 km",First
+atmosfair,Long,ZRH-SIN,14.6,Average,"Long: ZRH-SIN, 10,300 km",First
+Google Flights,Long,ZRH-SIN,7.5,Single,"Long: ZRH-SIN, 10,300 km",First
+Google Flights,Long,ZRH-SIN,8.8,Single,"Long: ZRH-SIN, 10,300 km",First
+ICAO,Long,ZRH-SIN,nan,Single,"Long: ZRH-SIN, 10,300 km",First
