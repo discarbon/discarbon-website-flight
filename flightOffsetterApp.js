@@ -401,7 +401,7 @@ async function doAutoOffsetUsingETH() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber(), gasLimit: 600000 });
+      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber(), gasLimit: 900000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -417,7 +417,7 @@ async function doAutoOffsetUsingToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 600000 });
+      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 900000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -430,7 +430,7 @@ async function doAutoOffsetUsingPoolToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 420000 });
+      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 800000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -493,6 +493,7 @@ function calcGeodesicDistance(start, destination) {
 async function isCorrectChainId(chainId) {
   // console.log("chainId: ", chainId)
   // if (chainId !== 80001) {
+  // if (chainId !== 31337) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
     return false;
