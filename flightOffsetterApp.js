@@ -22,7 +22,7 @@ const tokenDecimals = {
   NCT: 18,
   MATIC: 18,
   USDC: 6,
-  WWETH: 18,
+  WETH: 18,
   WMATIC: 18
 };
 
@@ -318,7 +318,9 @@ function updateBalanceField() {
 async function calculateRequiredMaticPaymentForOffset() {
   let amount = await window.offsetHelper
     .calculateNeededETHAmount(addresses['NCT'], window.carbonToOffset.asBigNumber());
-  window.paymentAmount = new BigNumber(amount, tokenDecimals[window.paymentToken]);
+  // use a slightly higher amount to allow for a small price variation before offset
+  amount = new BigNumber(amount, tokenDecimals[window.paymentToken]);
+  window.paymentAmount = new BigNumber(1.01 * amount.asFloat(), tokenDecimals[window.paymentToken]);
 }
 
 async function calculateRequiredTokenPaymentForOffset() {
@@ -399,7 +401,7 @@ async function doAutoOffsetUsingETH() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber() });
+      .autoOffsetUsingETH(addresses['NCT'], window.carbonToOffset.asBigNumber(), { value: window.paymentAmount.asBigNumber(), gasLimit: 900000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -415,7 +417,7 @@ async function doAutoOffsetUsingToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber());
+      .autoOffsetUsingToken(addresses[window.paymentToken], addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 900000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -428,7 +430,7 @@ async function doAutoOffsetUsingPoolToken() {
   busyOffsetButton();
   try {
     const transaction = await window.offsetHelperWithSigner
-      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber());
+      .autoOffsetUsingPoolToken(addresses['NCT'], window.carbonToOffset.asBigNumber(), { gasLimit: 800000 });
     await transaction.wait();
     readyOffsetButton();
   } catch (e) {
@@ -491,6 +493,7 @@ function calcGeodesicDistance(start, destination) {
 async function isCorrectChainId(chainId) {
   // console.log("chainId: ", chainId)
   // if (chainId !== 80001) {
+  // if (chainId !== 31337) {
   if (chainId !== 137) {
     document.getElementById("Network-Warning-Modal").checked = true;
     return false;

@@ -1,6 +1,7 @@
 // Addresses of used contracts
 export const addressesMainnet = {
-    offsetHelper: "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa", // Deployed 20220621
+    offsetHelper: "0x89b156Df43cfFF82215382D36eF5F761d9be2b0c", // Deployed 20220818
+    // offsetHelper: "0xFAFcCd01C395e4542BEed819De61f02f5562fAEa", // Deployed by Toucan 20220818
     BCT: "0x2F800Db0fdb5223b3C3f354886d907A671414A7F",
     NCT: "0xD838290e877E0188a4A44700463419ED96c16107",
     USDC: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
